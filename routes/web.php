@@ -1,0 +1,76 @@
+<?php
+
+use App\Http\Controllers\admin\BerandaController;
+use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\admin\MejaController;
+use App\Http\Controllers\admin\PemasukkanController;
+use App\Http\Controllers\admin\PengeluaranController;
+use App\Http\Controllers\admin\ProdukController;
+use App\Http\Controllers\admin\SatuanController;
+use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\CashierController;
+use App\Http\Controllers\CookController;
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\WaitressController;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return redirect('/login');
+});
+
+
+
+// login 
+Route::resource('/login', LoginController::class);
+
+// register  
+Route::get('/register', function () {
+    return Inertia::render('Auth/register');
+})->name('register');
+
+// layouts 
+Route::get('/blank', function () {
+    return Inertia::render('Template/blank');
+});
+
+
+Route::group(['middleware' => ['admin']], function () {
+    Route::resource('/beranda', BerandaController::class);
+    Route::prefix('master')->name('master')->group(function () {
+        Route::resource('/kategori', KategoriController::class);
+        Route::resource('/satuan', SatuanController::class);
+        Route::resource('/produk', ProdukController::class);
+        Route::resource('/meja', MejaController::class);
+    });
+    Route::prefix('transaksi')->name('transaksi')->group(function () {
+        Route::resource('/pemasukkan', PemasukkanController::class);
+        Route::resource('/pengeluaran', PengeluaranController::class);
+    });
+    Route::prefix('system')->name('system')->group(function () {
+        Route::resource('/user', UserController::class);
+        Route::resource('settings',SettingController::class);
+    });
+});
+
+Route::get('/bar', function () {
+    return Inertia::render('Chart/bar');
+})->name('bar');
+
+Route::resource('waitress', WaitressController::class)->middleware('cashier');
+Route::resource('cook', CookController::class)->middleware('cook');
+Route::resource('cashier', CashierController::class)->middleware('cashier');
+Route::resource('pemesanan', GuestController::class);
