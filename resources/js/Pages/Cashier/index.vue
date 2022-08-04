@@ -2,7 +2,9 @@
     <div
         class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500"
     >
-        <div class="flex flex-row w-full h-full">
+        <div
+            class="flex flex-row w-full h-full animate-in fade-in zoom-in duration-1000"
+        >
             <div class="w-13/20 h-full p-3">
                 <div
                     class="w-full h-full rounded-xl flex flex-col overflow-hidden border-2"
@@ -32,14 +34,16 @@
                             <div class="indicator relative">
                                 <span
                                     v-if="transaksi_api"
-                                    class="indicator-item border-0 z-20 indicator-bottom indicator-start badge bg-red-600 text-white"
+                                    class="indicator-item animate-in fade-in zoom-in duration-300 border-0 z-20 indicator-middle indicator-start badge bg-red-600 text-white"
                                     >{{ transaksi_api }}</span
                                 >
-                                <button
-                                    class="btn bg-blue-600 border-0 text-white font-semibold hover:bg-blue-700"
-                                >
-                                    Transaksi
-                                </button>
+                                <Link :href="route('cashiertransaksi.index')">
+                                    <button
+                                        class="btn bg-blue-600 border-0 text-white font-semibold hover:bg-blue-700"
+                                    >
+                                        Transaksi
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -102,16 +106,18 @@
                         <div
                             class="w-full h-3/20 flex items-center flex-row border-b-4 border-blue-600"
                         >
-                            <select required
+                            <select
+                                required
                                 class="select w-32 ml-3"
                                 v-model="form.meja"
                             >
-                                <option  selected>Pilih Meja</option>
+                                <option selected>Pilih Meja</option>
                                 <option :value="item.id" v-for="item in meja">
                                     {{ item.nama }}
                                 </option>
                             </select>
-                            <input required
+                            <input
+                                required
                                 v-model="form.namapemesan"
                                 type="text"
                                 placeholder="Nama Pemesan.."
@@ -180,7 +186,8 @@
                         >
                             <div
                                 v-for="items in this.search.pesanan"
-                                :id="'row' + items.id" name="rows"
+                                :id="'row' + items.id"
+                                name="rows"
                                 class="w-full my-1 flex flex-row border-b-2"
                             >
                                 <div
@@ -191,6 +198,12 @@
                                         name="nama"
                                         hidden
                                         :value="items.nama"
+                                        type="text"
+                                    />
+                                    <input
+                                        name="kategori_produk"
+                                        hidden
+                                        :value="items.id_kategori"
                                         type="text"
                                     /><input
                                         name="id"
@@ -281,6 +294,7 @@ export default {
 
         const form = useForm({
             id: [],
+            kategori: [],
             nama: [],
             jumlah: [],
             total: [],
@@ -293,6 +307,8 @@ export default {
             var total = 0;
             let jumlah = document.getElementsByName("jumlah");
             let jumlah_array = [];
+            let kategori = document.getElementsByName("kategori_produk");
+            let kategori_array = [];
             let harga = document.getElementsByName("harga");
             let harga_array = [];
             let total_value = document.getElementsByName("total");
@@ -310,36 +326,29 @@ export default {
                 jumlah_array.push(jumlah[index].value);
                 total_value_array.push(total_value[index].value);
                 nama_array.push(nama[index].value);
+                kategori_array.push(kategori[index].value);
             });
             this.form.harga.push(harga_array);
             this.form.id.push(id_array);
             this.form.jumlah.push(jumlah_array);
             this.form.total.push(total_value_array);
             this.form.nama.push(nama_array);
+            this.form.kategori.push(kategori_array);
             this.form.totalfinal = totalharga.value;
             Inertia.post(route("cashier.store"), form);
 
-            
-            this.form.nama.forEach(() => {
-                this.form.harga.pop();
-                this.form.id.pop();
-                this.form.jumlah.pop();
-                this.form.total.pop();
-                this.form.nama.pop();
-            });
+            this.form.harga = [];
+            this.form.id = [];
+            this.form.jumlah = [];
+            this.form.total = [];
+            this.form.nama = [];
+            this.form.kategori = [];
+
             this.form.totalfinal = null;
             this.form.namapemesan = null;
             this.form.meja = "Pilih Meja";
-            this.search.pesanan.forEach(element => {
-                this.search.pesanan.pop();
-            });
-            this.search.pesanan.forEach(element => {
-                this.search.pesanan.pop();
-            });
-            this.search.pesanan.forEach(element => {
-                this.search.pesanan.pop();
-            });
-                console.log(this.search.pesanan);
+
+            this.search.pesanan = [];
         }
         return {
             submit,
@@ -397,31 +406,16 @@ export default {
         };
     },
     mounted() {
-        function resolveAfter2Seconds() {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve("resolved");
-                }, 3000);
-            });
-        }
-
-        async function asyncCall() {
-            const result = await resolveAfter2Seconds();
-            transaksi = 9;
-            axios.get(route("apipemesanan")).then((response) => {});
-        }
         setInterval(
             () =>
                 axios.get(route("apipemesanan")).then((response) => {
                     this.transaksi_api = response.data.data;
                 }),
-            10000
+            5000
         );
     },
     computed: {
-        getdata(data) {
-            console.log(this.transaksi);
-        },
+        getdata(data) {},
         filteredItems() {
             if (this.search.kategori == "All") {
                 return this.produk.filter((item) => {

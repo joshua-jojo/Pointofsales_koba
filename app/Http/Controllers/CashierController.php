@@ -19,16 +19,17 @@ class CashierController extends Controller
      */
     public function index()
     {
+
         $kategori = Kategori::all();
         $produk = Produk::all();
         $meja = meja::all();
-        $data_produk=[];
+        $data_produk = [];
 
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;
             $data_produk[$key] = $value;
         }
-        return Inertia::render('Cashier/index',['produk' => $data_produk,'kategori' => $kategori,'meja' => $meja]);
+        return Inertia::render('Cashier/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja]);
     }
 
     /**
@@ -37,9 +38,7 @@ class CashierController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        
-    }
+    { }
 
     /**
      * Store a newly created resource in storage.
@@ -49,58 +48,83 @@ class CashierController extends Controller
      */
     public function store(Request $request)
     {
-        $id =[];
-        $nama =[];
-        $harga =[];
-        $jumlah =[];
-        $total =[];
+        $data = [];
+        $data_master = [];
         $totalfinal = $request->totalfinal;
         $namapemesan = $request->namapemesan;
         $meja = $request->meja;
+
+        $nama_meja = meja::find($meja)->nama;
+        foreach ($request->id as $key => $value) {
+            foreach ($value as $keys => $data) {
+                $a = array(
+                    'id' =>  $request->id[$key][$keys],
+                    'nama' =>  $request->nama[$key][$keys],
+                    'jumlah' =>  $request->jumlah[$key][$keys],
+                    'harga' =>  $request->harga[$key][$keys],
+                    'total' =>  $request->total[$key][$keys],
+                    'kategori' =>  $request->kategori[$key][$keys],
+                    'meja' =>  $nama_meja,
+                );
+                $data = array($keys => $a);
+                $data_master = array_merge($data_master, $data);
+            }
+        }
         $id_pemesanan = Pemesanan::create([
             'nama' => $namapemesan,
             'total' => $totalfinal,
             'meja' => $meja,
         ])->id;
-            
-        foreach ($request->id as $key => $value) {
-            foreach ($value as $keys => $data) {
-                $id[$keys] = $data;
+        $data_kategori = Kategori::all();
+
+        foreach ($data_master as $key => $value) {
+            if ($value['kategori'] == "Makanan") {
+                PemesananDetail::create([
+                    'id_pemesanan' => $id_pemesanan,
+                    'id_produk' => $value['id'],
+                    'nama' => $value['nama'],
+                    'jumlah' => $value['jumlah'],
+                    'harga' => $value['harga'],
+                    'total' => $value['total'],
+                    'meja' => $value['meja'],
+                    'progress' => "cook"
+                ]);
             }
-        }
-        
-        foreach ($request->nama as $key => $value) {
-            foreach ($value as $keys => $data) {
-                $nama[$keys] = $data;
-            }
-        }
-        foreach ($request->harga as $key => $value) {
-            foreach ($value as $keys => $data) {
-                $harga[$keys] = $data;
-            }
-        }
-        foreach ($request->jumlah as $key => $value) {
-            foreach ($value as $keys => $data) {
-                $jumlah[$keys] = $data;
-            }
-        }
-        foreach ($request->total as $key => $value) {
-            foreach ($value as $keys => $data) {
-                $total[$keys] = $data;
+            else{
+                PemesananDetail::create([
+                    'id_pemesanan' => $id_pemesanan,
+                    'id_produk' => $value['id'],
+                    'nama' => $value['nama'],
+                    'jumlah' => $value['jumlah'],
+                    'harga' => $value['harga'],
+                    'total' => $value['total'],
+                    'meja' => $value['meja'],
+                    'progress' => "barista"
+                ]);
             }
         }
 
-        foreach ($id as $key => $value) {
-            PemesananDetail::create([
-                'id_pemesanan' => $id_pemesanan,
-                'id_produk' => $id[$key],
-                'nama' => $nama[$key],
-                'jumlah' => $jumlah[$key],
-                'harga' => $harga[$key],
-                'total' => $total[$key],
-            ]);
-        }
 
+        // foreach ($id as $key => $value) {
+        //     foreach ($kategori as $keys => $values) {
+        //         if ($kategori[$keys] == "") {
+        //             PemesananDetail::create([
+        //                 'id_pemesanan' => $id_pemesanan,
+        //                 'id_produk' => $id[$key],
+        //                 'nama' => $nama[$key],
+        //                 'jumlah' => $jumlah[$key],
+        //                 'harga' => $harga[$key],
+        //                 'total' => $total[$key],
+        //                 'progress' => $total[$key],
+        //             ]);
+        //         }
+        //     }
+        // }
+
+        meja::find($meja)->update([
+            'status' => "1"
+        ]);
+        return $this->index();
     }
 
     /**

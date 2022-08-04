@@ -10,4 +10,9 @@ class meja extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function pemesanan()
+    {
+        return $this->hasMany(Pemesanan::class,'meja','id');
+    }
 }

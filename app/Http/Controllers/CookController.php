@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pemesanan;
+use App\Models\PemesananDetail;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CookController extends Controller
 {
@@ -13,7 +16,17 @@ class CookController extends Controller
      */
     public function index()
     {
-        //
+        $pemesanan_aktif = PemesananDetail::where('progress','cook')->where('status','antri')->orWhere('status','diproses')->orderBy('id_pemesanan','asc')->get();
+
+        // $pemesanan_aktif = Pemesanan::where('status', 'aktif')->get();
+        // foreach ($pemesanan_aktif as $key => $value) {
+        //     $data_pemesanan = PemesananDetail::where('id_pemesanan',$value->id)->get();
+        //     foreach ($data_pemesanan as $key => $values) {
+        //         if($values->progress == "cook"){
+        //         }
+        //     }
+        // }
+        return Inertia::render('Cook/index',['pemesanan_aktif' => $pemesanan_aktif]);
     }
 
     /**

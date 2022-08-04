@@ -19,7 +19,7 @@ class CreatePemesanansTable extends Migration
             $table->foreignId('meja');
             $table->bigInteger('total');
             $table->bigInteger('bayar')->default(0);
-            $table->enum('progress',['cook','waitress','cashier','finish'])->default('cook');
+            $table->bigInteger('kembalian')->default(0);
             $table->enum('status',['aktif','finish'])->default('aktif');
             $table->timestamps();
         });

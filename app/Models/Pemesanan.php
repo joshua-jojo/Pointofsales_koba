@@ -10,4 +10,9 @@ class Pemesanan extends Model
     use HasFactory;
     
     protected $guarded = ['id'];
+
+    public function datameja()
+    {
+        return $this->hasOne(meja::class,'id','meja');
+    }
 }

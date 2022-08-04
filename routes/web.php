@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\ProdukController;
 use App\Http\Controllers\admin\SatuanController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\CashierController;
+use App\Http\Controllers\CashierTransaksiController;
 use App\Http\Controllers\CookController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LoginController;
@@ -73,4 +74,5 @@ Route::get('/bar', function () {
 Route::resource('waitress', WaitressController::class)->middleware('cashier');
 Route::resource('cook', CookController::class)->middleware('cook');
 Route::resource('cashier', CashierController::class)->middleware('cashier');
+Route::resource('cashiertransaksi', CashierTransaksiController::class)->middleware('cashier');
 Route::resource('pemesanan', GuestController::class);

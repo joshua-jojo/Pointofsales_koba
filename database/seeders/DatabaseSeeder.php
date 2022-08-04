@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
             SatuanSeeder::class,
             ProdukSeeder::class,
             MejaSeeder::class,
-            PemasukkanSeeder::class,
-            PengeluaranSeeder::class,
+            // PemasukkanSeeder::class,
+            // PengeluaranSeeder::class,
             UserSeeder::class,
             SettingSeeder::class,
         ]);

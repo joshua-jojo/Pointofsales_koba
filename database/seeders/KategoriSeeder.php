@@ -22,25 +22,5 @@ class KategoriSeeder extends Seeder
             'id'=>2,
             'nama'=>'Minuman'
         ]);
-        DB::table('kategoris')->insert([
-            'id'=>3,
-            'nama'=>'Susu'
-        ]);
-        DB::table('kategoris')->insert([
-            'id'=>4,
-            'nama'=>'Sayur'
-        ]);
-        DB::table('kategoris')->insert([
-            'id'=>5,
-            'nama'=>'Buah'
-        ]);
-        DB::table('kategoris')->insert([
-            'id'=>6,
-            'nama'=>'Daging'
-        ]);
-        DB::table('kategoris')->insert([
-            'id'=>7,
-            'nama'=>'Saus'
-        ]);
     }
 }

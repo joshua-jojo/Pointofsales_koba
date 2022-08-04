@@ -35,51 +35,6 @@ class ProdukSeeder extends Seeder
                 'id_satuan' => 1,
             ]);
         }
-        for ($i=0; $i < 10; $i++) { 
-            DB::table('produks')->insert([
-                'nama' => $faker->dairyName(),
-                'harga' => rand(1,10),
-                'stok' => 10,
-                'id_kategori' => 3,
-                'id_satuan' => 1,
-            ]);
-        }
-        for ($i=0; $i < 10; $i++) { 
-            DB::table('produks')->insert([
-                'nama' => $faker->vegetableName(),
-                'harga' => rand(1,10),
-                'stok' => 10,
-                'id_kategori' => 4,
-                'id_satuan' => 1,
-            ]);
-        }
-        for ($i=0; $i < 10; $i++) { 
-            DB::table('produks')->insert([
-                'nama' => $faker->fruitName(),
-                'harga' => rand(1,10),
-                'stok' => 10,
-                'id_kategori' => 5,
-                'id_satuan' => 1,
-            ]);
-        }
-        for ($i=0; $i < 10; $i++) { 
-            DB::table('produks')->insert([
-                'nama' => $faker->meatName(),
-                'harga' => rand(1,10),
-                'stok' => 10,
-                'id_kategori' => 6,
-                'id_satuan' => 1,
-            ]);
-        }
-        for ($i=0; $i < 10; $i++) { 
-            DB::table('produks')->insert([
-                'nama' => $faker->sauceName(),
-                'harga' => rand(1,10),
-                'stok' => 10,
-                'id_kategori' => 7,
-                'id_satuan' => 1,
-            ]);
-        }
 
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Pemesanan;
+use App\Models\PemesananDetail;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,3 +28,13 @@ Route::get('pemesanan', function () {
     $data = count($data);
     return json_encode(['data' => $data]);
 })->name('apipemesanan');
+Route::get('cook', function () {
+    $pemesanan_aktif = PemesananDetail::where('progress','cook')->where('status','antri')->orWhere('status','diproses')->orderBy('id_pemesanan','asc')->get();
+    return json_encode(['data' => $pemesanan_aktif]);
+})->name('apicook');
+Route::post('status/{id}/{data}', function ($id,$data) {
+    $pemesanan = PemesananDetail::find($id);
+    $pemesanan->update([
+        'status' => $data
+    ]);
+})->name('cookstatus');

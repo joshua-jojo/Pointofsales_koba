@@ -18,10 +18,12 @@ class CreatePemesananDetailsTable extends Migration
             $table->foreignId('id_pemesanan');
             $table->foreignId('id_produk');
             $table->string('nama');
+            $table->string('meja');
             $table->bigInteger('jumlah');
             $table->bigInteger('harga');
             $table->bigInteger('total');
-            $table->enum('status',['antri','dimasak','diantarkan','finish'])->default('antri');
+            $table->enum('progress', ['cook', 'waitress', 'cashier', 'barista', 'finish'])->default('cook');
+            $table->enum('status', ['antri', 'diproses', 'selesai', 'habis'])->default('antri');
             $table->timestamps();
         });
     }
