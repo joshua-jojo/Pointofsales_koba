@@ -16,17 +16,21 @@ class LoginController extends Controller
      */
     public function index()
     {
+        $waitress = new WaitressController;
+        $cook = new CookController;
+        $cashier = new CashierController;
+        $barista = new BaristaController;
         if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
-                return redirect()->route('beranda.index ');
+                // return $beranda->index();
             } else if (Auth::user()->role == 'waitress') {
-                return redirect()->route('beranda.index ');
+                return $waitress->index();
             } else if (Auth::user()->role == 'cook') {
-                return redirect()->route('beranda.index ');
+                return $cook->index();
             } else if (Auth::user()->role == 'cashier') {
-                return redirect()->route('beranda.index ');
+                return $cashier->index();
             } else if (Auth::user()->role == 'barista') {
-                return redirect()->route('beranda.index ');
+                return $barista->index();
             }
         }
         return Inertia::render('Auth/login');
