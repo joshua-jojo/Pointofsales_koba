@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\admin\BerandaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class LoginController extends Controller
 {
-    use BerandaController;
 
     /**
      * Display a listing of the resource.
@@ -18,22 +16,17 @@ class LoginController extends Controller
      */
     public function index()
     {
-        $beranda = new BerandaController;
-        $waitress = new WaitressController;
-        $cook = new CookController;
-        $cashier = new CashierController;
-        $barista = new BaristaController;
         if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
-                return $beranda->index();
+                return redirect()->route('beranda.index ');
             } else if (Auth::user()->role == 'waitress') {
-                return $waitress->index();
+                return redirect()->route('beranda.index ');
             } else if (Auth::user()->role == 'cook') {
-                return $cook->index();
+                return redirect()->route('beranda.index ');
             } else if (Auth::user()->role == 'cashier') {
-                return $cashier->index();
+                return redirect()->route('beranda.index ');
             } else if (Auth::user()->role == 'barista') {
-                return $barista->index();
+                return redirect()->route('beranda.index ');
             }
         }
         return Inertia::render('Auth/login');
