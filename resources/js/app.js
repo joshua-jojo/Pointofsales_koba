@@ -4,6 +4,7 @@ import { createInertiaApp, Link } from '@inertiajs/inertia-vue3'
 import route from "ziggy-js";
 import { InertiaProgress } from '@inertiajs/progress';
 import VueApexCharts from "vue3-apexcharts";
+import 'flowbite';
 
 
 

@@ -217,9 +217,9 @@
                                 >
                                     <input
                                         required
-                                        class="w-12"
+                                        class="w-12 rounded text-center"
                                         name="jumlah"
-                                        :value=""
+                                        min="1"
                                         type="number"
                                         :id="items.id"
                                         @input="cek(items.id)"
@@ -260,7 +260,6 @@
                             }}<input
                                 v-model="form.totalfinal"
                                 id="totalharga"
-                                :value="search.totalharga"
                                 hidden
                             />
                         </div>
@@ -346,7 +345,7 @@ export default {
 
             this.form.totalfinal = 0;
             this.search.totalharga = 0;
-            this.form.namapemesan = 0;
+            this.form.namapemesan = null;
             this.form.meja = "Pilih Meja";
 
             this.search.pesanan = [];

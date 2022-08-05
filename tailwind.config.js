@@ -4,6 +4,7 @@ module.exports = {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
+    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
     extend: {
@@ -85,5 +86,5 @@ module.exports = {
       'desktop': '1024px',
     },
   },
-  plugins: [require("tailwindcss-animate"),require("daisyui"),require('tailwind-scrollbar-hide'),],
+  plugins: [require("tailwindcss-animate"),require("daisyui"),require('tailwind-scrollbar-hide'),require('flowbite/plugin'),],
 }

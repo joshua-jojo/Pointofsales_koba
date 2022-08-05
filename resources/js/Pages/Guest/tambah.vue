@@ -127,7 +127,6 @@
                                 }}<input
                                     v-model="form.totalfinal"
                                     id="totalharga"
-                                    :value="search.totalharga"
                                     hidden
                                 />
                             </div>
