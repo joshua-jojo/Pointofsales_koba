@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Admin\BerandaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,6 +17,7 @@ class LoginController extends Controller
      */
     public function index()
     {
+        $beranda = new BerandaController;
         $waitress = new WaitressController;
         $cook = new CookController;
         $cashier = new CashierController;
