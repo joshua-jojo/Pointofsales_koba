@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\admin\BerandaController;
-use App\Http\Controllers\admin\InventoryController;
-use App\Http\Controllers\admin\InventoryTransaksiController;
+use App\Http\Controllers\Admin\BerandaController;
+use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\InventoryTransaksiController;
 use App\Http\Controllers\Admin\KategoriController;
-use App\Http\Controllers\admin\MejaController;
-use App\Http\Controllers\admin\PemasukkanController;
-use App\Http\Controllers\admin\PengeluaranController;
-use App\Http\Controllers\admin\ProdukController;
-use App\Http\Controllers\admin\SatuanController;
-use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\Admin\MejaController;
+use App\Http\Controllers\Admin\PemasukkanController;
+use App\Http\Controllers\Admin\PengeluaranController;
+use App\Http\Controllers\Admin\ProdukController;
+use App\Http\Controllers\Admin\SatuanController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CashierTransaksiController;
 use App\Http\Controllers\CookController;
