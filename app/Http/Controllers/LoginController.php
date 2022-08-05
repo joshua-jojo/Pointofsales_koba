@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 class LoginController extends Controller
 {
+    use BerandaController;
 
     /**
      * Display a listing of the resource.
