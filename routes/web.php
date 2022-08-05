@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\admin\BerandaController;
+use App\Http\Controllers\admin\InventoryController;
+use App\Http\Controllers\admin\InventoryTransaksiController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\admin\MejaController;
 use App\Http\Controllers\admin\PemasukkanController;
@@ -64,6 +66,10 @@ Route::group(['middleware' => ['admin']], function () {
     Route::prefix('system')->name('system')->group(function () {
         Route::resource('/user', UserController::class);
         Route::resource('settings',SettingController::class);
+    });
+    Route::prefix('warehouse')->name('warehouse')->group(function () {
+        Route::resource('inventory', InventoryController::class);
+        Route::resource('inventorytransaksi', InventoryTransaksiController::class);
     });
 });
 

@@ -2,32 +2,41 @@
     <blankVue>
         <template v-slot:breadcrumbs>
             <ul>
-                <li><a>Master</a></li>
-                <li><a>Meja</a></li>
-                <li><a>Tambah</a></li>
+                <li><a>warehouse</a></li>
+                <li><a>inventory</a></li>
+                <li><a>edit</a></li>
                 <li></li></ul
         ></template>
         <template v-slot:konten>
             <form
                 class="w-full h-full"
                 @submit.prevent="
-                    form.post(
-                        route('mastermeja.store')
+                    form.put(
+                        route('warehouseinventory.update',{inventory:this.inventory.id})
                     )
                 "
             >
-                <h3 class="font-bold text-lg mb-1">Nama Meja</h3>
+                <h3 class="font-bold text-lg mb-1">Nama</h3>
                 <input
+                required
                     type="text"
                     v-model="form.nama"
                     placeholder="Type here"
                     class="input input-bordered w-full"
                 />
-                <h3 class="font-bold text-lg mb-1 capitalize">status</h3>
-                <select class="select select-bordered w-full mb-2" name="kategori" v-model="form.status" required>
-                    <option value="1" >Aktif</option>
-                    <option value="0" selected>Tidak Aktif</option>
+                <h3 class="font-bold text-lg mb-1">Harga</h3>
+                <input
+                required
+                    type="num"
+                    v-model="form.harga"
+                    placeholder="Type here"
+                    class="input input-bordered w-full"
+                />
+                <h3 class="font-bold text-lg mb-1 capitalize">Satuan</h3>
+                <select class="select select-bordered w-full mb-2" name="kategori" v-model="form.satuan" required>
+                    <option :value="item.id" v-for="item in satuan" >{{item.nama}}</option>
                 </select>
+
                 <div class="modal-action">
                     <button
                         type="submit"
@@ -35,7 +44,7 @@
                     >
                         Save
                     </button>
-                    <Link :href="route('mastersatuan.index')">
+                    <Link :href="route('warehouseinventory.index')">
                         <label for="my-modal-6" class="btn">cancel</label></Link
                     >
                 </div>
@@ -54,11 +63,18 @@ export default {
     },
     props: {
         satuan: Array,
+        inventory: Array,
+    },
+    mounted() {
+        this.form.nama = this.inventory.nama
+        this.form.harga = this.inventory.harga
+        this.form.satuan = this.inventory.satuan
     },
     setup() {
         const form = useForm({
-            nama: '',
-            status: 0,
+            nama: null,
+            harga: 0,
+            satuan: null,
         });
 
         return { form };

@@ -68,6 +68,20 @@
                         <div class="dropdown dropdown-right">
                             <label tabindex="0"
                                 class="btn m-1 bg-opacity-0 hover:bg-white hover:bg-opacity-40 hover:text-black border-0 text-white"><i
+                                    class="fa-solid fa-box text-xl opacity-80"></i></label>
+                            <ul tabindex="0"
+                                class="dropdown-content menu p-2 shadow-lg bg-white text-black rounded-box w-52">
+                                <li class="menu-title">
+                                    <span>Warehouse</span>
+                                </li>
+                                <li class="opacity-70">
+                                    <Link :href="route('warehouseinventory.index')"><a>Inventory</a></Link>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dropdown dropdown-right">
+                            <label tabindex="0"
+                                class="btn m-1 bg-opacity-0 hover:bg-white hover:bg-opacity-40 hover:text-black border-0 text-white"><i
                                     class="fa-solid fa-gear text-xl opacity-80"></i></label>
                             <ul tabindex="0"
                                 class="dropdown-content menu p-2 shadow-lg bg-white text-black rounded-box w-52">

@@ -58,7 +58,6 @@ export default {
         return { form };
     },
     mounted() {
-        this.form.nama = this.satuan.nama;
     },
 };
 </script>
