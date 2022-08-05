@@ -15,4 +15,8 @@ class Pemesanan extends Model
     {
         return $this->hasOne(meja::class,'id','meja');
     }
+    public function pemesanandetail()
+    {
+        return $this->hasMany(PemesananDetail::class,'id_pemesanan','id');
+    }
 }

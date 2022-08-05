@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\meja;
+use App\Models\Pemesanan;
+use App\Models\PemesananDetail;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class WaitressController extends Controller
 {
@@ -13,7 +17,24 @@ class WaitressController extends Controller
      */
     public function index()
     {
-        //
+        $data = Pemesanan::where('status', 'aktif')->get();
+        $array_pemesanan = [];
+        foreach ($data as $key => $value) {
+            $cek = PemesananDetail::where('id_pemesanan', $value->id)->get();
+            $indicator = 0;
+            foreach ($cek as $key => $status) {
+                if ($status->status == "selesai") {
+                    $indicator++;
+                }
+            }
+            if ($indicator == count($cek)) {
+                $data_meja = meja::find($value->meja)->nama;
+            $value->meja = $data_meja;
+                $data_pemesanan = array($value);
+                $array_pemesanan = array_merge($array_pemesanan,$data_pemesanan);
+            }
+        }
+        return Inertia::render('Waitress/transaksi', ['pemesanan_aktif' => $array_pemesanan]);
     }
 
     /**
@@ -43,9 +64,10 @@ class WaitressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($waitress)
     {
-        //
+        $data = PemesananDetail::where('id_pemesanan', $waitress)->get();
+        return Inertia::render('Waitress/transaksidetail', ['pemesanandetail' => $data]);
     }
 
     /**

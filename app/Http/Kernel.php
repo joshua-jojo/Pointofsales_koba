@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Admin;
+use App\Http\Middleware\barista;
 use App\Http\Middleware\Cashier;
 use App\Http\Middleware\Cook;
 use App\Http\Middleware\Waitress;
@@ -72,5 +73,6 @@ class Kernel extends HttpKernel
         'waitress' =>Waitress::class,
         'cook' =>Cook::class,
         'cashier' =>Cashier::class,
+        'barista' =>barista::class,
     ];
 }

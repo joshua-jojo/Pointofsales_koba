@@ -21,6 +21,7 @@ class LoginController extends Controller
         $waitress = new WaitressController;
         $cook = new CookController;
         $cashier = new CashierController;
+        $barista = new BaristaController;
         if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
                 return $beranda->index();
@@ -30,6 +31,8 @@ class LoginController extends Controller
                 return $cook->index();
             } else if (Auth::user()->role == 'cashier') {
                 return $cashier->index();
+            } else if (Auth::user()->role == 'barista') {
+                return $barista->index();
             }
         }
         return Inertia::render('Auth/login');

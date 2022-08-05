@@ -24,6 +24,7 @@ class CreatePemesananDetailsTable extends Migration
             $table->bigInteger('total');
             $table->enum('progress', ['cook', 'waitress', 'cashier', 'barista', 'finish'])->default('cook');
             $table->enum('status', ['antri', 'diproses', 'selesai', 'habis'])->default('antri');
+            $table->enum('waitress', [0,1])->default(0);
             $table->timestamps();
         });
     }

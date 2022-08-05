@@ -70,9 +70,13 @@ Route::group(['middleware' => ['admin']], function () {
 Route::get('/bar', function () {
     return Inertia::render('Chart/bar');
 })->name('bar');
+Route::get('/tambah_pesanan/{id}', [GuestController::class,'tambah'])->name('tambahpesan');
+Route::post('/update_pesanan/{id}', [GuestController::class,'update_pesanan'])->name('updatepesan');
 
-Route::resource('waitress', WaitressController::class)->middleware('cashier');
+Route::resource('waitress', WaitressController::class)->middleware('waitress');
 Route::resource('cook', CookController::class)->middleware('cook');
+Route::resource('barista', CookController::class)->middleware('barista');
 Route::resource('cashier', CashierController::class)->middleware('cashier');
 Route::resource('cashiertransaksi', CashierTransaksiController::class)->middleware('cashier');
-Route::resource('pemesanan', GuestController::class);
+Route::resource('pesan', GuestController::class);
+

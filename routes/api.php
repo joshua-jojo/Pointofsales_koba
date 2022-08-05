@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\meja;
 use App\Models\Pemesanan;
 use App\Models\PemesananDetail;
 use App\Models\Setting;
@@ -29,12 +30,51 @@ Route::get('pemesanan', function () {
     return json_encode(['data' => $data]);
 })->name('apipemesanan');
 Route::get('cook', function () {
-    $pemesanan_aktif = PemesananDetail::where('progress','cook')->where('status','antri')->orWhere('status','diproses')->orderBy('id_pemesanan','asc')->get();
+    $pemesanan_aktif = PemesananDetail::where('progress', 'cook')->where('status', 'antri')->orWhere('status', 'diproses')->orderBy('id_pemesanan', 'asc')->get();
     return json_encode(['data' => $pemesanan_aktif]);
 })->name('apicook');
-Route::post('status/{id}/{data}', function ($id,$data) {
+Route::get('barista', function () {
+    $pemesanan_aktif = PemesananDetail::where('progress', 'barista')->where('status', 'antri')->orWhere('status', 'diproses')->orderBy('id_pemesanan', 'asc')->get();
+    return json_encode(['data' => $pemesanan_aktif]);
+})->name('apibarista');
+Route::get('waitress', function () {
+    $pemesanan_aktif = PemesananDetail::where('status', 'antri')->orWhere('status', 'diproses')->orderBy('id_pemesanan', 'asc')->get();
+    $data = Pemesanan::where('status', 'aktif')->get();
+    $array_pemesanan = [];
+    foreach ($data as $key => $value) {
+        $cek = PemesananDetail::where('id_pemesanan', $value->id)->get();
+        $indicator = 0;
+        foreach ($cek as $key => $status) {
+            if ($status->status == "selesai" ) {
+                if($status->waitress == 0){
+                    $indicator++;
+                }
+            }
+        }
+        if ($indicator == count($cek)) {
+            $data_meja = meja::find($value->meja)->nama;
+            $value->meja = $data_meja;
+            $data_pemesanan = array($value);
+            $array_pemesanan = array_merge($array_pemesanan, $data_pemesanan);
+        }
+    }
+    return json_encode(['data' => $array_pemesanan]);
+})->name('apiwaitress');
+Route::post('status/{id}/{data}', function ($id, $data) {
     $pemesanan = PemesananDetail::find($id);
     $pemesanan->update([
         'status' => $data
     ]);
 })->name('cookstatus');
+Route::post('update/{waitress}', function ($waitress) {
+    $data = PemesananDetail::where('id_pemesanan',$waitress)->get();
+    foreach ($data as $key => $value) {
+        $value->update([
+            'waitress' => "1"
+        ]);
+    }
+})->name('waitressupdate');
+Route::get('progress/{guest}', function ($guest) {
+    $data = PemesananDetail::where('id_pemesanan',$guest)->get();
+    return json_encode(['data' => $data]);
+})->name('guestupdate');

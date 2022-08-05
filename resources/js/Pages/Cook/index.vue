@@ -30,6 +30,7 @@
                             <tr class="sticky top-0 text-center">
                                 <th>No</th>
                                 <th>Nama</th>
+                                <th>jumlah</th>
                                 <th>Meja</th>
                                 <th>Status</th>
                                 <th>Rincian</th>
@@ -43,6 +44,7 @@
                             >
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ item.nama }}</td>
+                                <td>{{ item.jumlah }}</td>
                                 <td>{{ item.meja }}</td>
                                 <td>{{ item.status }}</td>
                                 <td class="flex flex-row">
@@ -149,7 +151,7 @@ export default {
                     this.data = [];
                     this.data = response.data.data;
                 }),
-            5000
+            2000
         );
     },
     computed: {

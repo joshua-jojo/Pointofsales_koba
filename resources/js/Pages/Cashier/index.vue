@@ -344,8 +344,9 @@ export default {
             this.form.nama = [];
             this.form.kategori = [];
 
-            this.form.totalfinal = null;
-            this.form.namapemesan = null;
+            this.form.totalfinal = 0;
+            this.search.totalharga = 0;
+            this.form.namapemesan = 0;
             this.form.meja = "Pilih Meja";
 
             this.search.pesanan = [];
