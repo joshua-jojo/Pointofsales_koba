@@ -44,27 +44,30 @@ class CashierTransaksiController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $pemesanan = Pemesanan::find($request->id);
-        $data_pemesanan = PemesananDetail::where('id_pemesanan',$request->id)->get();
-        $pemesanan->update([
-            'status' => 'finish',
-            'bayar' => $request->bayar,
-            'kembalian' => $request->kembalian,
-        ]);
-        meja::find($pemesanan->datameja->id)->update([
-            'status' => "0"
-        ]);
-
-        foreach ($data_pemesanan as $key => $value) {
-            Pemasukkan::create([
-                'nama' => $value->nama,
-                'jumlah' => $value->jumlah,
-                'harga' => $value->harga,
-                'total' => $value->total,
-            ]);
+        $master_data = [];
+        $id_data = 0 ;
+        $id = [] ;
+        foreach ($request->id as $key => $value) {
+            $pemesanan = Pemesanan::find($value);
+            array_push($id,$value);
+            $pemesanan_detail = PemesananDetail::where('id_pemesanan', $pemesanan->id)->get();
+            foreach ($pemesanan_detail as $key => $data) {
+                if($id_data < $data->id_pemesanan){
+                    $id_data = $data->id_pemesanan;
+                }
+                array_push($master_data, $data->toArray());
+            }
         }
-        return $this->edit($request->id);
+        $total = 0;
+        foreach ($master_data as $key => $value) {
+            $total = $total + $value['total'];
+        }
+        $master_data = array('data_pemesanan' => $master_data);
+        $master_data['id_pemesanan'] = $id_data;
+        $master_data['id'] = $id;
+        $master_data['total'] = $total;
+        // dd($master_data);
+        return Inertia::render('Cashier/validate', ['pemesanandetail' => $master_data, 'total' => $total]);
     }
 
     /**
@@ -75,8 +78,8 @@ class CashierTransaksiController extends Controller
      */
     public function show($cashiertransaksi)
     {
-        $data = PemesananDetail::where('id_pemesanan',$cashiertransaksi)->get();
-        return Inertia::render('Cashier/transaksidetail',['pemesanandetail' => $data]);
+        $data = PemesananDetail::where('id_pemesanan', $cashiertransaksi)->get();
+        return Inertia::render('Cashier/transaksidetail', ['pemesanandetail' => $data]);
     }
 
     /**
@@ -89,8 +92,8 @@ class CashierTransaksiController extends Controller
     {
         $perusahaan = Setting::find(1)->nama;
         $pemesanan = Pemesanan::find($cashiertransaksi);
-        $pemesanan_detail = PemesananDetail::where('id_pemesanan',$cashiertransaksi)->get();
-        return view('struk',['pemesanan' => $pemesanan,'pemesanan_detail' => $pemesanan_detail,'perusahaan' => $perusahaan]);
+        $pemesanan_detail = PemesananDetail::where('id_pemesanan', $cashiertransaksi)->get();
+        return view('struk', ['pemesanan' => $pemesanan, 'pemesanan_detail' => $pemesanan_detail, 'perusahaan' => $perusahaan]);
     }
 
     /**
@@ -101,9 +104,7 @@ class CashierTransaksiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        
-    }
+    { }
 
     /**
      * Remove the specified resource from storage.
@@ -114,5 +115,25 @@ class CashierTransaksiController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function cetak(Request $request)
+    {
+        // dd($request);
+        foreach ($request->pemesanan['id'] as $key => $value) {
+            Pemesanan::find($value)->update([
+                'status' => 'finish'
+            ]);
+        }
+        foreach ($request['pemesanan']['data_pemesanan'] as $key => $value) {
+            Pemasukkan::create([
+                'nama' => $value['nama'],
+                'jumlah' => $value['jumlah'],
+                'harga' => $value['harga'],
+                'total' => $value['total'],
+            ]);
+        }
+        $perusahaan = Setting::find(1)->nama;
+        return view('struk', [ 'pemesanan_detail' => $request, 'perusahaan' => $perusahaan]);
     }
 }

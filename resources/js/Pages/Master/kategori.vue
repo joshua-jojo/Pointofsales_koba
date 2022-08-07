@@ -119,12 +119,10 @@
         Inertia
     } from "@inertiajs/inertia";
     import blankVue from "../Template/blank.vue";
-    import modalsVue from "../Component/modals.vue";
 
     export default {
         components: {
             blankVue,
-            modalsVue,
         },
         props: {
             kategori: Array,

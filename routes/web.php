@@ -86,3 +86,4 @@ Route::resource('cashier', CashierController::class)->middleware('cashier');
 Route::resource('cashiertransaksi', CashierTransaksiController::class)->middleware('cashier');
 Route::resource('pesan', GuestController::class);
 
+Route::post('cetak',[CashierTransaksiController::class,'cetak'])->name('cetak');

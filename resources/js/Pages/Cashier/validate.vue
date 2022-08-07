@@ -1,0 +1,150 @@
+<template lang="">
+    <div
+        class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500"
+    >
+        <div
+            class="w-full h-full flex justify-center items-center animate-in fade-in zoom-in duration-1000"
+        >
+            <div class="h-5/6 w-11/12 p-5 bg-white rounded-3xl flex flex-col">
+                <div
+                    class="w-full rounded-t-2xl border-b-2 text-3xl flex items-center drop-shadow-md pl-5 h-2/20"
+                >
+                    Transaksi Detail
+                </div>
+                <div
+                    class="w-full rounded-t-2xl text-xl flex flex-cols items-center drop-shadow-md pl-5 h-2/20"
+                >
+                    <label for="">Search : </label>
+                    <input
+                        v-model="search.value"
+                        type="text"
+                        id="search_transaksi"
+                        class="w-1/12 rounded-lg pl-4 ml-4 text-md"
+                    />
+                    <label class="ml-4 mr-2" for="">Total : </label>
+                    {{ total }}
+                    <label class="ml-4" for="">Bayar : </label>
+                    <input
+                        v-model="form.bayar"
+                        @input="kembalian(total)"
+                        type="number"
+                        min="1"
+                        id="bayar"
+                        class="w-2/12 rounded-lg pl-4 ml-4 text-md"
+                    />
+                    <label class="ml-4 mr-2" for="">Kembalian : </label>
+                    <input
+                        v-model="form.kembalian"
+                        type="number"
+                        min="1"
+                        id="kembalian"
+                        class="w-2/12 rounded-lg pl-4 ml-4 text-md"
+                    />
+                </div>
+                <div
+                    class="w-full h-14/20 overflow-auto scrollbar-default rounded-b-2xl"
+                >
+                    <table class="table w-full">
+                        <thead>
+                            <tr class="sticky top-0 text-center">
+                                <th>No</th>
+                                <th>Produk</th>
+                                <th>Jumlah</th>
+                                <th>Harga</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center" id="tabel_body">
+                            <tr
+                                v-for="(item, index) in filteredItems"
+                                :key="index"
+                            >
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ item.nama }}</td>
+                                <td>{{ item.jumlah }}</td>
+                                <td>{{ item.harga }}</td>
+                                <td>{{ item.total }}</td>
+                                <td>{{ item.status }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    class="w-full rounded-t-2xl flex items-center drop-shadow-md pl-5 h-2/20 justify-end"
+                >
+                        <button v-if="form.kembalian > 0"  @click="submit()"
+                            class="rounded-xl bg-green-500 h-11 w-20 text-white hover:bg-green-400 mr-2"
+                        >
+                            Accept
+                        </button>
+                    <Link :href="route('cashiertransaksi.index')">
+                        <button
+                            class="rounded-xl bg-blue-500 h-11 w-20 text-white hover:bg-blue-400"
+                        >
+                            back
+                        </button></Link
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import { Inertia } from "@inertiajs/inertia";
+import { useForm } from "@inertiajs/inertia-vue3";
+import { reactive } from "vue";
+
+export default {
+    props: {
+        pemesanandetail: Object,
+        total: Number,
+    },
+    setup() {
+        var no = 1;
+        const search = reactive({
+            value: "",
+        });
+        const form = useForm({
+            pemesanan: null,
+            bayar: null,
+            kembalian: null,
+        });
+        
+        
+        return {
+            form,
+            no,
+            search,
+        };
+    },
+    methods: {
+        submit() {
+            this.form.pemesanan = this.pemesanandetail
+            return Inertia.post(route("cetak"), this.form);
+        },
+        kembalian(total) {
+            var kembalian = 0;
+            var bayar = this.form.bayar;
+            kembalian = bayar - total;
+            if (kembalian >= 0) {
+                this.form.kembalian = kembalian;
+            } else {
+                this.form.kembalian = 0;
+            }
+        },
+    },
+    computed: {
+        filteredItems() {
+            return this.pemesanandetail.data_pemesanan.filter((item) => {
+                return (
+                    item.nama
+                        .toLowerCase()
+                        .indexOf(this.search.value.toLowerCase()) > -1
+                );
+            });
+        },
+    },
+};
+</script>
+<style lang=""></style>

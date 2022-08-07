@@ -393,6 +393,7 @@ export default {
             });
             this.search.jumlah = total;
             this.search.nama = total;
+            this.form.totalfinal = total;
             this.search.totalharga = total;
         },
         hapus(id) {

@@ -1,4 +1,7 @@
 <html>
+{{-- @php
+dd($pemesanan_detail);
+@endphp --}}
 
 <head>
     <title>Faktur Pembayaran</title>
@@ -36,7 +39,8 @@
 
         <div style='width:350px; font-size:12pt; font-family:calibri;  border-collapse: collapse;' border='0'>
             <b class="mt-2 text-3xl capitalize">{{$perusahaan}}</b>
-            <p class="mt-2"><span style='font-size:12pt'>No. : {{$pemesanan->id}}, {{ date('Y-m-d') }}, {{ date('h:i:s')
+            <p class="mt-2"><span style='font-size:12pt'>No. : {{$pemesanan_detail->pemesanan['id_pemesanan']}}, {{
+                    date('Y-m-d') }}, {{ date('h:i:s')
                     }}</span></p>
             <table class="w-full border-b-2 mt-2 border-black">
                 <thead class="border-b-2 border-black">
@@ -48,12 +52,15 @@
                     </tr>
                 </thead>
                 <tbody class="text-center text-sm">
-                    @foreach ($pemesanan_detail as $item)
+                    @foreach ($pemesanan_detail->pemesanan['data_pemesanan'] as $item)
+                    {{-- @php
+                    dd($pemesanan_detail);
+                    @endphp --}}
                     <tr>
-                        <td class="text-left">{{$item->nama}}</td>
-                        <td>{{$item->harga}}</td>
-                        <td>x{{$item->jumlah}}</td>
-                        <td>Rp. {{$item->total}}</td>
+                        <td class="text-left">{{$item['nama']}}</td>
+                        <td>{{$item['harga']}}</td>
+                        <td>x{{$item['jumlah']}}</td>
+                        <td>Rp. {{$item['total']}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -61,15 +68,15 @@
 
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Total :</div>
-                <div class="w-6/12 h-5 ">Rp. {{$pemesanan->total}}</div>
+                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail->pemesanan['total']}}</div>
             </div>
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Cash :</div>
-                <div class="w-6/12 h-5 ">Rp. {{$pemesanan->bayar}}</div>
+                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail['bayar']}}</div>
             </div>
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Sisa :</div>
-                <div class="w-6/12 h-5 ">Rp. {{$pemesanan->kembalian}}</div>
+                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail['kembalian']}}</div>
             </div>
 
         </div>

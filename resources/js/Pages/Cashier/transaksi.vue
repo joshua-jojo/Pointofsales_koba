@@ -29,9 +29,9 @@
                         <thead>
                             <tr class="sticky top-0 text-center">
                                 <th></th>
-                                <th>No</th>
                                 <th>Nama</th>
                                 <th>Meja</th>
+                                <th>Total</th>
                                 <th>Rincian</th>
                             </tr>
                         </thead>
@@ -42,16 +42,16 @@
                             >
                                 <td>
                                     <input
+                                        @change="cekbox()"
                                         type="checkbox"
-                                        checked="checked"
                                         name="checkbox"
                                         :value="item.id"
                                         class="checkbox"
                                     />
                                 </td>
-                                <td>{{ index + 1 }}</td>
                                 <td>{{ item.nama }}</td>
                                 <td>{{ item.meja }}</td>
+                                <td>{{ item.total }}</td>
                                 <td>
                                     <Link
                                         :href="
@@ -73,12 +73,13 @@
                 <div
                     class="w-full rounded-t-2xl flex items-center drop-shadow-md pl-5 h-2/20 justify-end"
                 >
-                    <button
-                    @click="cekbox"
+                    <button v-if="form.id.length > 0"
+                        @click="submit"
                         class="rounded-xl bg-green-500 h-11 w-20 text-white hover:bg-green-400 mr-2"
                     >
                         Bayar
                     </button>
+
                     <Link :href="route('cashier.index')">
                         <button
                             class="rounded-xl bg-blue-500 h-11 w-20 text-white hover:bg-blue-400"
@@ -102,17 +103,13 @@ export default {
     },
     setup() {
         var no = 1;
-        var modals = true;
         const search = reactive({
             value: "",
         });
         const form = useForm({
-            bayar: 0,
-            kembalian: 0,
             id: 0,
         });
         return {
-            modals,
             form,
             no,
             search,
@@ -121,15 +118,20 @@ export default {
     methods: {
         cekbox() {
             var a = document.getElementsByName("checkbox");
-            console.log(a);
+            var b = [];
+
+            a.forEach((element, index, arr) => {
+                if (a[index].checked) {
+                    b.push(a[index].value);
+                }
+            });
+            this.form.id = b;
         },
         submit(index, id) {
             Inertia.post(route("cashiertransaksi.store"), this.form);
         },
     },
-    mounted() {
-       
-    },
+    mounted() {},
     computed: {
         filteredItems() {
             return this.pemesanan_aktif.filter((item) => {

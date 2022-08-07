@@ -45,6 +45,7 @@ class GuestController extends Controller
         $namapemesan = $request->namapemesan;
         $meja = $request->meja;
         $nama_meja = meja::find((int) $meja)->nama;
+        // dd($request->totalfinal);
         foreach ($request->id as $key => $value) {
             foreach ($value as $keys => $data) {
                 $a = array(

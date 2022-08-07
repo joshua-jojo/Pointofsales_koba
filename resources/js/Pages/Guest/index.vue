@@ -211,6 +211,7 @@ export default {
             this.form.nama.push(nama_array);
             this.form.kategori.push(kategori_array);
             this.form.totalfinal = totalharga.value;
+            console.log(this.form.totalfinal)
             Inertia.post(route("pesan.store"), form);
 
             this.form.harga = [];
@@ -249,6 +250,7 @@ export default {
         },
         cek(id) {
             var total = 0;
+            var totalfinal = 0;
             let jumlah = document.getElementsByName("jumlah");
             let harga = document.getElementsByName("harga");
             let harga_array = [];
@@ -265,9 +267,11 @@ export default {
                 }
 
                 total = total + a * b;
+                totalfinal = totalfinal + total
                 total_value[index].value = a * b;
                 harga_array.push(harga[index].value);
             });
+            this.form.totalfinal = totalfinal;
             this.search.jumlah = total;
             this.search.nama = total;
             this.search.totalharga = total;
