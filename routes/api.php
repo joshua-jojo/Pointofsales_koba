@@ -78,3 +78,8 @@ Route::get('progress/{guest}', function ($guest) {
     $data = PemesananDetail::where('id_pemesanan',$guest)->get();
     return json_encode(['data' => $data]);
 })->name('guestupdate');
+
+Route::get('hapus/{id}', function ($id) {
+    $data = PemesananDetail::find($id);
+    $data->delete();
+})->name('delete_data');

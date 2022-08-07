@@ -163,10 +163,58 @@ class GuestController extends Controller
             $value->id_kategori = $value->kategori->nama;
             $data_produk[$key] = $value;
         }
-        return Inertia::render('Guest/tambah', ['produk' => $data_produk, 'kategori' => $kategori,'id_pembelian' => $id]);
+        return Inertia::render('Guest/tambah', ['produk' => $data_produk, 'kategori' => $kategori, 'id_pembelian' => $id]);
     }
-    public function update_pesanan(Request $request,$id)
+    public function update_pesanan(Request $request, $id)
     {
-        dd($id);
+        $data = [];
+        $data_master = [];
+        $totalfinal = $request->totalfinal;
+        $namapemesan = $request->namapemesan;
+        $nama_meja = Pemesanan::find($request->id_pembelian);
+        // dd();
+        // dd($request->totalfinal);
+        foreach ($request->id as $key => $value) {
+            foreach ($value as $keys => $data) {
+                $a = array(
+                    'id' =>  $request->id[$key][$keys],
+                    'nama' =>  $request->nama[$key][$keys],
+                    'jumlah' =>  $request->jumlah[$key][$keys],
+                    'harga' =>  $request->harga[$key][$keys],
+                    'total' =>  $request->total[$key][$keys],
+                    'kategori' =>  $request->kategori[$key][$keys],
+                    'meja' =>  $nama_meja->datameja->nama,
+                );
+                $data = array($keys => $a);
+                $data_master = array_merge($data_master, $data);
+            }
+        }
+
+        foreach ($data_master as $key => $value) {
+            if ($value['kategori'] == "Makanan") {
+                PemesananDetail::create([
+                    'id_pemesanan' => $request->id_pembelian,
+                    'id_produk' => $value['id'],
+                    'nama' => $value['nama'],
+                    'jumlah' => $value['jumlah'],
+                    'harga' => $value['harga'],
+                    'total' => $value['total'],
+                    'meja' => $value['meja'],
+                    'progress' => "cook"
+                ]);
+            } else {
+                PemesananDetail::create([
+                    'id_pemesanan' => $request->id_pembelian,
+                    'id_produk' => $value['id'],
+                    'nama' => $value['nama'],
+                    'jumlah' => $value['jumlah'],
+                    'harga' => $value['harga'],
+                    'total' => $value['total'],
+                    'meja' => $value['meja'],
+                    'progress' => "barista"
+                ]);
+            }
+        }
+        return redirect()->route('pesan.edit', ['pesan' => $request->id_pembelian]);
     }
 }

@@ -2,8 +2,8 @@
     <div
         class="w-screen h-max bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500 p-2"
     >
-        <Link :href="route('tambahpesan',{id:this.id})">
-            <button class="w-max p-2 bg-blue-400 rounded-xl mb-2">
+        <Link :href="route('tambahpesan', { id: this.id })">
+            <button class="w-max p-2 bg-blue-300 rounded-xl mb-2">
                 Tambah Pesanan
             </button>
         </Link>
@@ -24,8 +24,10 @@
                     </tr>
                 </tbody>
             </table>
-
-            <table class="table w-full mt-3">
+            <table
+                v-if="this.pemberitahuan.length > 0"
+                class="table mt-6 w-full"
+            >
                 <!-- head -->
                 <thead>
                     <tr>
@@ -35,9 +37,9 @@
                 </thead>
                 <tbody>
                     <!-- row 1 -->
-                    <tr v-for="data in datas">
-                        <th>{{ data.nama }}</th>
-                        <td>{{ data.status }}</td>
+                    <tr v-for="(data, index) in pemberitahuan">
+                        <th>{{ data[index].nama }}</th>
+                        <td>{{ data[index].status }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -50,13 +52,18 @@ export default {
         pemesanan: Array,
         id: String,
     },
+    setup() {
+        const pemberitahuan = [];
+        return {
+            pemberitahuan,
+        };
+    },
     data() {
         return {
             datas: this.pemesanan,
         };
     },
     mounted() {
-        console.log(this.id);
         setInterval(
             () =>
                 axios
@@ -64,6 +71,23 @@ export default {
                     .then((response) => {
                         this.datas = [];
                         this.datas = response.data.data;
+                        var data = [];
+                        var validate = 0;
+                        this.datas.forEach((element, index, arr) => {
+                            if (arr[index].status == "habis") {
+                                data.push(arr[index]);
+                                validate++;
+                                axios
+                                    .get(
+                                        route("delete_data", { id: arr[index].id })
+                                    )
+                                    .then((response) => {});
+                            }
+                        });
+                        if (validate > 0) {
+                            this.pemberitahuan.push(data);
+                            console.log(this.pemberitahuan);
+                        }
                     }),
             4000
         );

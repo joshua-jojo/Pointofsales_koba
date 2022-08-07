@@ -20412,6 +20412,12 @@ __webpack_require__.r(__webpack_exports__);
     pemesanan: Array,
     id: String
   },
+  setup: function setup() {
+    var pemberitahuan = [];
+    return {
+      pemberitahuan: pemberitahuan
+    };
+  },
   data: function data() {
     return {
       datas: this.pemesanan
@@ -20420,13 +20426,30 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    console.log(this.id);
     setInterval(function () {
       return axios.get(route("guestupdate", {
         guest: _this.id
       })).then(function (response) {
         _this.datas = [];
         _this.datas = response.data.data;
+        var data = [];
+        var validate = 0;
+
+        _this.datas.forEach(function (element, index, arr) {
+          if (arr[index].status == "habis") {
+            data.push(arr[index]);
+            validate++;
+            axios.get(route("delete_data", {
+              id: arr[index].id
+            })).then(function (response) {});
+          }
+        });
+
+        if (validate > 0) {
+          _this.pemberitahuan.push(data);
+
+          console.log(_this.pemberitahuan);
+        }
       });
     }, 4000);
   }
@@ -20476,6 +20499,7 @@ __webpack_require__.r(__webpack_exports__);
     });
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
       id: [],
+      id_pembelian: null,
       kategori: [],
       nama: [],
       jumlah: [],
@@ -20487,8 +20511,8 @@ __webpack_require__.r(__webpack_exports__);
     });
 
     function submit() {
-      console.log(id_penjualan);
       var total = 0;
+      console.log(this.id_pembelian);
       var jumlah = document.getElementsByName("jumlah");
       var jumlah_array = [];
       var kategori = document.getElementsByName("kategori_produk");
@@ -20574,6 +20598,8 @@ __webpack_require__.r(__webpack_exports__);
         total_value[index].value = a * b;
         harga_array.push(harga[index].value);
       });
+      this.form.id_pembelian = this.id_pembelian;
+      console.log(this.form.id_pembelian);
       this.search.jumlah = total;
       this.search.nama = total;
       this.search.totalharga = total;
@@ -23752,7 +23778,7 @@ var _hoisted_1 = {
 };
 
 var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  "class": "w-max p-2 bg-blue-400 rounded-xl mb-2"
+  "class": "w-max p-2 bg-blue-300 rounded-xl mb-2"
 }, " Tambah Pesanan ", -1
 /* HOISTED */
 );
@@ -23769,7 +23795,8 @@ var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_6 = {
-  "class": "table w-full mt-3"
+  key: 0,
+  "class": "table mt-6 w-full"
 };
 
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Nama"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Status")])], -1
@@ -23800,15 +23827,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     )]);
   }), 256
   /* UNKEYED_FRAGMENT */
-  ))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" head "), _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" row 1 "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.datas, function (data) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.nama), 1
+  ))])]), this.pemberitahuan.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" head "), _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" row 1 "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.pemberitahuan, function (data, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data[index].nama), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.status), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data[index].status), 1
     /* TEXT */
     )]);
   }), 256
   /* UNKEYED_FRAGMENT */
-  ))])])])]);
+  ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }
 
 /***/ }),

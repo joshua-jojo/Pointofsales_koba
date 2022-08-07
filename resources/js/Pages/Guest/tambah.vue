@@ -164,6 +164,7 @@ export default {
         });
         const form = useForm({
             id: [],
+            id_pembelian: null,
             kategori: [],
             nama: [],
             jumlah: [],
@@ -174,8 +175,8 @@ export default {
             meja: 0,
         });
         function submit() {
-            console.log(id_penjualan);
             var total = 0;
+            console.log(this.id_pembelian)
             let jumlah = document.getElementsByName("jumlah");
             let jumlah_array = [];
             let kategori = document.getElementsByName("kategori_produk");
@@ -264,6 +265,8 @@ export default {
                 total_value[index].value = a * b;
                 harga_array.push(harga[index].value);
             });
+            this.form.id_pembelian = this.id_pembelian
+            console.log(this.form.id_pembelian)
             this.search.jumlah = total;
             this.search.nama = total;
             this.search.totalharga = total;
