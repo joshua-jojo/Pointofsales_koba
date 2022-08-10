@@ -10,7 +10,9 @@
         <template v-slot:konten>
             <form
                 class="w-full h-full mb-20"
-                @submit.prevent="form.patch(route('masterproduk.update',{produk:form.id}))"
+                @submit.prevent="
+                    submit
+                "
             >
                 <h3 class="font-bold text-lg mb-1">Nama Produk</h3>
                 <input
@@ -20,6 +22,13 @@
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
                 />
+                <h3 class="font-bold text-lg mb-1">Keterangan</h3>
+                <textarea
+                    class="textarea textarea-info w-full"
+                    required
+                    v-model="form.keterangan"
+                    placeholder="Keterangan"
+                ></textarea>
                 <h3 class="font-bold text-lg mb-1 capitalize">harga</h3>
                 <input
                     type="number"
@@ -37,18 +46,44 @@
                     class="input input-bordered w-full mb-2"
                 />
                 <h3 class="font-bold text-lg mb-1 capitalize">kategori</h3>
-                <select class="select select-bordered w-full mb-2" name="kategori" v-model="form.kategori" required>
+                <select
+                    class="select select-bordered w-full mb-2"
+                    name="kategori"
+                    v-model="form.kategori"
+                    required
+                >
                     <option disabled selected>-Pilih Kategori-</option>
-                    <option v-for="(item, index) in kategori" :key="index" >{{item.nama}}</option>
+                    <option v-for="(item, index) in kategori" :key="index">
+                        {{ item.nama }}
+                    </option>
                 </select>
                 <h3 class="font-bold text-lg mb-1 capitalize">satuan</h3>
-                <select class="select select-bordered w-full" name="satuan" v-model="form.satuan" required>
+                <select
+                    class="select select-bordered w-full"
+                    name="satuan"
+                    v-model="form.satuan"
+                    required
+                >
                     <option disabled selected>-Pilih Satuan-</option>
-                     <option v-for="(item, index) in satuan" :key="index">{{item.nama}}</option>
+                    <option v-for="(item, index) in satuan" :key="index">
+                        {{ item.nama }}
+                    </option>
                 </select>
+                <div class="form-control w-full mt-2">
+                    <label class="input-group w-full">
+                        <input
+                            type="file"
+                            name="gambar"
+                            @input="this.form.gambar = $event.target.files[0]"
+                            placeholder="Input your image"
+                            class="input input-bordered w-full"
+                        />
+                    </label>
+                </div>
                 <div class="modal-action">
                     <button
                         type="submit"
+                        @click="submit"
                         class="btn bg-green-500 text-white hover:bg-green-400 border-0"
                     >
                         Save
@@ -63,6 +98,7 @@
 </template>
 
 <script>
+import { Inertia } from "@inertiajs/inertia";
 import { useForm } from "@inertiajs/inertia-vue3";
 import blankVue from "../../Template/blank.vue";
 
@@ -71,7 +107,7 @@ export default {
         blankVue,
     },
     props: {
-        produk: Array,
+        produk: Object,
         kategori: Array,
         satuan: Array,
     },
@@ -83,9 +119,17 @@ export default {
             stok: null,
             kategori: null,
             id: null,
+            keterangan: null,
+            gambar: null,
         });
+        function submit() {
+            Inertia.post(route('masterproduk.update', { produk: form.id }), {
+                _method: "put",
+                form,
+            });
+        }
 
-        return { form };
+        return { form,submit};
     },
     mounted() {
         this.form.id = this.produk.id;
@@ -94,6 +138,7 @@ export default {
         this.form.satuan = this.produk.satuan;
         this.form.stok = this.produk.stok;
         this.form.kategori = this.produk.kategori;
+        this.form.keterangan = this.produk.keterangan;
     },
 };
 </script>

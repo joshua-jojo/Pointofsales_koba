@@ -21,7 +21,7 @@
                     class="input input-bordered w-full mb-2"
                 />
                 <h3 class="font-bold text-lg mb-1">Keterangan</h3>
-                <textarea class="textarea textarea-info w-full" v-model="form.keterangan" placeholder="Bio"></textarea>
+                <textarea class="textarea textarea-info w-full" required v-model="form.keterangan" placeholder="Keterangan"></textarea>
                 <h3 class="font-bold text-lg mb-1 capitalize">harga</h3>
                 <input
                     type="number"

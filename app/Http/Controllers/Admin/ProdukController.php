@@ -53,6 +53,7 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
+
         try {
             $kategori  = Kategori::where('nama', $request->kategori)->first()->id;
             $satuan  = Satuan::where('nama', $request->satuan)->first()->id;
@@ -67,7 +68,7 @@ class ProdukController extends Controller
             if ($request->hasFile('gambar')) {
                 $ekstensi = $request->file('gambar')->getClientOriginalExtension();
 
-                if ($ekstensi == 'png' or $ekstensi == 'jpg') {
+                if ($ekstensi == 'png' or $ekstensi == 'jpg' or $ekstensi == 'JPG') {
                     $namafile = $request->file('gambar')->getClientOriginalName();
                     $filename = pathinfo($namafile, PATHINFO_FILENAME);
                     $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
@@ -112,6 +113,7 @@ class ProdukController extends Controller
             'stok' => $data->stok,
             'satuan' => $data->satuan->nama,
             'kategori' => $data->kategori->nama,
+            'keterangan' => $data->keterangan,
         );
         return Inertia::render('Master/Produk/edit', ['produk' => $produk, 'kategori' => Kategori::all(), 'satuan' => Satuan::all()]);
     }
@@ -126,15 +128,37 @@ class ProdukController extends Controller
     public function update(Request $request, Produk $produk)
     {
         try {
-            $kategori  = Kategori::where('nama', $request->kategori)->first()->id;
-            $satuan  = Satuan::where('nama', $request->satuan)->first()->id;
-            $produk->update([
-                'nama' => $request->nama,
-                'stok' => $request->stok,
-                'harga' => $request->harga,
-                'id_satuan' => $satuan,
-                'id_kategori' => $kategori,
-            ]);
+            $kategori  = Kategori::where('nama', $request['form']['kategori'])->first()->id;
+            $satuan  = Satuan::where('nama',$request['form']['satuan'])->first()->id;
+            if($request->hasFile('form')){
+                $ekstensi = $request->file('form')['gambar']->getClientOriginalExtension();
+                if ($ekstensi == 'png' or $ekstensi == 'jpg' or $ekstensi == 'JPG') {
+                    $namafile =$request->file('form')['gambar']->getClientOriginalName();
+                    $filename = pathinfo($namafile, PATHINFO_FILENAME);
+                    $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
+                    $filenamesimpandatabase = '/foto_produk/'.$filename . '_' . time() . '.' . $ekstensi;
+                    $path = $request->file('form')['gambar']->storeAs('/public/foto_produk',$filenamesimpan);
+                    $produk->update([
+                        'nama' => $request['form']['nama'],
+                        'stok' => $request['form']['stok'],
+                        'harga' => $request['form']['harga'],
+                        'keterangan' => $request['form']['keterangan'],
+                        'id_satuan' => $satuan,
+                        'id_kategori' => $kategori,
+                        'gambar' => $filenamesimpandatabase,
+                    ]);
+                }
+            }
+            else{
+                $produk->update([
+                    'nama' => $request['form']['nama'],
+                    'stok' => $request['form']['stok'],
+                    'harga' => $request['form']['harga'],
+                    'keterangan' => $request['form']['keterangan'],
+                    'id_satuan' => $satuan,
+                    'id_kategori' => $kategori,
+                ]);
+            }
             return $this->index()->with('success', 'Produk berhasil diubah');
         } catch (\Throwable $th) {
             return $this->index()->with('danger', 'Produk gagal diubah');

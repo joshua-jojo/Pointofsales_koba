@@ -39,13 +39,13 @@ class GuestController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $data = [];
         $data_master = [];
         $totalfinal = $request->totalfinal;
         $namapemesan = $request->namapemesan;
         $meja = $request->meja;
         $nama_meja = meja::find((int) $meja)->nama;
-        // dd($request->totalfinal);
         foreach ($request->id as $key => $value) {
             foreach ($value as $keys => $data) {
                 $a = array(
@@ -55,6 +55,7 @@ class GuestController extends Controller
                     'harga' =>  $request->harga[$key][$keys],
                     'total' =>  $request->total[$key][$keys],
                     'kategori' =>  $request->kategori[$key][$keys],
+                    'keterangan' =>  $request->keterangan[$keys],
                     'meja' =>  $nama_meja,
                 );
                 $data = array($keys => $a);
@@ -77,6 +78,7 @@ class GuestController extends Controller
                     'jumlah' => $value['jumlah'],
                     'harga' => $value['harga'],
                     'total' => $value['total'],
+                    'keterangan' => $value['keterangan'],
                     'meja' => $value['meja'],
                     'progress' => "cook"
                 ]);
@@ -88,6 +90,7 @@ class GuestController extends Controller
                     'jumlah' => $value['jumlah'],
                     'harga' => $value['harga'],
                     'total' => $value['total'],
+                    'keterangan' => $value['keterangan'],
                     'meja' => $value['meja'],
                     'progress' => "barista"
                 ]);

@@ -19,6 +19,7 @@ class CreatePemesananDetailsTable extends Migration
             $table->foreignId('id_produk');
             $table->string('nama');
             $table->string('meja');
+            $table->text('keterangan')->default('-');
             $table->bigInteger('jumlah');
             $table->bigInteger('harga');
             $table->bigInteger('total');

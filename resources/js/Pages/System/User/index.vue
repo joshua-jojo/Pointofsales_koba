@@ -69,7 +69,7 @@
             </div>
         </template>
 
-        <!-- <template v-slot:opsibutton>
+        <template v-slot:opsibutton>
             <div class="flex justify-end">
                 <Link :href="route('systemuser.create')">
                     <div
@@ -79,7 +79,7 @@
                     </div>
                 </Link>
             </div>
-        </template> -->
+        </template>
 
         <template v-slot:konten>
             <div class="form-control mb-2">

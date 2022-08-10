@@ -31,6 +31,7 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Meja</th>
+                                 <th>Keterangan</th>
                                 <th>Status</th>
                                 <th>Rincian</th>
                             </tr>
@@ -44,32 +45,29 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ item.nama }}</td>
                                 <td>{{ item.meja }}</td>
+                                <td>
+                                    <textarea class="textarea textarea-bordered">{{item.keterangan}}</textarea>
+                                </td>
                                 <td>{{ item.status }}</td>
-                                <td class="flex flex-row">
-                                    <button
-                                        @click="antri(item.id)"
-                                        class="rounded-xl ml-2 bg-gray-500 h-11 w-20 text-white hover:bg-gray-400"
-                                    >
-                                        ANTRI
-                                    </button>
-                                    <button
-                                        @click="proses(item.id)"
-                                        class="rounded-xl ml-2 bg-yellow-500 h-11 w-20 text-white hover:bg-yellow-400"
-                                    >
-                                        PROSES
-                                    </button>
-                                    <button
-                                        @click="selesai(item.id)"
-                                        class="rounded-xl ml-2 bg-green-500 h-11 w-20 text-white hover:bg-green-400"
-                                    >
-                                        SELESAI
-                                    </button>
-                                    <button
-                                        @click="habis(item.id)"
-                                        class="rounded-xl ml-2 bg-red-500 h-11 w-24 text-white hover:bg-red-400"
-                                    >
-                                        STOK HABIS
-                                    </button>
+                                <td>
+                                    <div class="flex flex-row">
+                                        <button @click="antri(item.id)"
+                                            class="rounded-xl ml-2 bg-gray-500 h-11 w-20 text-white hover:bg-gray-400">
+                                            ANTRI
+                                        </button>
+                                        <button v-if="item.status == 'antri'" @click="proses(item.id)"
+                                            class="rounded-xl ml-2 bg-yellow-500 h-11 w-20 text-white hover:bg-yellow-400">
+                                            PROSES
+                                        </button>
+                                        <button v-if="item.status == 'diproses'" @click="selesai(item.id)"
+                                            class="rounded-xl ml-2 bg-green-500 h-11 w-20 text-white hover:bg-green-400">
+                                            SELESAI
+                                        </button>
+                                        <button @click="habis(item.id)"
+                                            class="rounded-xl ml-2 bg-red-500 h-11 w-24 text-white hover:bg-red-400">
+                                            STOK HABIS
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
