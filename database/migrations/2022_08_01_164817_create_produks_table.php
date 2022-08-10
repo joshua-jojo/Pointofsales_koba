@@ -18,9 +18,10 @@ class CreateProduksTable extends Migration
             $table->string('nama');
             $table->bigInteger('harga');
             $table->foreignId('id_satuan');
-            $table->bigInteger('stok');
+            $table->bigInteger('stok')->default(0);
+            $table->bigInteger('diskon')->default(0);
             $table->foreignId('id_kategori');
-            $table->foreignId('detail')->default(0);
+            $table->text('keterangan')->nullable();
             $table->string('gambar')->nullable();
             $table->timestamps();
         });

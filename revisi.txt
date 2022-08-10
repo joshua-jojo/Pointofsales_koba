@@ -1,0 +1,7 @@
+textbar menu guest ganti button buat nambah dan hapus item, + keterangan.
+menambah pop up validasi di menu guest untuk validasi makanan. menampilkan view pesanan.
+menu cook sama barista ubah button jadi 3 => antri, (proses, selesai), stok habis. ganti jadi icon.
+menambah button list pesanan di menu guest waktu pesan.
+Ppn => global master + di menu struk.
+tambah kondisi uang pas di menu kasir transaksi.
+tambah fitur user id di setiap peruahan database.

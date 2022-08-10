@@ -19,7 +19,7 @@ class ProdukController extends Controller
     public function index()
     {
         $data = Produk::all();
-        $produk=[];
+        $produk = [];
         foreach ($data as $key => $value) {
             $produk[$key] = array(
                 'id' => $value->id,
@@ -30,7 +30,7 @@ class ProdukController extends Controller
                 'kategori' => $value->kategori->nama,
             );
         }
-        return Inertia::render('Master/Produk/index',['produk' => $produk]);
+        return Inertia::render('Master/Produk/index', ['produk' => $produk]);
     }
 
     /**
@@ -42,7 +42,7 @@ class ProdukController extends Controller
     {
         $satuan = Satuan::all();
         $kategori = Kategori::all();
-        return Inertia::render('Master/Produk/tambah',['satuan' => $satuan,'kategori' => $kategori]);
+        return Inertia::render('Master/Produk/tambah', ['satuan' => $satuan, 'kategori' => $kategori]);
     }
 
     /**
@@ -54,18 +54,33 @@ class ProdukController extends Controller
     public function store(Request $request)
     {
         try {
-            $kategori  = Kategori::where('nama',$request->kategori)->first()->id;
-            $satuan  = Satuan::where('nama',$request->satuan)->first()->id;
-            Produk::create([
+            $kategori  = Kategori::where('nama', $request->kategori)->first()->id;
+            $satuan  = Satuan::where('nama', $request->satuan)->first()->id;
+            $id = Produk::create([
                 'nama' => $request->nama,
                 'stok' => $request->stok,
                 'harga' => $request->harga,
+                'keterangan' => $request->keterangan,
                 'id_satuan' => $satuan,
                 'id_kategori' => $kategori,
-            ]);
-            return $this->index()->with('success','Produk berhasil ditambahkan');
+            ])->id;
+            if ($request->hasFile('gambar')) {
+                $ekstensi = $request->file('gambar')->getClientOriginalExtension();
+
+                if ($ekstensi == 'png' or $ekstensi == 'jpg') {
+                    $namafile = $request->file('gambar')->getClientOriginalName();
+                    $filename = pathinfo($namafile, PATHINFO_FILENAME);
+                    $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
+                    $filenamesimpandatabase = '/foto_produk/'.$filename . '_' . time() . '.' . $ekstensi;
+                    $path = $request->file('gambar')->storeAs('/public/foto_produk',$filenamesimpan);
+                    Produk::find($id)->update([
+                        'gambar' => $filenamesimpandatabase
+                    ]);
+                }
+            }
+            return $this->index()->with('success', 'Produk berhasil ditambahkan');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Produk gagal ditambahkan');
+            return $this->index()->with('danger', 'Produk gagal ditambahkan');
         }
     }
 
@@ -89,16 +104,16 @@ class ProdukController extends Controller
     public function edit(Produk $produk)
     {
         $data = $produk;
-        
-            $produk = array(
-                'id' => $data->id,
-                'nama' => $data->nama,
-                'harga' => $data->harga,
-                'stok' => $data->stok,
-                'satuan' => $data->satuan->nama,
-                'kategori' => $data->kategori->nama,
-            );
-        return Inertia::render('Master/Produk/edit',['produk' => $produk,'kategori' => Kategori::all(),'satuan' => Satuan::all()]);
+
+        $produk = array(
+            'id' => $data->id,
+            'nama' => $data->nama,
+            'harga' => $data->harga,
+            'stok' => $data->stok,
+            'satuan' => $data->satuan->nama,
+            'kategori' => $data->kategori->nama,
+        );
+        return Inertia::render('Master/Produk/edit', ['produk' => $produk, 'kategori' => Kategori::all(), 'satuan' => Satuan::all()]);
     }
 
     /**
@@ -111,8 +126,8 @@ class ProdukController extends Controller
     public function update(Request $request, Produk $produk)
     {
         try {
-            $kategori  = Kategori::where('nama',$request->kategori)->first()->id;
-            $satuan  = Satuan::where('nama',$request->satuan)->first()->id;
+            $kategori  = Kategori::where('nama', $request->kategori)->first()->id;
+            $satuan  = Satuan::where('nama', $request->satuan)->first()->id;
             $produk->update([
                 'nama' => $request->nama,
                 'stok' => $request->stok,
@@ -120,9 +135,9 @@ class ProdukController extends Controller
                 'id_satuan' => $satuan,
                 'id_kategori' => $kategori,
             ]);
-            return $this->index()->with('success','Produk berhasil diubah');
+            return $this->index()->with('success', 'Produk berhasil diubah');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Produk gagal diubah');
+            return $this->index()->with('danger', 'Produk gagal diubah');
         }
     }
 
@@ -136,9 +151,9 @@ class ProdukController extends Controller
     {
         try {
             $produk->delete();
-            return $this->index()->with('warning','Produk berhasil dihapus');
+            return $this->index()->with('warning', 'Produk berhasil dihapus');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Produk gagal dihapus');
+            return $this->index()->with('danger', 'Produk gagal dihapus');
         }
     }
 }

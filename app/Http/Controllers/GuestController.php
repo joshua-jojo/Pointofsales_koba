@@ -114,6 +114,7 @@ class GuestController extends Controller
 
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;
+            $value->gambar = asset('storage'.$value->gambar);
             $data_produk[$key] = $value;
         }
         return Inertia::render('Guest/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja]);

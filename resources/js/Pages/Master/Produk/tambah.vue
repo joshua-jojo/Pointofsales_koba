@@ -20,6 +20,8 @@
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
                 />
+                <h3 class="font-bold text-lg mb-1">Keterangan</h3>
+                <textarea class="textarea textarea-info w-full" v-model="form.keterangan" placeholder="Bio"></textarea>
                 <h3 class="font-bold text-lg mb-1 capitalize">harga</h3>
                 <input
                     type="number"
@@ -37,18 +39,44 @@
                     class="input input-bordered w-full mb-2"
                 />
                 <h3 class="font-bold text-lg mb-1 capitalize">kategori</h3>
-                <select class="select select-bordered w-full mb-2" name="kategori" v-model="form.kategori" required>
+                <select
+                    class="select select-bordered w-full mb-2"
+                    name="kategori"
+                    v-model="form.kategori"
+                    required
+                >
                     <option disabled selected>-Pilih Kategori-</option>
-                    <option v-for="(item, index) in kategori" :key="index" >{{item.nama}}</option>
+                    <option v-for="(item, index) in kategori" :key="index">
+                        {{ item.nama }}
+                    </option>
                 </select>
                 <h3 class="font-bold text-lg mb-1 capitalize">satuan</h3>
-                <select class="select select-bordered w-full" name="satuan" v-model="form.satuan" required>
+                <select
+                    class="select select-bordered w-full"
+                    name="satuan"
+                    v-model="form.satuan"
+                    required
+                >
                     <option disabled selected>-Pilih Satuan-</option>
-                     <option v-for="(item, index) in satuan" :key="index">{{item.nama}}</option>
+                    <option v-for="(item, index) in satuan" :key="index">
+                        {{ item.nama }}
+                    </option>
                 </select>
+                <div class="form-control w-full mt-2">
+                    <label class="input-group w-full">
+                        <input
+                            type="file"
+                            name="gambar"
+                            @input="this.form.gambar = $event.target.files[0]"
+                            placeholder="Input your image"
+                            class="input input-bordered w-full"
+                        />
+                    </label>
+                </div>
                 <div class="modal-action">
                     <button
                         type="submit"
+                        @click="gambar"
                         class="btn bg-green-500 text-white hover:bg-green-400 border-0"
                     >
                         Save
@@ -82,9 +110,16 @@ export default {
             satuan: null,
             stok: null,
             kategori: null,
+            gambar: null,
+            keterangan: null,
         });
 
         return { form };
+    },
+    methods: {
+        gambar() {
+            console.log(this.form.gambar);
+        },
     },
 };
 </script>

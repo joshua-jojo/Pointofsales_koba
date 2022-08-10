@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             BulanSeeder::class,
             KategoriSeeder::class,
             SatuanSeeder::class,
-            ProdukSeeder::class,
+            // ProdukSeeder::class,
             MejaSeeder::class,
             // PemasukkanSeeder::class,
             // PengeluaranSeeder::class,

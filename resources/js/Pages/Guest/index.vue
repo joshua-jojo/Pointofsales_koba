@@ -1,5 +1,47 @@
 <template lang="">
     <div
+        v-if="search.modal.length > 0"
+        class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center"
+    >
+        <div
+            v-for="item in search.modal"
+            class="w-18/20 h-max bg-white p-2 grid grid-rows-1 rounded-xl animate-in zoom-in duration-300"
+        >
+            <div class="border-b-2 h-max p-2 capitalize">{{ item.nama }}</div>
+            <div class="border-b-2 h-max p-2 capitalize">
+                <img
+                    :src="item.gambar"
+                    alt=""
+                    srcset=""
+                />
+            </div>
+            <div class="border-b-2 h-max p-2 capitalize">
+                Harga : {{ item.harga }}
+            </div>
+            <div class="border-b-2 h-max p-2 capitalize text-xs">
+                {{ item.keterangan }}
+            </div>
+            <div class="w-full flex justify-end p-5 item-center">
+                <div class="grid w-max grid-cols-2 gap-1">
+                    <button
+                @click="add(item.id)"
+                    type="button"
+                    class="btn bg-green-400 text-white border-0 hover:bg-green-500 font-semibold"
+                >
+                    ADD
+                </button>
+                <button
+                @click="close()"
+                    type="button"
+                    class="btn bg-gray-600 text-white border-0 hover:bg-gray-700 font-semibold"
+                >
+                    Close
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div
         class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500 p-2"
     >
         <div class="w-full h-full flex flex-col">
@@ -34,17 +76,42 @@
                     >
                         <div
                             v-for="item in filteredItems"
-                            @click="add(item.id)"
-                            class="w-40 h-40 bg-red-200 rounded-xl relative overflow-hidden flex items-end"
+                            class="w-40 h-max flex flex-col bg-red-200 rounded-xl overflow-hidden"
                         >
                             <img
-                                src="https://picsum.photos/200"
-                                class="bg-cover z-0"
+                                v-bind:src="`${item.gambar}`"
+                                class="bg-cover w-full"
                             />
                             <div
-                                class="absolute z-10 flex justify-center items-center h-2/6 w-full bg-white"
+                                class="text-xs grid grid-rows-2 h-max w-full bg-white"
                             >
-                                {{ item.nama }}
+                                <div
+                                    class="h-full w-full flex justify-center items-center"
+                                >
+                                    <div
+                                        class="w-full h-full px-2 break-words text-center"
+                                    >
+                                        {{ item.nama }}
+                                    </div>
+                                </div>
+                                <div
+                                    class="grid grid-cols-2 p-1 gap-1 h-max w-full pb-1"
+                                >
+                                    <button
+                                        @click="add(item.id)"
+                                        type="button"
+                                        class="btn btn-sm bg-green-500 text-white border-0 hover:bg-green-600 font-semibold w-full"
+                                    >
+                                        ADD
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="modal(item.id)"
+                                        class="btn btn-sm bg-blue-500 text-white border-0 hover:bg-blue-600 font-semibold w-full"
+                                    >
+                                        Detail
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -56,14 +123,15 @@
                 >
                     <div class="w-full h-4/20 flex justify-center items-center">
                         <input
-                        required
+                            required
                             type="text"
                             v-model="form.namapemesan"
                             placeholder="Nama Pemesan.."
                             class="mx-2 input input-bordered w-40"
                         />
                         <button
-                        type="submit"
+                            v-if="search.ceksubmit > 0"
+                            type="submit"
                             class="btn bg-blue-600 text-white border-0 hover:bg-blue-700 font-semibold"
                         >
                             Pesan
@@ -73,12 +141,13 @@
                         <div class="h-full w-full overflow-auto scrollbar-hide">
                             <div
                                 :id="'row' + items.id"
-                                class="flex flex-row w-full py-3"
+                                class="flex flex-row justify-center items-center w-full py-3"
                                 v-for="items in this.search.pesanan"
+                                @load="alert('oke')"
                             >
-                                <div class="w-full text-center">
+                                <div class="w-full text-xs text-center">
                                     {{ items.nama }}
-                                     <input
+                                    <input
                                         name="nama"
                                         hidden
                                         :value="items.nama"
@@ -98,8 +167,13 @@
                                 </div>
                                 <div class="w-full text-center">
                                     <input
-                                        class="w-10 text-center"
+                                        class="w-14 h-5 text-center rounded-lg"
                                         name="jumlah"
+                                        type="number"
+                                        :id="'jumlah' + items.id"
+                                        value="0"
+                                        min="1"
+                                        readonly
                                         required
                                         @input="cek(items.id)"
                                     />
@@ -113,23 +187,46 @@
                                     />
                                     {{ items.harga }}
                                 </div>
-                                <div class="w-full text-center">
+                                <div class="w-full px-2 text-center">
                                     <input
-                                        class="w-10 text-center"
+                                        class="w-full h-5 rounded-lg text-center"
                                         readonly
+                                        type="number"
                                         name="total"
+                                        value="0"
+                                        :id="'total' + items.id"
                                     />
                                 </div>
-                                <div class="w-full text-center">
+                                <div
+                                    class="w-full grid grid-cols-2 gap-1 text-center"
+                                >
                                     <button
+                                        @click="tambah(items.id)"
+                                        type="button"
+                                        class="btn btn-sm bg-green-500 text-white border-0 hover:bg-green-600 font-semibold w-full"
+                                    >
+                                        +
+                                    </button>
+                                    <button
+                                        @click="kurang(items.id)"
+                                        type="button"
+                                        class="btn btn-sm bg-yellow-500 text-white border-0 hover:bg-yellow-600 font-semibold w-full"
+                                    >
+                                        -
+                                    </button>
+                                    <button
+                                        type="button"
                                         @click="hapus(items.id)"
-                                        class="btn bg-blue-500 text-white border-0 hover:bg-blue-600 font-semibold"
+                                        class="btn btn-sm col-span-2 bg-blue-500 text-white border-0 hover:bg-blue-600 font-semibold"
                                     >
                                         hapus
                                     </button>
                                 </div>
                             </div>
-                            <div v-if="search.totalharga !=0" class="flex justify-center items-center font-semibold text-lg w-full py-3">
+                            <div
+                                v-if="search.totalharga != 0"
+                                class="flex justify-center items-center font-semibold text-lg w-full py-3"
+                            >
                                 Total Rp. {{ search.totalharga
                                 }}<input
                                     v-model="form.totalfinal"
@@ -156,7 +253,7 @@ export default {
         meja: String,
     },
     mounted() {
-        setInterval(() =>this.form.meja = this.meja, 3000);
+        setInterval(() => (this.form.meja = this.meja), 3000);
     },
     setup() {
         const search = reactive({
@@ -167,6 +264,8 @@ export default {
             jumlah: 0,
             pesanan: [],
             totalharga: 0,
+            ceksubmit: 0,
+            modal: [],
         });
         const form = useForm({
             id: [],
@@ -179,6 +278,7 @@ export default {
             namapemesan: null,
             meja: 0,
         });
+
         function submit() {
             var total = 0;
             let jumlah = document.getElementsByName("jumlah");
@@ -211,7 +311,7 @@ export default {
             this.form.nama.push(nama_array);
             this.form.kategori.push(kategori_array);
             this.form.totalfinal = totalharga.value;
-            console.log(this.form.totalfinal)
+            console.log(this.form.totalfinal);
             Inertia.post(route("pesan.store"), form);
 
             this.form.harga = [];
@@ -235,21 +335,56 @@ export default {
         };
     },
     methods: {
+        tambah(id) {
+            let jumlah = document.getElementById("jumlah" + id);
+            jumlah.value = parseInt(jumlah.value) + 1;
+            this.cek(id);
+        },
+        kurang(id) {
+            let jumlah = document.getElementById("jumlah" + id);
+            let a = parseInt(jumlah.value) - 1;
+            jumlah.value = a;
+            if (a < 1) {
+                jumlah.value = 1;
+            }
+            this.cek(id);
+        },
+        close(){
+            this.search.modal = [];
+        },
+        modal(id) {
+            this.produk.filter((item) => {
+                if (item.id == id) {
+                    if (this.search.pesanan.length < 1) {
+                        this.search.modal.push(item);
+                    }
+                }
+            });
+        },
         add(id) {
             this.search.nama = id;
             return this.produk.filter((item) => {
                 if (item.id == id) {
-                    return (
-                        item.nama
-                            .toLowerCase()
-                            .indexOf(this.search.value.toLowerCase()) > -1,
-                        this.search.pesanan.push(item)
-                    );
+                    if (this.search.pesanan.length < 1) {
+                        this.search.pesanan.push(item);
+                    } else {
+                        var no = 0;
+                        this.search.pesanan.forEach((element) => {
+                            if (element.id == item.id) {
+                                no++;
+                            }
+                        });
+                        if (no < 1) {
+                            this.search.pesanan.push(item);
+                        }
+                    }
                 }
+            this.search.modal = [];
             });
         },
         cek(id) {
             var total = 0;
+            var ceksubmit = 0;
             var totalfinal = 0;
             let jumlah = document.getElementsByName("jumlah");
             let harga = document.getElementsByName("harga");
@@ -259,6 +394,9 @@ export default {
                 var a = jumlah[index].value;
                 var b = harga[index].value;
 
+                if (jumlah[index].value > "0") {
+                    ceksubmit++;
+                }
                 if (jumlah[index].value == "") {
                     a = 0;
                 }
@@ -267,10 +405,15 @@ export default {
                 }
 
                 total = total + a * b;
-                totalfinal = totalfinal + total
+                totalfinal = totalfinal + total;
                 total_value[index].value = a * b;
                 harga_array.push(harga[index].value);
             });
+            if (ceksubmit > 0) {
+                this.search.ceksubmit = 1;
+            } else {
+                this.search.ceksubmit = 0;
+            }
             this.form.totalfinal = totalfinal;
             this.search.jumlah = total;
             this.search.nama = total;
@@ -278,11 +421,17 @@ export default {
         },
         hapus(id) {
             document.getElementById("row" + id).remove();
+            var set = [];
+            this.search.pesanan.filter((data) => {
+                if (data.id != id) {
+                    set.push(data);
+                }
+            });
+            this.search.pesanan = set;
             this.cek(id);
         },
     },
     computed: {
-        getdata(data) {},
         filteredItems() {
             if (this.search.kategori == "All") {
                 return this.produk.filter((item) => {
