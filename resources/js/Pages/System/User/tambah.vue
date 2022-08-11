@@ -58,6 +58,9 @@ export default {
     setup() {
         const form = useForm({
             nama: null,
+            email: null,
+            username: null,
+            role: null,
             status: 0,
         });
 
