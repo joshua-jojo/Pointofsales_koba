@@ -117,7 +117,7 @@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <!-- <th>Opsi</th> -->
+                            <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -126,7 +126,7 @@
                             <td>{{ data.username }}</td>
                             <td>{{ data.email }}</td>
                             <td>{{ data.role }}</td>
-                            <!-- <td class="text-white flex flex-row">
+                            <td class="text-white flex flex-row">
                                 <label
                                     @click="edit(data.id)"
                                     class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg mr-2"
@@ -142,7 +142,7 @@
                                 >
                                     <i class="fa-solid fa-trash pr-2"></i>hapus
                                 </label>
-                            </td> -->
+                            </td>
                         </tr>
                     </tbody>
                 </table>

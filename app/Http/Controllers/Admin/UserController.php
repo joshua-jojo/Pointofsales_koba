@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return Inertia::render('System/User/index',['user' => User::all()]);
+        return Inertia::render('System/User/index', ['user' => User::all()]);
     }
 
     /**
@@ -37,7 +37,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'email' => ['required', 'max:50', 'email', 'unique:users'],
+            'nama' => ['required', 'max:50'],
+            'password' => ['required'],
+            'username' => ['required', 'unique:users'],
+            'role' => ['required'],
+        ]);
+
+
+
+        User::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => $request->role,
+            'username' => $request->username,
+        ]);
+        return $this->index()->with('success', 'User berhasil Ditambahkan');
     }
 
     /**
@@ -57,9 +75,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return Inertia::render('System/User/edit', ['user' => $user]);
     }
 
     /**
@@ -69,9 +87,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        if($request->email == $user->email and $request->username == $user->username and $request->password == null){
+
+        }
+        else{
+            $email = User::where('email',$request->email)->get()->count();
+            $username = User::where('username',$request->username)->get()->count();
+            dd($email,$username);
+        }
     }
 
     /**
@@ -80,8 +105,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return $this->index()->with('warning', 'User berhasil dihapus');
     }
 }

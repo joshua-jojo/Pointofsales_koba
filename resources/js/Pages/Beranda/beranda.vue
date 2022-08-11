@@ -40,10 +40,15 @@ export default {
         areaVue,
         statVue
     },
-    props:['bulan','indexbulan','data_pemasukkan','data_pengeluaran','kategori','produk','transaksi_pemasukkan','transaksi_pengeluaran'],
-    data() {
-        return {
+    setup() {
+        var username = null;
+        return{
+            username
         }
+    },
+    props:['bulan','indexbulan','data_pemasukkan','data_pengeluaran','kategori','produk','transaksi_pemasukkan','transaksi_pengeluaran','user'],
+    mounted() {
+        localStorage.setItem('username', this.user)
     },
 };
 </script>

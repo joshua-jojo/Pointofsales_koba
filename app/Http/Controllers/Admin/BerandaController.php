@@ -9,6 +9,7 @@ use App\Models\Pemasukkan;
 use App\Models\Pengeluaran;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class BerandaController extends Controller
@@ -54,7 +55,8 @@ class BerandaController extends Controller
         $kategori  = count(Kategori::all());
         $transaksi_pemasukan  = count(Pemasukkan::all());
         $transaksi_pengeluaran  = count(Pengeluaran::all());
-        return Inertia::render('Beranda/beranda', ['bulan' => $nama_bulan,'data_pemasukkan' => $data_pemasukkan,'data_pengeluaran' => $data_pengeluaran,'transaksi_pengeluaran' => $transaksi_pengeluaran,'transaksi_pemasukkan' => $transaksi_pemasukan,'kategori'=>$kategori,'produk'=>$produk]);
+        $user = Auth::user()->nama;
+        return Inertia::render('Beranda/beranda', ['bulan' => $nama_bulan,'data_pemasukkan' => $data_pemasukkan,'data_pengeluaran' => $data_pengeluaran,'transaksi_pengeluaran' => $transaksi_pengeluaran,'transaksi_pemasukkan' => $transaksi_pemasukan,'kategori'=>$kategori,'produk'=>$produk,'user' => $user]);
     }
 
     /**

@@ -24,7 +24,7 @@ class LoginController extends Controller
         $barista = new BaristaController;
         if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
-                return $beranda->index();
+                return redirect()->route('beranda.index');
             } else if (Auth::user()->role == 'waitress') {
                 return $waitress->index();
             } else if (Auth::user()->role == 'cook') {
