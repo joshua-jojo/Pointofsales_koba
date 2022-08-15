@@ -37,9 +37,9 @@
                 </thead>
                 <tbody>
                     <!-- row 1 -->
-                    <tr v-for="(data, index) in pemberitahuan">
-                        <th>{{ data[index].nama }}</th>
-                        <td>{{ data[index].status }}</td>
+                    <tr v-for="data in pemberitahuan">
+                        <th>{{ data.nama }}</th>
+                        <td>{{ data.status }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -75,21 +75,33 @@ export default {
                         var validate = 0;
                         this.datas.forEach((element, index, arr) => {
                             if (arr[index].status == "habis") {
-                                data.push(arr[index]);
+                                data.push(element);
                                 validate++;
-                                axios
-                                    .get(
-                                        route("delete_data", { id: arr[index].id })
-                                    )
-                                    .then((response) => {});
+                                // axios
+                                //         .get(
+                                //             route("delete_data", {
+                                //                 id: arr[index].id,
+                                //             })
+                                //         )
+                                //         .then((response) => {});
                             }
                         });
                         if (validate > 0) {
-                            this.pemberitahuan.push(data);
-                            console.log(this.pemberitahuan);
+                            if (this.pemberitahuan.length == 0) {
+                                this.pemberitahuan.push(data);
+                            }
+                            this.pemberitahuan.forEach(
+                                (data_pemberitahuan) => {
+                                    data.forEach((data_terupdate)=>{
+                                        data_pemberitahuan.forEach((data_sekarang)=>{
+                                            console.log(data_sekarang.id == data_terupdate.id);
+                                        })
+                                    })
+                                }
+                            );
                         }
                     }),
-            4000
+            10000
         );
     },
 };

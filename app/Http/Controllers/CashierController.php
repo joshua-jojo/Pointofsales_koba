@@ -56,8 +56,7 @@ class CashierController extends Controller
         $totalfinal = $request->totalfinal;
         $namapemesan = $request->namapemesan;
         $meja = $request->meja;
-
-        $nama_meja = meja::find($meja)->nama;
+        $nama_meja = meja::find((int) $meja)->nama;
         foreach ($request->id as $key => $value) {
             foreach ($value as $keys => $data) {
                 $a = array(
@@ -66,7 +65,8 @@ class CashierController extends Controller
                     'jumlah' =>  $request->jumlah[$key][$keys],
                     'harga' =>  $request->harga[$key][$keys],
                     'total' =>  $request->total[$key][$keys],
-                    'kategori' =>  $request->kategori[$key][$keys],
+                    'kategori' =>  $request->kategori[$key][$keys]['nama'],
+                    'keterangan' =>  $request->keterangan[$keys],
                     'meja' =>  $nama_meja,
                 );
                 $data = array($keys => $a);
@@ -78,7 +78,6 @@ class CashierController extends Controller
             'total' => $totalfinal,
             'meja' => $meja,
         ])->id;
-        $data_kategori = Kategori::all();
 
         foreach ($data_master as $key => $value) {
             if ($value['kategori'] == "Makanan") {
@@ -89,11 +88,11 @@ class CashierController extends Controller
                     'jumlah' => $value['jumlah'],
                     'harga' => $value['harga'],
                     'total' => $value['total'],
+                    'keterangan' => $value['keterangan'],
                     'meja' => $value['meja'],
                     'progress' => "cook"
                 ]);
-            }
-            else{
+            } else {
                 PemesananDetail::create([
                     'id_pemesanan' => $id_pemesanan,
                     'id_produk' => $value['id'],
@@ -101,29 +100,12 @@ class CashierController extends Controller
                     'jumlah' => $value['jumlah'],
                     'harga' => $value['harga'],
                     'total' => $value['total'],
+                    'keterangan' => $value['keterangan'],
                     'meja' => $value['meja'],
                     'progress' => "barista"
                 ]);
             }
         }
-
-
-        // foreach ($id as $key => $value) {
-        //     foreach ($kategori as $keys => $values) {
-        //         if ($kategori[$keys] == "") {
-        //             PemesananDetail::create([
-        //                 'id_pemesanan' => $id_pemesanan,
-        //                 'id_produk' => $id[$key],
-        //                 'nama' => $nama[$key],
-        //                 'jumlah' => $jumlah[$key],
-        //                 'harga' => $harga[$key],
-        //                 'total' => $total[$key],
-        //                 'progress' => $total[$key],
-        //             ]);
-        //         }
-        //     }
-        // }
-
         meja::find($meja)->update([
             'status' => "1"
         ]);

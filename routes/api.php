@@ -83,12 +83,14 @@ Route::get('waitress', function () {
     }
     return json_encode(['data' => $master_data]);
 })->name('apiwaitress');
+
 Route::post('status/{id}/{data}', function ($id, $data) {
     $pemesanan = PemesananDetail::find($id);
     $pemesanan->update([
         'status' => $data
     ]);
 })->name('cookstatus');
+
 Route::post('update/{waitress}', function ($waitress) {
     $data = PemesananDetail::where('id_pemesanan', $waitress)->get();
     foreach ($data as $key => $value) {
@@ -97,6 +99,7 @@ Route::post('update/{waitress}', function ($waitress) {
         ]);
     }
 })->name('waitressupdate');
+
 Route::get('progress/{guest}', function ($guest) {
     $data = PemesananDetail::where('id_pemesanan', $guest)->get();
     return json_encode(['data' => $data]);

@@ -45,7 +45,7 @@
                                         <label tabindex="0"
                                             class="btn m-1 text-white bg-blue-500 hover:bg-blue-500 border-0">Detail</label>
                                         <ul tabindex="0"
-                                            class="dropdown-content menu p-1 border-2 border-blue-700 shadow bg-base-100 rounded-box max-h-48 h-max w-72 overflow-auto scrollbar-hide">
+                                            class="dropdown-content menu p-1 border-2 border-blue-400 shadow bg-base-100 rounded-box max-h-48 h-max w-72 overflow-auto scrollbar-hide">
                                             <li v-for="data in item.pesanan" class="my-1">
                                                 <a class="border-2 border-blue-400">
                                                     <div class="w-full h-full text-left grid grid-cols-4">

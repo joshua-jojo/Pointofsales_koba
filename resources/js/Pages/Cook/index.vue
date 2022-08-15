@@ -151,7 +151,7 @@
                     this.data = [];
                     this.data = response.data.data;
                 }),
-                2000
+                10000
             );
         },
         computed: {
