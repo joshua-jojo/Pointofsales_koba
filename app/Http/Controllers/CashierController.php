@@ -24,6 +24,9 @@ class CashierController extends Controller
         $produk = Produk::all();
         $meja = meja::all();
         $data_produk = [];
+        foreach ($produk as $key => $value) {
+            $produk[$key]->gambar = asset('storage/'.$value->gambar);
+        }
 
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;

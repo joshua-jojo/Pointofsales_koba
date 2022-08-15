@@ -1,28 +1,27 @@
 <template lang="">
-    <!-- <div v-if="search.validasi.length > 0"
-        class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center">
-        <div v-for="(item, index) in search.validasi[0].nama.length" :key="index"
-            class="w-18/20 h-max bg-white p-2 grid grid-rows-1 rounded-xl animate-in zoom-in duration-300">
-            <div class="border-b-2 h-max p-2 capitalize">{{ search.validasi[0].nama[index] }}</div>
-        </div>
-    </div> -->
-    <div v-if="search.validasi.length > 0"
-        class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center">
-        <div
-            class="w-18/20 h-15/20 bg-white p-2 grid grid-rows-1 rounded-xl animate-in zoom-in duration-300 overflow-auto scrollbar-hide">
+    <div v-if="search.validasi.length > 0" class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center">
+        <div class="w-18/20 h-15/20 bg-white p-2 grid grid-rows-1 rounded-xl animate-in zoom-in duration-300 overflow-auto scrollbar-hide">
             <form class="h-full w-full" @submit.prevent="submit">
                 <div class="w-full h-full">
                     <input required type="text" v-model="form.namapemesan" placeholder="Nama Pemesan.."
-                        class="input input-bordered w-full mb-2"/>
-                    <div class="h-max w-full border-2 mb-10" v-for="(item, index) in search.validasi[0].nama.length"
-                        :key="index">
-                        <div class="border-b-2 h-max p-2 capitalize">Nama : {{search.validasi[0].nama[index]}}</div>
-                        <div class="border-b-2 h-max p-2 capitalize">Jumlah: {{search.validasi[0].jumlah[index]}}</div>
-                        <div class="border-b-2 h-max p-2 capitalize">Harga: {{search.validasi[0].harga[index]}}</div>
-                        <div class="border-b-2 h-max p-2 capitalize">Total: {{search.validasi[0].total[index]}}</div>
-                        <div class="border-b-2 h-max p-2 capitalize flex items-center">Keterangan:
+                        class="input input-bordered w-full mb-2" />
+                    <div class="h-max w-full border-2 mb-10" v-for="(item, index) in search.validasi" :key="index">
+                        <div class="border-b-2 h-max p-2 capitalize">
+                            Nama : {{ item.nama }}
+                        </div>
+                        <div class="border-b-2 h-max p-2 capitalize">
+                            Jumlah: {{ item.jumlah }}
+                        </div>
+                        <div class="border-b-2 h-max p-2 capitalize">
+                            Harga: {{ item.harga }}
+                        </div>
+                        <div class="border-b-2 h-max p-2 capitalize">
+                            Total: {{ item.total }}
+                        </div>
+                        <div class="border-b-2 h-max p-2 capitalize flex items-center">
+                            Keterangan:
                             <textarea class="textarea ml-2 w-full textarea-bordered" name="keterangan"
-                                placeholder="Keterangan "></textarea>
+                                :id="'keterangan'+item.id" placeholder="Keterangan ">{{ item.keterangan }}</textarea>
                         </div>
                     </div>
                     <div class="w-full h-max mb-10 flex justify-end items-end p-2">
@@ -119,7 +118,7 @@
                     <div class="w-full h-16/20 bg-blue-300 p-2 overflow-hidden">
                         <div class="h-full w-full overflow-auto scrollbar-hide">
                             <div :id="'row' + items.id" class="flex flex-row justify-center items-center w-full py-3"
-                                v-for="items in this.search.pesanan" @load="alert('oke')">
+                                v-for="items in this.search.pesanan">
                                 <div class="w-full text-xs text-center">
                                     {{ items.nama }}
                                     <input name="nama" hidden :value="items.nama" type="text" />
@@ -127,17 +126,15 @@
                                         name="id" hidden :value="items.id" type="text" />
                                 </div>
                                 <div class="w-full text-center">
-                                    <input class="w-11 h-5 text-center rounded-lg" name="jumlah" type="number"
-                                        :id="'jumlah' + items.id" value="0" min="1" readonly required
-                                        @input="cek(items.id)" />
+                                    x {{ items.jumlah }}
                                 </div>
                                 <div class="w-full text-center">
-                                    <input class="w-10 text-center" name="harga" :value="items.harga" hidden />
-                                    {{ items.harga }}
+                                    <input class="w-10 text-center" name="harga" :id="'harga' + items.id"
+                                        :value="items.harga" hidden />
+                                    Rp. {{ items.harga }}
                                 </div>
                                 <div class="w-full px-2 text-center">
-                                    <input class="w-24 h-5 rounded-lg text-center" readonly type="number" name="total"
-                                        value="0" :id="'total' + items.id" />
+                                    Rp. {{ items.total }}
                                 </div>
                                 <div class="w-full grid grid-cols-2 gap-1 text-center">
                                     <button @click="tambah(items.id)" type="button"
@@ -186,7 +183,7 @@
         mounted() {
             setInterval(() => (this.form.meja = this.meja), 3000);
         },
-        setup() {
+        setup(props) {
             const search = reactive({
                 value: "",
                 kategori: "All",
@@ -211,44 +208,41 @@
                 meja: 0,
                 keterangan: [],
             });
+            const meja = props.meja;
 
             function submit() {
-                var total = 0;
-                let jumlah = document.getElementsByName("jumlah");
-                let jumlah_array = [];
-                let kategori = document.getElementsByName("kategori_produk");
-                let kategori_array = [];
-                let harga = document.getElementsByName("harga");
-                let harga_array = [];
-                let total_value = document.getElementsByName("total");
-                let total_value_array = [];
-                let nama = document.getElementsByName("nama");
-                let nama_array = [];
-                let keterangan = document.getElementsByName("keterangan");
-                let keterangan_array= [];
-                let id = document.getElementsByName("id");
-                let rows = document.getElementsByName("rows");
-                let id_array = [];
-                let totalharga = document.getElementById("totalharga");
+                var harga_array = [];
+                var id_array = [];
+                var jumlah_array = [];
+                var total_value_array = [];
+                var kategori_array = [];
+                var nama_array = [];
+                var harga_array = [];
+                var keterangan_array = [];
+                var totalfinal = 0;
+                this.search.pesanan.forEach((item, index) => {
+                    var keterangan = document.getElementById('keterangan' + item.id).value
 
-                jumlah.forEach(function (item, index, arr) {
-                    harga_array.push(harga[index].value);
-                    id_array.push(id[index].value);
-                    jumlah_array.push(jumlah[index].value);
-                    total_value_array.push(total_value[index].value);
-                    nama_array.push(nama[index].value);
-                    kategori_array.push(kategori[index].value);
-                    keterangan_array.push(keterangan[index].value);
-                });
+                    harga_array.push(item.harga)
+                    id_array.push(item.id)
+                    jumlah_array.push(item.jumlah)
+                    total_value_array.push(item.total)
+                    kategori_array.push(item.kategori)
+                    nama_array.push(item.nama)
+                    keterangan_array.push(keterangan)
+                    totalfinal = totalfinal + item.total
+                })
                 this.form.harga.push(harga_array);
                 this.form.id.push(id_array);
                 this.form.jumlah.push(jumlah_array);
                 this.form.total.push(total_value_array);
                 this.form.nama.push(nama_array);
                 this.form.kategori.push(kategori_array);
-                this.form.totalfinal = totalharga.value;
                 this.form.keterangan = keterangan_array;
+                this.form.meja = this.meja;
+                this.form.totalfinal = totalfinal;
                 Inertia.post(route("pesan.store"), form);
+                console.log(this.form);
 
                 this.form.harga = [];
                 this.form.id = [];
@@ -267,24 +261,35 @@
             }
             return {
                 submit,
+                meja,
                 form,
                 search,
             };
         },
         methods: {
             tambah(id) {
-                let jumlah = document.getElementById("jumlah" + id);
-                jumlah.value = parseInt(jumlah.value) + 1;
-                this.cek(id);
+                this.search.pesanan.forEach((items, index) => {
+                    if (items.id == id) {
+                        items.jumlah++;
+                        items.total = items.jumlah * items.harga;
+                        this.search.pesanan[index] = items;
+                    }
+                });
             },
             kurang(id) {
-                let jumlah = document.getElementById("jumlah" + id);
-                let a = parseInt(jumlah.value) - 1;
-                jumlah.value = a;
-                if (a < 1) {
-                    jumlah.value = 1;
-                }
-                this.cek(id);
+                this.search.pesanan.forEach((items, index) => {
+                    if (items.id == id) {
+                        items.jumlah--;
+                        if (items.jumlah <= 1) {
+                            items.jumlah = 1;
+                            items.total = items.jumlah * items.harga;
+                            this.search.pesanan[index] = items;
+                        } else {
+                            items.total = items.jumlah * items.harga;
+                            this.search.pesanan[index] = items;
+                        }
+                    }
+                });
             },
             close() {
                 this.search.modal = [];
@@ -299,47 +304,19 @@
                 });
             },
             validasi() {
-                var jumlah = document.getElementsByName('jumlah');
-                var data_jumlah = []
-                var nama = document.getElementsByName('nama');
-                var data_nama = []
-                var harga = document.getElementsByName('harga');
-                var data_harga = []
-                var total = document.getElementsByName('total');
-                var data_total = []
-                var id = document.getElementsByName('id');
-                var data_id = []
-                jumlah.forEach(element => {
-                    data_jumlah.push(element.value);
+                this.search.pesanan.forEach((items, index) => {
+                    items["keterangan"] = "-";
+                    this.search.pesanan[index] = items;
                 });
-                nama.forEach(element => {
-                    data_nama.push(element.value);
-                });
-                harga.forEach(element => {
-                    data_harga.push(element.value);
-                });
-                total.forEach(element => {
-                    data_total.push(element.value);
-                });
-                id.forEach(element => {
-                    data_id.push(element.value);
-                });
-                var master = [];
-
-                master['nama'] = data_nama
-                master['id'] = data_id
-                master['jumlah'] = data_jumlah
-                master['harga'] = data_harga
-                master['total'] = data_total
-
-                this.search.validasi.push(master);
-                console.log();
+                this.search.validasi = this.search.pesanan;
             },
             add(id) {
                 this.search.nama = id;
                 return this.produk.filter((item) => {
                     if (item.id == id) {
                         if (this.search.pesanan.length < 1) {
+                            item["jumlah"] = 1;
+                            item["total"] = item.harga;
                             this.search.pesanan.push(item);
                         } else {
                             var no = 0;
@@ -349,61 +326,33 @@
                                 }
                             });
                             if (no < 1) {
+                                item["jumlah"] = 1;
+                                item["total"] = item.harga;
                                 this.search.pesanan.push(item);
                             }
                         }
                     }
-                    this.search.modal = [];
+                    this.cek();
                 });
             },
-            cek(id) {
-                var total = 0;
-                var ceksubmit = 0;
-                var totalfinal = 0;
-                let jumlah = document.getElementsByName("jumlah");
-                let harga = document.getElementsByName("harga");
-                let harga_array = [];
-                let total_value = document.getElementsByName("total");
-                jumlah.forEach(function (item, index, arr) {
-                    var a = jumlah[index].value;
-                    var b = harga[index].value;
-
-                    if (jumlah[index].value == "0") {
-                        ceksubmit++;
-                    }
-                    if (jumlah[index].value == "") {
-                        a = 0;
-                    }
-                    if (harga[index].value == "") {
-                        b = 0;
-                    }
-
-                    total = total + a * b;
-                    totalfinal = totalfinal + total;
-                    total_value[index].value = a * b;
-                    harga_array.push(harga[index].value);
-                });
-                if (ceksubmit < 1) {
-                    this.search.ceksubmit = 1;
-                } else {
-                    this.search.ceksubmit = 0;
-                }
-                this.form.totalfinal = totalfinal;
-                this.search.jumlah = total;
-                this.search.nama = total;
-                this.search.totalharga = total;
+            cek() {
+                this.search.ceksubmit = this.search.pesanan.length;
             },
             hapus(id) {
-                document.getElementById("row" + id).remove();
                 var set = [];
                 this.search.pesanan.filter((data) => {
                     if (data.id != id) {
                         set.push(data);
-                    }
+                    } else {}
                 });
+                // document.getElementById("row" + id).remove();
+                console.log();
                 this.search.pesanan = set;
-                this.cek(id);
+                this.cek();
             },
+        },
+        mounted() {
+
         },
         computed: {
             filteredItems() {

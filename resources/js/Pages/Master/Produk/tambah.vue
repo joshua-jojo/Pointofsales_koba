@@ -76,7 +76,7 @@
                 <div class="modal-action">
                     <button
                         type="submit"
-                        @click="gambar"
+                        :disabled="form.processing"
                         class="btn bg-green-500 text-white hover:bg-green-400 border-0"
                     >
                         Save

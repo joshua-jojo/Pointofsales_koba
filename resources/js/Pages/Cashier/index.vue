@@ -60,7 +60,7 @@
                                 class="bg-black w-40 h-40 flex border-2 items-end rounded-xl overflow-hidden relative"
                             >
                                 <img
-                                    src="https://picsum.photos/200"
+                                    :src="item.gambar"
                                     class="bg-cover absolute z-0"
                                 />
                                 <div
@@ -80,7 +80,7 @@
                                 class="bg-black w-40 h-40 flex border-2 items-end rounded-xl overflow-hidden relative"
                             >
                                 <img
-                                    src="https://picsum.photos/200"
+                                    :src="item.gambar"
                                     class="bg-cover absolute z-0"
                                 />
                                 <div
