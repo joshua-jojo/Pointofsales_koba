@@ -19,9 +19,11 @@
                     type="text"
                     v-model="form.nama"
                     name="nama"
+                    min="2"
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
                 />
+                <div class="capitalize text-red-400" v-if="errors.nama">{{errors.nama}}</div>
                 <h3 class="font-bold text-lg mb-1">Keterangan</h3>
                 <textarea
                     class="textarea textarea-info w-full"
@@ -37,14 +39,14 @@
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
                 />
-                <h3 class="font-bold text-lg mb-1 capitalize">stok</h3>
+                <h3 class="font-bold text-lg mb-1 capitalize">diskon %</h3>
                 <input
                     type="number"
-                    v-model="form.stok"
-                    name="stok"
+                    v-model="form.diskon"
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
                 />
+                <div class="capitalize text-red-400" v-if="errors.diskon">{{errors.diskon}}</div>
                 <h3 class="font-bold text-lg mb-1 capitalize">kategori</h3>
                 <select
                     class="select select-bordered w-full mb-2"
@@ -110,13 +112,15 @@ export default {
         produk: Object,
         kategori: Array,
         satuan: Array,
+        errors: Object,
     },
     setup() {
         const form = useForm({
             nama: null,
             harga: null,
             satuan: null,
-            stok: null,
+            stok: 0,
+            diskon: null,
             kategori: null,
             id: null,
             keterangan: null,
@@ -136,7 +140,7 @@ export default {
         this.form.nama = this.produk.nama;
         this.form.harga = this.produk.harga;
         this.form.satuan = this.produk.satuan;
-        this.form.stok = this.produk.stok;
+        this.form.diskon = this.produk.diskon;
         this.form.kategori = this.produk.kategori;
         this.form.keterangan = this.produk.keterangan;
     },

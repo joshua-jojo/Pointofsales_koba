@@ -31,7 +31,7 @@
                                 <td>{{ item.jumlah }}</td>
                                 <td>{{ item.meja }}</td>
                                 <td>
-                                    <textarea class="textarea textarea-bordered">{{item.keterangan}}</textarea>
+                                    <textarea class="textarea textarea-bordered">{{ item.keterangan }}</textarea>
                                 </td>
                                 <!-- <td>{{ item.keterangan }}</td> -->
                                 <td>{{ item.status }}</td>
@@ -39,19 +39,19 @@
                                     <div class="flex flex-row">
                                         <button @click="antri(item.id)"
                                             class="rounded-xl ml-2 bg-gray-500 h-11 w-20 text-white hover:bg-gray-400">
-                                            ANTRI
+                                            <i class="fa-solid fa-boxes-stacked"></i>
                                         </button>
                                         <button v-if="item.status == 'antri'" @click="proses(item.id)"
                                             class="rounded-xl ml-2 bg-yellow-500 h-11 w-20 text-white hover:bg-yellow-400">
-                                            PROSES
+                                            <i class="fa-solid fa-fire-burner"></i>
                                         </button>
                                         <button v-if="item.status == 'diproses'" @click="selesai(item.id)"
                                             class="rounded-xl ml-2 bg-green-500 h-11 w-20 text-white hover:bg-green-400">
-                                            SELESAI
+                                            <i class="fa-solid fa-people-arrows"></i>
                                         </button>
                                         <button @click="habis(item.id)"
                                             class="rounded-xl ml-2 bg-red-500 h-11 w-24 text-white hover:bg-red-400">
-                                            STOK HABIS
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -113,34 +113,42 @@
         methods: {
             antri(id) {
                 axios
-                    .post(route("cookstatus", {
-                        id: id,
-                        data: "antri"
-                    }))
+                    .post(
+                        route("cookstatus", {
+                            id: id,
+                            data: "antri",
+                        })
+                    )
                     .then((response) => {});
             },
             proses(id) {
                 axios
-                    .post(route("cookstatus", {
-                        id: id,
-                        data: "diproses"
-                    }))
+                    .post(
+                        route("cookstatus", {
+                            id: id,
+                            data: "diproses",
+                        })
+                    )
                     .then((response) => {});
             },
             selesai(id) {
                 axios
-                    .post(route("cookstatus", {
-                        id: id,
-                        data: "selesai"
-                    }))
+                    .post(
+                        route("cookstatus", {
+                            id: id,
+                            data: "selesai",
+                        })
+                    )
                     .then((response) => {});
             },
             habis(id) {
                 axios
-                    .post(route("cookstatus", {
-                        id: id,
-                        data: "habis"
-                    }))
+                    .post(
+                        route("cookstatus", {
+                            id: id,
+                            data: "habis",
+                        })
+                    )
                     .then((response) => {});
             },
         },

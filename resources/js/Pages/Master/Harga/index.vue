@@ -1,15 +1,17 @@
 <template lang="">
     <blankVue>
         <template v-slot:title>
-            <title>Produk | Point Of Sales</title>
+            <title>Kategori | Point Of Sales</title>
         </template>
+
         <template v-slot:breadcrumbs>
             <ul>
                 <li><a>Master</a></li>
-                <li><a>Produk</a></li>
+                <li><a>Harga</a></li>
                 <li></li>
             </ul>
         </template>
+
         <template v-slot:alert>
             <div v-if="success" class="alert alert-success shadow-lg mb-2">
                 <div>
@@ -64,11 +66,12 @@
                     </svg>
                     <span class="capitalize">{{ danger }}</span>
                 </div>
-            </div>  
+            </div>
         </template>
-        <template v-slot:opsibutton>
+
+        <!-- <template v-slot:opsibutton>
             <div class="flex justify-end">
-                <Link :href="route('masterproduk.create')">
+                <Link :href="route('mastermeja.create')">
                     <div
                         class="flex justify-center items-center modal-button w-24 bg-green-500 hover:bg-green-400 capitalize h-8 rounded-lg"
                     >
@@ -76,7 +79,8 @@
                     </div>
                 </Link>
             </div>
-        </template>
+        </template> -->
+
         <template v-slot:konten>
             <div class="form-control mb-2">
                 <div class="input-group">
@@ -110,36 +114,23 @@
                     <thead>
                         <tr>
                             <th>Nama</th>
-                            <th>Harga</th>
-                            <th>Kategori</th>
-                            <!-- <th>Stok</th> -->
-                            <th>Satuan</th>
+                            <th>Value</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- row 1 -->
-                        <tr v-for="(item, index) in filteredItems">
-                            <td>{{ item.nama }}</td>
-                            <td>{{ item.harga }}</td>
-                            <td>{{ item.kategori }}</td>
-                            <!-- <td>{{ item.stok }}</td> -->
-                            <td>{{ item.satuan }}</td>
+                        <tr v-for="(data, index) in harga" :key="index">
+                            <td>{{ data.nama }}</td>
+                            <td>{{data.value}}%</td>
                             <td class="text-white flex flex-row">
                                 <label
-                                    @click="edit(item.id)"
+                                    @click="edit(data.id)"
                                     class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg mr-2"
                                 >
                                     <i
                                         class="fa-solid fa-pen-to-square pr-2"
                                     ></i
                                     >edit
-                                </label>
-                                <label
-                                    @click="hapus(item.id)"
-                                    class="flex justify-center items-center modal-button w-24 bg-red-500 hover:bg-red-400 capitalize h-8 rounded-lg"
-                                >
-                                    <i class="fa-solid fa-trash pr-2"></i>hapus
                                 </label>
                             </td>
                         </tr>
@@ -158,6 +149,12 @@ export default {
     components: {
         blankVue,
     },
+    props: {
+        harga: Array,
+        success: String,
+        warning: String,
+        danger: String,
+    },
     setup() {
         const search = reactive({
             value: "",
@@ -166,37 +163,13 @@ export default {
             search,
         };
     },
-    props: {
-        produk: Array,
-        success: String,
-        warning: String,
-        danger: String,
-    },
     methods: {
         edit(id) {
             Inertia.get(
-                route("masterproduk.edit", {
-                    produk: id,
+                route("masterharga.edit", {
+                    harga: id,
                 })
             );
-        },
-        hapus(id) {
-            Inertia.delete(
-                route("masterproduk.destroy", {
-                    produk: id,
-                })
-            );
-        },
-    },
-    computed: {
-        filteredItems() {
-            return this.produk.filter((item) => {
-                return (
-                    item.nama
-                        .toLowerCase()
-                        .indexOf(this.search.value.toLowerCase()) > -1
-                );
-            });
         },
     },
 };

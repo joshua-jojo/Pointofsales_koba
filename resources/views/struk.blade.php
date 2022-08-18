@@ -65,9 +65,17 @@ dd($pemesanan_detail);
                     @endforeach
                 </tbody>
             </table>
-
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Total :</div>
+                <div class="w-6/12 h-5 ">Rp. {{$total_keseluruhan}}</div>
+            </div>
+
+            <div class="w-full flex flex-row text-right">
+                <div class="w-7/12 h-5 font-bold">PPN :</div>
+                <div class="w-6/12 h-5 ">{{$ppn->value}}%</div>
+            </div>
+            <div class="w-full flex flex-row text-right">
+                <div class="w-7/12 h-5 font-bold">Total Keseluruhan :</div>
                 <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail->pemesanan['total']}}</div>
             </div>
             <div class="w-full flex flex-row text-right">

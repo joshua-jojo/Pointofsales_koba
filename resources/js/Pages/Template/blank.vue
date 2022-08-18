@@ -78,6 +78,11 @@
                                         ><a>Satuan</a></Link
                                     >
                                 </li>
+                                <li class="opacity-70">
+                                    <Link :href="route('masterharga.index')"
+                                        ><a>Harga</a></Link
+                                    >
+                                </li>
                             </ul>
                         </div>
                         <div class="dropdown dropdown-right">

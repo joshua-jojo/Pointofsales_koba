@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BerandaController;
+use App\Http\Controllers\Admin\HargaController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\InventoryTransaksiController;
 use App\Http\Controllers\Admin\KategoriController;
@@ -58,6 +59,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::resource('/satuan', SatuanController::class);
         Route::resource('/produk', ProdukController::class);
         Route::resource('/meja', MejaController::class);
+        Route::resource('/harga', HargaController::class);
     });
     Route::prefix('transaksi')->name('transaksi')->group(function () {
         Route::resource('/pemasukkan', PemasukkanController::class);

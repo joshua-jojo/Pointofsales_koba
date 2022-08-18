@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\meja;
+use App\Models\Harga;
 use App\Models\Pemasukkan;
 use App\Models\Pemesanan;
 use App\Models\PemesananDetail;
@@ -20,6 +20,15 @@ class CashierTransaksiController extends Controller
     public function index()
     {
         $pemesanan_aktif = Pemesanan::where('status', 'aktif')->get();
+        $ppn = Harga::find(1)->value;
+        foreach ($pemesanan_aktif as $key => $value) {
+            $data_pemesanan = PemesananDetail::where('id_pemesanan', $value->id)->get();
+            $total = 0;
+            foreach ($data_pemesanan as $keys => $data) {
+                $total+=$data->total;
+            }
+            $pemesanan_aktif[$key]->total = $total + ($total * $ppn/100);
+        }
         foreach ($pemesanan_aktif as $key => $value) {
             $pemesanan_aktif[$key]->meja = $value->datameja->nama;
         }
@@ -62,10 +71,11 @@ class CashierTransaksiController extends Controller
         foreach ($master_data as $key => $value) {
             $total = $total + $value['total'];
         }
+        $ppn = Harga::find(1)->value;
         $master_data = array('data_pemesanan' => $master_data);
         $master_data['id_pemesanan'] = $id_data;
         $master_data['id'] = $id;
-        $master_data['total'] = $total;
+        $master_data['total'] = $total + ($ppn/100 * $total);
         // dd($master_data);
         return Inertia::render('Cashier/validate', ['pemesanandetail' => $master_data, 'total' => $total]);
     }
@@ -125,7 +135,9 @@ class CashierTransaksiController extends Controller
                 'status' => 'finish'
             ]);
         }
+        $total_keseluruhan = 0;
         foreach ($request['pemesanan']['data_pemesanan'] as $key => $value) {
+            $total_keseluruhan+=$value['total'];
             Pemasukkan::create([
                 'nama' => $value['nama'],
                 'jumlah' => $value['jumlah'],
@@ -133,7 +145,8 @@ class CashierTransaksiController extends Controller
                 'total' => $value['total'],
             ]);
         }
+        $ppn = Harga::where('nama', 'ppn')->first();
         $perusahaan = Setting::find(1)->nama;
-        return view('struk', [ 'pemesanan_detail' => $request, 'perusahaan' => $perusahaan]);
+        return view('struk', [ 'pemesanan_detail' => $request, 'perusahaan' => $perusahaan,'ppn' => $ppn,'total_keseluruhan' => $total_keseluruhan]);
     }
 }

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             // PengeluaranSeeder::class,
             UserSeeder::class,
             SettingSeeder::class,
+            HargaSeeder::class,
         ]);
     }
 }

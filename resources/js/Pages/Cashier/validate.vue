@@ -22,16 +22,17 @@
                         class="w-1/12 rounded-lg pl-4 ml-4 text-md"
                     />
                     <label class="ml-4 mr-2" for="">Total : </label>
-                    {{ total }}
+                    {{ pemesanandetail.total }}
                     <label class="ml-4" for="">Bayar : </label>
                     <input
                         v-model="form.bayar"
-                        @input="kembalian(total)"
+                        @input="kembalian(pemesanandetail.total)"
                         type="number"
                         min="1"
                         id="bayar"
                         class="w-2/12 rounded-lg pl-4 ml-4 text-md"
                     />
+                    <button type="button" class="btn mx-2" @click="uang_pas"> Uang Pas</button>
                     <label class="ml-4 mr-2" for="">Kembalian : </label>
                     <input
                         v-model="form.kembalian"
@@ -73,7 +74,7 @@
                 <div
                     class="w-full rounded-t-2xl flex items-center drop-shadow-md pl-5 h-2/20 justify-end"
                 >
-                        <button v-if="form.kembalian > 0"  @click="submit()"
+                        <button v-if="search.kembalian > 0"  @click="submit()"
                             class="rounded-xl bg-green-500 h-11 w-20 text-white hover:bg-green-400 mr-2"
                         >
                             Accept
@@ -104,6 +105,7 @@ export default {
         var no = 1;
         const search = reactive({
             value: "",
+            kembalian: 0,
         });
         const form = useForm({
             pemesanan: null,
@@ -123,13 +125,19 @@ export default {
             this.form.pemesanan = this.pemesanandetail
             return Inertia.post(route("cetak"), this.form);
         },
+        uang_pas(){
+            this.form.bayar= this.pemesanandetail.total
+            this.kembalian(this.pemesanandetail.total)
+        },
         kembalian(total) {
             var kembalian = 0;
             var bayar = this.form.bayar;
             kembalian = bayar - total;
             if (kembalian >= 0) {
+                this.search.kembalian = 1
                 this.form.kembalian = kembalian;
             } else {
+                this.search.kembalian = 0
                 this.form.kembalian = 0;
             }
         },

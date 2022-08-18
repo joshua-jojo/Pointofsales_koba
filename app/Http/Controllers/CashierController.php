@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Harga;
 use App\Models\Kategori;
 use App\Models\meja;
 use App\Models\Pemesanan;
@@ -23,11 +24,17 @@ class CashierController extends Controller
         $kategori = Kategori::all();
         $produk = Produk::all();
         $meja = meja::all();
+        $master_diskon = Harga::find(2);
         $data_produk = [];
         foreach ($produk as $key => $value) {
             $produk[$key]->gambar = asset('storage/'.$value->gambar);
+            if($value->diskon != 0){
+                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
+            }
+            else{
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
+            }
         }
-
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;
             $data_produk[$key] = $value;
@@ -78,7 +85,6 @@ class CashierController extends Controller
             'total' => $totalfinal,
             'meja' => $meja,
         ])->id;
-
         foreach ($data_master as $key => $value) {
             if ($value['kategori'] == "Makanan") {
                 PemesananDetail::create([

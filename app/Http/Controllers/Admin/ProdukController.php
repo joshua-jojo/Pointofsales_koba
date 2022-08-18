@@ -8,6 +8,7 @@ use App\Models\Produk;
 use App\Models\Satuan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
 
 class ProdukController extends Controller
 {
@@ -54,12 +55,19 @@ class ProdukController extends Controller
     public function store(Request $request)
     {
 
+        $request->validate([
+            'nama' => ['required', 'min:3'],
+            'diskon' => ['min:0', 'max:100', 'required'],
+            'satuan' => ['required'],
+            'kategori' => ['required'],
+        ]);
         try {
             $kategori  = Kategori::where('nama', $request->kategori)->first()->id;
             $satuan  = Satuan::where('nama', $request->satuan)->first()->id;
             $id = Produk::create([
                 'nama' => $request->nama,
-                'stok' => $request->stok,
+                'stok' => 0,
+                'diskon' => $request->diskon,
                 'harga' => $request->harga,
                 'keterangan' => $request->keterangan,
                 'id_satuan' => $satuan,
@@ -72,8 +80,8 @@ class ProdukController extends Controller
                     $namafile = $request->file('gambar')->getClientOriginalName();
                     $filename = pathinfo($namafile, PATHINFO_FILENAME);
                     $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
-                    $filenamesimpandatabase = '/foto_produk/'.$filename . '_' . time() . '.' . $ekstensi;
-                    $path = $request->file('gambar')->storeAs('/public/foto_produk',$filenamesimpan);
+                    $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
+                    $path = $request->file('gambar')->storeAs('/public/foto_produk', $filenamesimpan);
                     Produk::find($id)->update([
                         'gambar' => $filenamesimpandatabase
                     ]);
@@ -104,13 +112,13 @@ class ProdukController extends Controller
      */
     public function edit(Produk $produk)
     {
-        $data = $produk;
 
+        $data = $produk;
         $produk = array(
             'id' => $data->id,
             'nama' => $data->nama,
             'harga' => $data->harga,
-            'stok' => $data->stok,
+            'diskon' => $data->diskon,
             'satuan' => $data->satuan->nama,
             'kategori' => $data->kategori->nama,
             'keterangan' => $data->keterangan,
@@ -127,20 +135,30 @@ class ProdukController extends Controller
      */
     public function update(Request $request, Produk $produk)
     {
+        $request['nama'] = $request->form['nama'];
+        $request['diskon'] = $request->form['diskon'];
+        $request['satuan'] = $request->form['satuan'];
+        $request['kategori'] = $request->form['kategori'];
+
+        $request->validate([
+            'nama' => ['required', 'min:3'],
+            'diskon' => 'required|numeric|min:0|max:100',
+        ]);
         try {
             $kategori  = Kategori::where('nama', $request['form']['kategori'])->first()->id;
-            $satuan  = Satuan::where('nama',$request['form']['satuan'])->first()->id;
-            if($request->hasFile('form')){
+            $satuan  = Satuan::where('nama', $request['form']['satuan'])->first()->id;
+            if ($request->hasFile('form')) {
                 $ekstensi = $request->file('form')['gambar']->getClientOriginalExtension();
                 if ($ekstensi == 'png' or $ekstensi == 'jpg' or $ekstensi == 'JPG') {
-                    $namafile =$request->file('form')['gambar']->getClientOriginalName();
+                    $namafile = $request->file('form')['gambar']->getClientOriginalName();
                     $filename = pathinfo($namafile, PATHINFO_FILENAME);
                     $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
-                    $filenamesimpandatabase = '/foto_produk/'.$filename . '_' . time() . '.' . $ekstensi;
-                    $path = $request->file('form')['gambar']->storeAs('/public/foto_produk',$filenamesimpan);
+                    $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
+                    $path = $request->file('form')['gambar']->storeAs('/public/foto_produk', $filenamesimpan);
                     $produk->update([
                         'nama' => $request['form']['nama'],
-                        'stok' => $request['form']['stok'],
+                        'diskon' => $request['form']['diskon'],
+                        'stok' => 0,
                         'harga' => $request['form']['harga'],
                         'keterangan' => $request['form']['keterangan'],
                         'id_satuan' => $satuan,
@@ -148,11 +166,11 @@ class ProdukController extends Controller
                         'gambar' => $filenamesimpandatabase,
                     ]);
                 }
-            }
-            else{
+            } else {
                 $produk->update([
                     'nama' => $request['form']['nama'],
-                    'stok' => $request['form']['stok'],
+                    'diskon' => $request['form']['diskon'],
+                    'stok' => 0,
                     'harga' => $request['form']['harga'],
                     'keterangan' => $request['form']['keterangan'],
                     'id_satuan' => $satuan,

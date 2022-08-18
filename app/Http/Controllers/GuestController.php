@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Harga;
 use App\Models\Kategori;
 use App\Models\meja;
 use App\Models\Pemesanan;
@@ -112,11 +113,18 @@ class GuestController extends Controller
     {
         $kategori = Kategori::all();
         $produk = Produk::all();
+        $master_diskon = Harga::find(2);
         $meja = $id;
         $data_produk = [];
 
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;
+            if($value->diskon != 0){
+                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
+            }
+            else{
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
+            }
             $value->gambar = asset('storage' . $value->gambar);
             $data_produk[$key] = $value;
         }

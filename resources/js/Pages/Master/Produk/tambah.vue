@@ -17,27 +17,54 @@
                     type="text"
                     v-model="form.nama"
                     name="nama"
+                    required
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
                 />
+                <div class="capitalize text-red-400" v-if="errors.nama">
+                    {{ errors.nama }}
+                </div>
                 <h3 class="font-bold text-lg mb-1">Keterangan</h3>
-                <textarea class="textarea textarea-info w-full" required v-model="form.keterangan" placeholder="Keterangan"></textarea>
+                <textarea
+                    class="textarea textarea-info w-full"
+                    required
+                    v-model="form.keterangan"
+                    placeholder="Keterangan"
+                ></textarea>
+                <div class="capitalize text-red-400" v-if="errors.keterangan">
+                    {{ errors.keterangan }}
+                </div>
                 <h3 class="font-bold text-lg mb-1 capitalize">harga</h3>
                 <input
                     type="number"
                     v-model="form.harga"
                     name="harga"
+                    required
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
                 />
-                <h3 class="font-bold text-lg mb-1 capitalize">stok</h3>
+                 <div class="capitalize text-red-400" v-if="errors.harga">{{ errors.harga }}</div>
+                <h3 class="font-bold text-lg mb-1 capitalize">diskon %</h3>
+                <input
+                    type="number"
+                    v-model="form.diskon"
+                    name="harga"
+                    min="0"
+                    max="100"
+                    placeholder="Type here"
+                    class="input input-bordered w-full mb-2"
+                    required
+                />
+                 <div class="capitalize text-red-400" v-if="errors.diskon">{{ errors.diskon }}</div>
+                <!-- <h3 class="font-bold text-lg mb-1 capitalize">stok</h3>
                 <input
                     type="number"
                     v-model="form.stok"
                     name="stok"
+                    required
                     placeholder="Type here"
                     class="input input-bordered w-full mb-2"
-                />
+                /> -->
                 <h3 class="font-bold text-lg mb-1 capitalize">kategori</h3>
                 <select
                     class="select select-bordered w-full mb-2"
@@ -70,6 +97,7 @@
                             @input="this.form.gambar = $event.target.files[0]"
                             placeholder="Input your image"
                             class="input input-bordered w-full"
+                            required
                         />
                     </label>
                 </div>
@@ -102,6 +130,7 @@ export default {
         produk: Array,
         kategori: Array,
         satuan: Array,
+        errors: Object,
     },
     setup() {
         const form = useForm({
@@ -112,13 +141,14 @@ export default {
             kategori: null,
             gambar: null,
             keterangan: null,
+            diskon: null,
         });
 
         return { form };
     },
     methods: {
         gambar() {
-            console.log(this.form.gambar);
+            // console.log(this.form.gambar);
         },
     },
 };
