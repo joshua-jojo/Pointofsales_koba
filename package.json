@@ -31,14 +31,9 @@
         "apexcharts": "^3.35.4",
         "chart.js": "^3.8.2",
         "daisyui": "^2.20.0",
-        "flowbite": "^1.5.1",
         "tailwind-scrollbar-hide": "^1.1.7",
         "vue": "^3.2.37",
         "vue-apexcharts": "^1.6.2",
-        "vue-chartjs": "^4.1.1",
-        "vue-chartkick": "^1.1.0",
-        "vue-image-crop-upload": "^3.0.3",
-        "vue-weblineindia-image-crop-upload": "^1.0.1",
         "vue3-apexcharts": "^1.4.1",
         "ziggy-js": "^1.4.6"
     }

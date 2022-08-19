@@ -8,6 +8,7 @@ use App\Models\Pemesanan;
 use App\Models\PemesananDetail;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CashierTransaksiController extends Controller
@@ -53,6 +54,7 @@ class CashierTransaksiController extends Controller
      */
     public function store(Request $request)
     {
+       
         $master_data = [];
         $id_data = 0 ;
         $id = [] ;
@@ -129,10 +131,10 @@ class CashierTransaksiController extends Controller
 
     public function cetak(Request $request)
     {
-        // dd($request);
         foreach ($request->pemesanan['id'] as $key => $value) {
             Pemesanan::find($value)->update([
-                'status' => 'finish'
+                'status' => 'finish',
+                'cashier' => Auth::user()->id
             ]);
         }
         $total_keseluruhan = 0;
@@ -145,8 +147,9 @@ class CashierTransaksiController extends Controller
                 'total' => $value['total'],
             ]);
         }
-        $ppn = Harga::where('nama', 'ppn')->first();
+        $ppn = Harga::where('nama', 'ppn')->first()->value;
+        $ppn = $total_keseluruhan * ($ppn/100);
         $perusahaan = Setting::find(1)->nama;
-        return view('struk', [ 'pemesanan_detail' => $request, 'perusahaan' => $perusahaan,'ppn' => $ppn,'total_keseluruhan' => $total_keseluruhan]);
+        return view('struk', [ 'pemesanan_detail' => $request, 'perusahaan' => $perusahaan,'ppn' => (int)$ppn,'total_keseluruhan' => $total_keseluruhan]);
     }
 }

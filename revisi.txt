@@ -4,4 +4,4 @@ menu cook sama barista ubah button jadi 3 => antri, (proses, selesai), stok habi
 menambah button list pesanan di menu guest waktu pesan. => ok
 Ppn => global master + di menu struk. => oke
 tambah kondisi uang pas di menu kasir transaksi. => ok
-tambah fitur user id cashier di setiap perubahan database.
+tambah fitur user id cashier di setiap perubahan database. => ok

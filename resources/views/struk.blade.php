@@ -72,7 +72,7 @@ dd($pemesanan_detail);
 
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">PPN :</div>
-                <div class="w-6/12 h-5 ">{{$ppn->value}}%</div>
+                <div class="w-6/12 h-5 ">Rp. {{$ppn}}</div>
             </div>
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Total Keseluruhan :</div>

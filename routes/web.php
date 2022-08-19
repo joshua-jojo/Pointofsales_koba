@@ -11,12 +11,14 @@ use App\Http\Controllers\Admin\PengeluaranController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\SatuanController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Cashier2Controller;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CashierTransaksiController;
 use App\Http\Controllers\CookController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TransaksiKasirController;
 use App\Http\Controllers\WaitressController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -64,6 +66,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::prefix('transaksi')->name('transaksi')->group(function () {
         Route::resource('/pemasukkan', PemasukkanController::class);
         Route::resource('/pengeluaran', PengeluaranController::class);
+        Route::resource('/kasir', TransaksiKasirController::class);
     });
     Route::prefix('system')->name('system')->group(function () {
         Route::resource('/user', UserController::class);
@@ -85,6 +88,7 @@ Route::resource('waitress', WaitressController::class)->middleware('waitress');
 Route::resource('cook', CookController::class)->middleware('cook');
 Route::resource('barista', CookController::class)->middleware('barista');
 Route::resource('cashier', CashierController::class)->middleware('cashier');
+Route::resource('cashier/takeaway', Cashier2Controller::class)->middleware('cashier');
 Route::resource('cashiertransaksi', CashierTransaksiController::class)->middleware('cashier');
 Route::resource('pesan', GuestController::class);
 

@@ -13,7 +13,7 @@
                             </option>
                         </select>
                         <div class="w-full h-full flex justify-end items-center">
-                            <div class="indicator relative grid grid-cols-1 w-max gap-3">
+                            <div class="indicator relative grid grid-cols-2 w-max gap-3">
                                 <span v-if="transaksi_api"
                                     class="indicator-item animate-in fade-in zoom-in duration-300 border-0 z-20 indicator-middle indicator-start badge bg-red-600 text-white">{{ transaksi_api }}</span>
                                 <Link :href="route('cashiertransaksi.index')">
@@ -21,11 +21,11 @@
                                     Transaksi
                                 </button>
                                 </Link>
-                                <!-- <Link :href="route('cashiertransaksi.index')">
+                                <Link :href="route('cashiertransaksi.index')">
                                 <button class="btn bg-blue-600 border-0 text-white font-semibold hover:bg-blue-700">
                                     Takeaway
                                 </button>
-                                </Link> -->
+                                </Link>
                             </div>
                         </div>
                     </div>

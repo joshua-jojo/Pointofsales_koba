@@ -119,11 +119,11 @@ class GuestController extends Controller
 
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;
-            if($value->diskon != 0){
-                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
+            if($master_diskon->value != 0){
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
             }
             else{
-                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
+                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
             }
             $value->gambar = asset('storage' . $value->gambar);
             $data_produk[$key] = $value;

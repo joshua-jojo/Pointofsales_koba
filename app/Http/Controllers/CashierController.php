@@ -28,11 +28,11 @@ class CashierController extends Controller
         $data_produk = [];
         foreach ($produk as $key => $value) {
             $produk[$key]->gambar = asset('storage/'.$value->gambar);
-            if($value->diskon != 0){
-                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
+            if($master_diskon->value != 0){
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
             }
             else{
-                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
+                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
             }
         }
         foreach ($produk as $key => $value) {

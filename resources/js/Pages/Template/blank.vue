@@ -116,6 +116,14 @@
                                         ><a>Pengeluaran</a></Link
                                     >
                                 </li>
+                                <li class="opacity-70">
+                                    <Link
+                                        :href="
+                                            route('transaksikasir.index')
+                                        "
+                                        ><a>Kasir</a></Link
+                                    >
+                                </li>
                             </ul>
                         </div>
                         <div class="dropdown dropdown-right">

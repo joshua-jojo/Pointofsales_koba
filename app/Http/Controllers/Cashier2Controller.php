@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Harga;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
-class HargaController extends Controller
+class Cashier2Controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +13,7 @@ class HargaController extends Controller
      */
     public function index()
     {
-        $harga = Harga::all();
-        return Inertia::render('Master/Harga/index', ['harga' => $harga]);
+        //
     }
 
     /**
@@ -44,10 +40,10 @@ class HargaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Harga  $harga
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Harga $harga)
+    public function show($id)
     {
         //
     }
@@ -55,37 +51,33 @@ class HargaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Harga  $harga
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Harga $harga)
+    public function edit($id)
     {
-        return Inertia::render('Master/Harga/edit', ['harga' => $harga]);
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Harga  $harga
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Harga $harga)
+    public function update(Request $request, $id)
     {
-        $data = $request->validate([
-            'value' => ['integer', 'min:0', 'max:100']
-        ]);
-        $harga->update($data);
-        return $this->index()->with('success', 'Value berhasil ditetapkan');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Harga  $harga
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Harga $harga)
+    public function destroy($id)
     {
         //
     }
