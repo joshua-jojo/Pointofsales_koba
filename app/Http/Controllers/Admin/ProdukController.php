@@ -156,7 +156,7 @@ class ProdukController extends Controller
                     $filename = pathinfo($namafile, PATHINFO_FILENAME);
                     $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
                     $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
-                    $path = $request->file('form')['gambar']->storeAs('/public/foto_produk', $filenamesimpan);
+                    $path = $request->file('form')['gambar']->move(public_path('foto_produk'), $filenamesimpan);
                     $produk->update([
                         'nama' => $request['form']['nama'],
                         'diskon' => $request['form']['diskon'],
