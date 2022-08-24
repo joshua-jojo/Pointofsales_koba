@@ -113,7 +113,7 @@ class GuestController extends Controller
             else{
                 $value->harga = $value->harga - ($value->harga * $value->diskon/100);
             }
-            $value->gambar = asset('storage' . $value->gambar);
+            $value->gambar = asset( $value->gambar);
             $data_produk[$key] = $value;
         }
         return Inertia::render('Guest/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja]);
@@ -130,7 +130,7 @@ class GuestController extends Controller
         $data = PemesananDetail::where('id_pemesanan', $id)->get();
         foreach ($data as $key => $value) {
             $gambar = Produk::find($value->id_produk)->gambar;
-            $data[$key]->gambar = asset('storage'.$gambar);
+            $data[$key]->gambar = asset($gambar);
         }
         return Inertia::render('Guest/standby', ['pemesanan' => $data, 'id' => $id]);
         dd($data);
@@ -174,7 +174,7 @@ class GuestController extends Controller
             else{
                 $value->harga = $value->harga - ($value->harga * $value->diskon/100);
             }
-            $value->gambar = asset('storage' . $value->gambar);
+            $value->gambar = asset( $value->gambar);
             $data_produk[$key] = $value;
         }
         return Inertia::render('Guest/tambah', ['produk' => $data_produk, 'kategori' => $kategori, 'id_pembelian' => $id]);

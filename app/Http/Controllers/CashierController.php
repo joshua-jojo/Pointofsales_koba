@@ -27,7 +27,7 @@ class CashierController extends Controller
         $master_diskon = Harga::find(2);
         $data_produk = [];
         foreach ($produk as $key => $value) {
-            $produk[$key]->gambar = asset('storage/'.$value->gambar);
+            $produk[$key]->gambar = asset($value->gambar);
             if($master_diskon->value != 0){
                 $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
             }

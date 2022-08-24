@@ -28,7 +28,7 @@ class ProdukController extends Controller
                 'harga' => $value->harga,
                 'stok' => $value->stok,
                 'satuan' => $value->satuan->nama,
-                'gambar' => asset('storage' . $value->gambar),
+                'gambar' => asset($value->gambar),
                 'kategori' => $value->kategori->nama,
             );
         }
@@ -84,7 +84,7 @@ class ProdukController extends Controller
                 $filename = pathinfo($namafile, PATHINFO_FILENAME);
                 $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
                 $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
-                $path = $request->file('gambar')->storeAs('/public/foto_produk', $filenamesimpan);
+                $path = $request->file('gambar')->move(public_path('foto_produk'), $filenamesimpan);
                 Produk::find($id)->update([
                     'gambar' => $filenamesimpandatabase
                 ]);

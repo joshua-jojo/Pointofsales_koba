@@ -127,7 +127,7 @@ Route::get('progress/{guest}', function ($guest) {
     $data = PemesananDetail::where('id_pemesanan', $guest)->get();
     foreach ($data as $key => $value) {
         $gambar = Produk::find($value->id_produk)->gambar;
-        $data[$key]->gambar = asset('storage'.$gambar);
+        $data[$key]->gambar = asset($gambar);
     }
     return json_encode(['data' => $data]);
 })->name('guestupdate');
