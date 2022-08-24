@@ -1,6 +1,6 @@
 <template lang="">
     <div class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500">
-        <div class="flex flex-row w-full h-full animate-in fade-in zoom-in duration-1000">
+        <div class="flex flex-row w-full h-full " data-aos="zoom-in" data-aos-duration="1000">
             <div class="w-13/20 h-full p-3">
                 <div class="w-full h-full rounded-xl flex flex-col overflow-hidden border-2">
                     <div class="w-full h-2/20 bg-blue-400 flex items-center px-4">

@@ -3,7 +3,9 @@
         class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500"
     >
         <div
-            class="w-full h-full flex justify-center items-center animate-in fade-in zoom-in duration-1000"
+            class="w-full h-full flex justify-center items-center"
+            data-aos="zoom-in"
+            data-aos-duration="1000"
         >
             <div class="h-5/6 w-11/12 p-5 bg-white rounded-3xl flex flex-col">
                 <div
@@ -12,38 +14,58 @@
                     Transaksi Detail
                 </div>
                 <div
-                    class="w-full rounded-t-2xl text-xl flex flex-cols items-center drop-shadow-md pl-5 h-2/20"
+                    class="w-max gap-2 rounded-t-2xl text-xl drop-shadow-md pl-5 h-3/20 grid grid-cols-6 mb-1"
                 >
-                    <label for="">Search : </label>
-                    <input
-                        v-model="search.value"
-                        type="text"
-                        id="search_transaksi"
-                        class="w-1/12 rounded-lg pl-4 ml-4 text-md"
-                    />
-                    <label class="ml-4 mr-2" for="">Total : </label>
-                    {{ pemesanandetail.total }}
-                    <label class="ml-4" for="">Bayar : </label>
-                    <input
-                        v-model="form.bayar"
-                        @input="kembalian(pemesanandetail.total)"
-                        type="number"
-                        min="1"
-                        id="bayar"
-                        class="w-2/12 rounded-lg pl-4 ml-4 text-md"
-                    />
-                    <button type="button" class="btn mx-2" @click="uang_pas"> Uang Pas</button>
-                    <label class="ml-4 mr-2" for="">Kembalian : </label>
-                    <input
-                        v-model="form.kembalian"
-                        type="number"
-                        min="1"
-                        id="kembalian"
-                        class="w-2/12 rounded-lg pl-4 ml-4 text-md"
-                    />
+                    <div class="grid grid-cols-1">
+                        <label class="text-md" for="">Search : </label>
+                        <input
+                            v-model="search.value"
+                            type="text"
+                            id="search_transaksi"
+                            class="w-36 rounded-lg px-4 text-md"
+                        />
+                    </div>
+                    <div class="grid grid-cols-1">
+                        <label for="">Total : </label>
+                        Rp. {{ pemesanandetail.total }}
+                    </div>
+                    <div class="grid grid-cols-1">
+                        <label for="">Bayar : </label>
+                        <input
+                            v-model="form.bayar"
+                            @input="kembalian(pemesanandetail.total)"
+                            type="number"
+                            min="1"
+                            id="bayar"
+                            class="w-36 rounded-lg pl-4 text-md"
+                        />
+                    </div>
+                    <div class="grid grid-cols-1 p-2">
+                        <button
+                            type="button"
+                            class="btn h-full"
+                            @click="uang_pas"
+                        >
+                            Uang Pas
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1">
+                        <label class="" for="">Kembalian : </label>
+                        <div>Rp. {{ form.kembalian }}</div>
+                    </div> 
+                    <div class="grid grid-cols-1">
+                        <label class="" for="">Ref : </label>
+                        <input
+                            v-model="form.ref"
+                            type="text"
+                            placeholder="Optional..."
+                            min="1"
+                            class="w-36 rounded-lg pl-4 text-md p-1"
+                        />
+                    </div> 
                 </div>
                 <div
-                    class="w-full h-14/20 overflow-auto scrollbar-default rounded-b-2xl"
+                    class="w-full h-13/20 overflow-auto scrollbar-default rounded-b-2xl"
                 >
                     <table class="table w-full">
                         <thead>
@@ -74,11 +96,13 @@
                 <div
                     class="w-full rounded-t-2xl flex items-center drop-shadow-md pl-5 h-2/20 justify-end"
                 >
-                        <button v-if="search.kembalian > 0"  @click="submit()"
-                            class="rounded-xl bg-green-500 h-11 w-20 text-white hover:bg-green-400 mr-2"
-                        >
-                            Accept
-                        </button>
+                    <button
+                        v-if="search.kembalian > 0"
+                        @click="submit()"
+                        class="rounded-xl bg-green-500 h-11 w-20 text-white hover:bg-green-400 mr-2"
+                    >
+                        Accept
+                    </button>
                     <Link :href="route('cashiertransaksi.index')">
                         <button
                             class="rounded-xl bg-blue-500 h-11 w-20 text-white hover:bg-blue-400"
@@ -110,10 +134,10 @@ export default {
         const form = useForm({
             pemesanan: null,
             bayar: null,
-            kembalian: null,
+            kembalian: 0,
+            ref: null,
         });
-        
-        
+
         return {
             form,
             no,
@@ -122,22 +146,22 @@ export default {
     },
     methods: {
         submit() {
-            this.form.pemesanan = this.pemesanandetail
+            this.form.pemesanan = this.pemesanandetail;
             return Inertia.post(route("cetak"), this.form);
         },
-        uang_pas(){
-            this.form.bayar= this.pemesanandetail.total
-            this.kembalian(this.pemesanandetail.total)
+        uang_pas() {
+            this.form.bayar = this.pemesanandetail.total;
+            this.kembalian(this.pemesanandetail.total);
         },
         kembalian(total) {
             var kembalian = 0;
             var bayar = this.form.bayar;
             kembalian = bayar - total;
             if (kembalian >= 0) {
-                this.search.kembalian = 1
+                this.search.kembalian = 1;
                 this.form.kembalian = kembalian;
             } else {
-                this.search.kembalian = 0
+                this.search.kembalian = 0;
                 this.form.kembalian = 0;
             }
         },

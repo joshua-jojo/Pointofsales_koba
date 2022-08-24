@@ -49,6 +49,7 @@ class GuestController extends Controller
         $nama_meja = meja::find((int) $meja)->nama;
         foreach ($request->id as $key => $value) {
             foreach ($value as $keys => $data) {
+                $taking_order = Kategori::where('nama',$request->kategori[$key][$keys]['nama'])->first();
                 $a = array(
                     'id' =>  $request->id[$key][$keys],
                     'nama' =>  $request->nama[$key][$keys],
@@ -56,6 +57,7 @@ class GuestController extends Controller
                     'harga' =>  $request->harga[$key][$keys],
                     'total' =>  $request->total[$key][$keys],
                     'kategori' =>  $request->kategori[$key][$keys]['nama'],
+                    'taking_order' =>  $taking_order->taking_order,
                     'keterangan' =>  $request->keterangan[$keys],
                     'meja' =>  $nama_meja,
                 );
@@ -71,31 +73,17 @@ class GuestController extends Controller
         $data_kategori = Kategori::all();
 
         foreach ($data_master as $key => $value) {
-            if ($value['kategori'] == "Makanan") {
-                PemesananDetail::create([
-                    'id_pemesanan' => $id_pemesanan,
-                    'id_produk' => $value['id'],
-                    'nama' => $value['nama'],
-                    'jumlah' => $value['jumlah'],
-                    'harga' => $value['harga'],
-                    'total' => $value['total'],
-                    'keterangan' => $value['keterangan'],
-                    'meja' => $value['meja'],
-                    'progress' => "cook"
-                ]);
-            } else {
-                PemesananDetail::create([
-                    'id_pemesanan' => $id_pemesanan,
-                    'id_produk' => $value['id'],
-                    'nama' => $value['nama'],
-                    'jumlah' => $value['jumlah'],
-                    'harga' => $value['harga'],
-                    'total' => $value['total'],
-                    'keterangan' => $value['keterangan'],
-                    'meja' => $value['meja'],
-                    'progress' => "barista"
-                ]);
-            }
+            PemesananDetail::create([
+                'id_pemesanan' => $id_pemesanan,
+                'id_produk' => $value['id'],
+                'nama' => $value['nama'],
+                'jumlah' => $value['jumlah'],
+                'harga' => $value['harga'],
+                'total' => $value['total'],
+                'keterangan' => $value['keterangan'],
+                'meja' => $value['meja'],
+                'progress' => $value['taking_order']
+            ]);
         }
         meja::find($meja)->update([
             'status' => "1"
@@ -140,7 +128,12 @@ class GuestController extends Controller
     public function edit($id)
     {
         $data = PemesananDetail::where('id_pemesanan', $id)->get();
+        foreach ($data as $key => $value) {
+            $gambar = Produk::find($value->id_produk)->gambar;
+            $data[$key]->gambar = asset('storage'.$gambar);
+        }
         return Inertia::render('Guest/standby', ['pemesanan' => $data, 'id' => $id]);
+        dd($data);
     }
 
     /**
@@ -171,9 +164,16 @@ class GuestController extends Controller
         $produk = Produk::all();
         $meja = $id;
         $data_produk = [];
+        $master_diskon = Harga::find(2);
 
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;
+            if($master_diskon->value != 0){
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
+            }
+            else{
+                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
+            }
             $value->gambar = asset('storage' . $value->gambar);
             $data_produk[$key] = $value;
         }
@@ -190,6 +190,7 @@ class GuestController extends Controller
         // dd($request);
         foreach ($request->id as $key => $value) {
             foreach ($value as $keys => $data) {
+                $taking_order = Kategori::where('nama',$request->kategori[$key][$keys]['nama'])->first();
                 $a = array(
                     'id' =>  $request->id[$key][$keys],
                     'nama' =>  $request->nama[$key][$keys],
@@ -197,6 +198,7 @@ class GuestController extends Controller
                     'harga' =>  $request->harga[$key][$keys],
                     'total' =>  $request->total[$key][$keys],
                     'kategori' =>  $request->kategori[$key][$keys]['nama'],
+                    'taking_order' =>  $taking_order->taking_order,
                     'keterangan' =>  $request->keterangan[$keys],
                     'meja' =>  $meja,
                 );
@@ -205,31 +207,17 @@ class GuestController extends Controller
             }
         }
         foreach ($data_master as $key => $value) {
-            if ($value['kategori'] == "Makanan") {
-                PemesananDetail::create([
-                    'id_pemesanan' => $id,
-                    'id_produk' => $value['id'],
-                    'nama' => $value['nama'],
-                    'jumlah' => $value['jumlah'],
-                    'harga' => $value['harga'],
-                    'total' => $value['total'],
-                    'meja' => $value['meja'],
-                    'keterangan' => $value['keterangan'],
-                    'progress' => "cook"
-                ]);
-            } else {
-                PemesananDetail::create([
-                    'id_pemesanan' => $id,
-                    'id_produk' => $value['id'],
-                    'nama' => $value['nama'],
-                    'jumlah' => $value['jumlah'],
-                    'harga' => $value['harga'],
-                    'total' => $value['total'],
-                    'meja' => $value['meja'],
-                    'keterangan' => $value['keterangan'],
-                    'progress' => "barista"
-                ]);
-            }
+            PemesananDetail::create([
+                'id_pemesanan' => $id,
+                'id_produk' => $value['id'],
+                'nama' => $value['nama'],
+                'jumlah' => $value['jumlah'],
+                'harga' => $value['harga'],
+                'total' => $value['total'],
+                'keterangan' => $value['keterangan'],
+                'meja' => $value['meja'],
+                'progress' => $value['taking_order']
+            ]);
         }
         return redirect()->route('pesan.edit', ['pesan' => $id]);
     }

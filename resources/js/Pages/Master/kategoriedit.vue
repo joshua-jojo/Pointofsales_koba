@@ -31,17 +31,17 @@
                 </div>
             </div>
         </template>
-        <template v-slot:opsibutton>
-            <div class="flex justify-end">
-                <label
-                    for="my-modal-6"
-                    class="flex justify-center items-center modal-button w-24 bg-green-500 hover:bg-green-400 capitalize h-8 rounded-lg"
-                    ><i class="fa-solid fa-plus pr-2"></i>tambah</label
-                >
-            </div>
-        </template>
         <template v-slot:konten>
-            <form class="w-full h-full" @submit.prevent="form.put(route('masterkategori.update',{kategori:this.kategori.id}))">
+            <form
+                class="w-full h-full"
+                @submit.prevent="
+                    form.put(
+                        route('masterkategori.update', {
+                            kategori: this.kategori.id,
+                        })
+                    )
+                "
+            >
                 <h3 class="font-bold text-lg mb-1">Nama Kategori</h3>
                 <input
                     type="text"
@@ -49,6 +49,16 @@
                     placeholder="Type here"
                     class="input input-bordered w-full"
                 />
+                <h3 class="font-bold text-lg mb-1 capitalize">Taking Order</h3>
+                <select
+                    class="select select-bordered w-full mb-2"
+                    name="kategori"
+                    v-model="form.taking_order"
+                    required
+                >
+                    <option value="barista">barista</option>
+                    <option value="cook">cook</option>
+                </select>
                 <div class="modal-action">
                     <button
                         type="submit"
@@ -56,7 +66,9 @@
                     >
                         Save
                     </button>
-                   <Link :href="route('masterkategori.index')"> <label for="my-modal-6" class="btn">cancel</label></Link>
+                    <Link :href="route('masterkategori.index')">
+                        <label for="my-modal-6" class="btn">cancel</label></Link
+                    >
                 </div>
             </form>
         </template>
@@ -78,13 +90,15 @@ export default {
     },
     setup() {
         const form = useForm({
-           nama:null,
+            nama: null,
+            taking_order :null,
         });
 
         return { form };
     },
     mounted() {
-        this.form.nama = this.kategori.nama
+        this.form.nama = this.kategori.nama;
+        this.form.taking_order = this.kategori.taking_order;
     },
 };
 </script>

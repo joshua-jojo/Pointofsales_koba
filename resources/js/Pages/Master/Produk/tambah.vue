@@ -100,6 +100,7 @@
                             required
                         />
                     </label>
+                    <div class="capitalize text-red-400" v-if="errors.gambar">{{ errors.gambar }}</div>
                 </div>
                 <div class="modal-action">
                     <button

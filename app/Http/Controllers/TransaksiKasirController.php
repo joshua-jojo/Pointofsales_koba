@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Harga;
 use App\Models\meja;
 use App\Models\Pemasukkan;
 use App\Models\Pemesanan;
@@ -20,6 +21,7 @@ class TransaksiKasirController extends Controller
     public function index()
     {
         $pemesanan = Pemesanan::all();
+        $master_pemesanan = [];
         foreach ($pemesanan as $key => $value) {
             if($value->cashier == null){
                 unset($pemesanan[$key]);
@@ -29,9 +31,11 @@ class TransaksiKasirController extends Controller
                 $value->cashier = User::find($value->cashier)->nama;
                 $data = PemesananDetail::where('id_pemesanan',$value->id)->get();
                 $value['pesanan'] = $data;
+                array_push($master_pemesanan,$value);
             }
         }
-        return Inertia::render('Transaksi/Kasir/index',['pemesanan' => $pemesanan]);
+        // dd($master_pemesanan);
+        return Inertia::render('Transaksi/Kasir/index',['pemesanan' => $master_pemesanan]);
     }
 
     /**

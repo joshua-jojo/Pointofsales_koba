@@ -39,9 +39,9 @@ dd($pemesanan_detail);
 
         <div style='width:350px; font-size:12pt; font-family:calibri;  border-collapse: collapse;' border='0'>
             <b class="mt-2 text-3xl capitalize">{{$perusahaan}}</b>
-            <p class="mt-2"><span style='font-size:12pt'>No. : {{$pemesanan_detail->pemesanan['id_pemesanan']}}, {{
-                    date('Y-m-d') }}, {{ date('h:i:s')
-                    }}</span></p>
+            <p class="mt-2"><span style='font-size:12pt'>No. : {{$pemesanan_detail->id}}/{{
+                    date('Y-m-d') }}/{{ date('h:i:s')
+                    }}/{{$pemesanan_detail->ref}}</span></p>
             <table class="w-full border-b-2 mt-2 border-black">
                 <thead class="border-b-2 border-black">
                     <tr class="w-full text-sm text-center">

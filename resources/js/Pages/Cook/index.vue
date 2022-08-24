@@ -1,6 +1,6 @@
 <template lang="">
     <div class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500">
-        <div class="w-full h-full flex justify-center items-center animate-in fade-in zoom-in duration-1000">
+        <div class="w-full h-full flex justify-center items-center " data-aos="zoom-in" data-aos-duration="1000">
             <div class="h-5/6 w-11/12 p-5 bg-white rounded-3xl flex flex-col">
                 <div class="w-full rounded-t-2xl border-b-2 text-3xl flex items-center drop-shadow-md pl-5 h-2/20">
                     Daftar Pesan Makanan
@@ -24,7 +24,7 @@
                             </tr>
                         </thead>
                         <tbody class="text-center" id="tabel_body">
-                            <tr class="animate-in slide-in-from-left duration-1000"
+                            <tr data-aos="fade-right" data-aos-duration="1000"
                                 v-for="(item, index) in filteredItems" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ item.nama }}</td>

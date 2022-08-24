@@ -4,20 +4,17 @@
     >
         <slot name="title"></slot>
         <div
-            class="flex flex-row w-full p-2 pb-20 h-full animate-in fade-in duration-1000"
+            class="flex flex-row w-full p-2 pb-20 h-full" data-aos="fade-in" data-aos-duration="1000"
         >
             <div
                 class="bg-white w-full h-full rounded-3xl bg-opacity-30 backdrop-blur-md flex flex-row shadow-lg shadow-cyan-600"
             >
-                <div class="h-full w-1/20 flex pl-2 flex-col">
+                <div class="h-full w-1/20 flex pl-2 flex-col z-10">
                     <div class="h-3/20 w-full flex justify-center items-center">
-                        <img
-                            src="https://picsum.photos/170/170"
-                            class="w-2/3 rounded-full shadow-md shadow-cyan-600"
-                        />
                     </div>
                     <div
-                        class="h-14/20 w-full flex items-center flex-col justify-start animate-in fade-in duration-1000"
+                        class="h-14/20 w-full flex items-center flex-col justify-start"
+                        data-aos="fade-in" data-aos-duration="1000"
                     >
                         <div class="dropdown dropdown-right">
                             <label
@@ -192,10 +189,10 @@
                                         tabindex="0"
                                         class="btn w-max m-1 bg-opacity-0 hover:bg-white hover:bg-opacity-40 hover:text-black border-0 text-white flex flex-row"
                                     >
-                                        <img
+                                        <!-- <img
                                             src="https://picsum.photos/170/170"
                                             class="h-2/3 w-max rounded-full shadow-md shadow-cyan-600"
-                                        />
+                                        /> -->
                                         <label class="text-md ml-2">
                                             {{ this.username }}
                                         </label>
@@ -224,7 +221,8 @@
                     </div>
                     <div class="w-full h-2/20 pl-9">
                         <div
-                            class="text-md capitalize font-semibold breadcrumbs text-white drop-shadow-md shadow-cyan-600 animate-in slide-in-from-left duration-700 flex justify-between pr-4"
+                            class="text-md capitalize font-semibold breadcrumbs text-white drop-shadow-md shadow-cyan-600 flex justify-between pr-4"
+                            data-aos="fade-right" data-aos-duration="1000"
                         >
                             <slot name="breadcrumbs"></slot>
                             <div></div>
@@ -233,10 +231,11 @@
                         </div>
                     </div>
                     <div
-                        class="w-full h-full absolute z-10 translate-y-3/20 mt-2 pl-9 pr-4 pt-2"
+                        class="w-full h-full absolute translate-y-3/20 mt-2 pl-9 pr-4 pt-2"
                     >
                         <div
-                            class="w-full h-19/20 bg-white rounded-3xl shadow-cyan-600 animate-in slide-in-from-left duration-1000 zoom-in-0 p-4 overflow-auto mt-2 scrollbar-hide scroll-smooth"
+                            class="w-full h-19/20 bg-white rounded-3xl shadow-cyan-600  p-4 overflow-auto mt-2 scrollbar-hide scroll-smooth"
+                            data-aos="fade-right" data-aos-duration="1000"
                         >
                             <slot name="alert"></slot>
                             <slot name="konten"></slot>

@@ -12,34 +12,47 @@
                 <!-- head -->
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Nama</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- row 1 -->
-                    <tr v-for="data in datas">
+                    <tr v-for="data in datas" :key="data.id">
+                        <th>
+                            <img
+                                :src="data.gambar"
+                                class="w-16 h-16 mask mask-squircle"
+                            />
+                        </th>
                         <th>{{ data.nama }}</th>
-                        <td>{{ data.status }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table
-                v-if="this.pemberitahuan.length > 0"
-                class="table mt-6 w-full"
-            >
-                <!-- head -->
-                <thead>
-                    <tr>
-                        <th>Nama</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- row 1 -->
-                    <tr v-for="data in pemberitahuan">
-                        <th>{{ data.nama }}</th>
-                        <td>{{ data.status }}</td>
+                        <td>
+                            <div
+                                class="badge bg-red-500 border-0 text-white w-20"
+                                v-if="data.status == 'habis'"
+                            >
+                                {{ data.status }}
+                            </div>
+                            <div
+                                class="badge bg-green-500 border-0 text-white w-20"
+                                v-if="data.status == 'selesai'"
+                            >
+                                {{ data.status }}
+                            </div>
+                            <div
+                                class="badge bg-yellow-500 border-0 text-white w-20"
+                                v-if="data.status == 'diproses'"
+                            >
+                                {{ data.status }}
+                            </div>
+                            <div
+                                class="badge bg-gray-500 border-0 text-white w-20"
+                                v-if="data.status == 'antri'"
+                            >
+                                {{ data.status }}
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -71,35 +84,6 @@ export default {
                     .then((response) => {
                         this.datas = [];
                         this.datas = response.data.data;
-                        var data = [];
-                        var validate = 0;
-                        this.datas.forEach((element, index, arr) => {
-                            if (arr[index].status == "habis") {
-                                data.push(element);
-                                validate++;
-                                // axios
-                                //         .get(
-                                //             route("delete_data", {
-                                //                 id: arr[index].id,
-                                //             })
-                                //         )
-                                //         .then((response) => {});
-                            }
-                        });
-                        if (validate > 0) {
-                            if (this.pemberitahuan.length == 0) {
-                                this.pemberitahuan.push(data);
-                            }
-                            this.pemberitahuan.forEach(
-                                (data_pemberitahuan) => {
-                                    data.forEach((data_terupdate)=>{
-                                        data_pemberitahuan.forEach((data_sekarang)=>{
-                                            console.log(data_sekarang.id == data_terupdate.id);
-                                        })
-                                    })
-                                }
-                            );
-                        }
                     }),
             10000
         );

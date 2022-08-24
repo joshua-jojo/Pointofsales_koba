@@ -66,7 +66,7 @@
                 </div>
             </div>
         </template>
-        <template v-slot:opsibutton>
+        <!-- <template v-slot:opsibutton>
             <div class="flex justify-end">
                 <Link :href="route('transaksipemasukkan.create')">
                     <div
@@ -76,37 +76,62 @@
                     </div>
                 </Link>
             </div>
-        </template>
+        </template> -->
         <template v-slot:konten>
             <div class="form-control mb-2">
                 <div class="input-group">
-                    <input
-                        type="text"
-                        v-model="search.value"
-                        placeholder="Search…"
-                        class="input input-bordered"
-                    />
-                    <button class="btn btn-square">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                    <select
+                        v-model="search.searchField"
+                        class="select select-bordered"
+                    >
+                        <option value="">Select</option>
+                        <option
+                            v-for="(item, index) in headers"
+                            :key="index"
+                            :value="item.value"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                        </svg>
-                    </button>
+                            {{ item.text }}
+                        </option>
+                    </select>
+                    <input
+                        v-model="search.searchValue"
+                        type="text"
+                        placeholder="Search..."
+                        class="input input-bordered w-full max-w-xs"
+                    />
                 </div>
             </div>
-            <div class="overflow-x-auto scrollbar-hide">
-                
-            </div>
+            <DataTable
+                :headers="headers"
+                :items="items"
+                :search-field="search.searchField"
+                :search-value="search.searchValue"
+                buttons-pagination
+                show-index
+            >
+                <template #item-total="item">
+                    Rp. {{ item.total }}
+                </template>
+                <template #expand="item">
+                    <ul class="menu bg-gray-100">
+                        <li>
+                            <a
+                                ><div class="grid grid-cols-4 gap-2">
+                                    <div
+                                        v-for="(pesanan, index) in item.pesanan"
+                                        :key="index"
+                                    >
+                                        Nama : "{{ pesanan.nama }}"<br />
+                                        Jumlah: "{{ pesanan.jumlah }}"<br />
+                                        Harga: "{{ pesanan.harga }}" <br />
+                                        Total: "{{ pesanan.total }}"
+                                    </div>
+                                </div></a
+                            >
+                        </li>
+                    </ul>
+                </template>
+            </DataTable>
         </template>
     </blankVue>
 </template>
@@ -116,12 +141,25 @@ import { reactive } from "vue";
 import blankVue from "../../Template/blank.vue";
 
 export default {
+    data() {
+        return {
+            headers: [
+                { text: "ID", value: "id" },
+                { text: "Nama", value: "nama" },
+                { text: "Meja", value: "meja" },
+                { text: "Total", value: "total" },
+                { text: "Cashier", value: "cashier" },
+            ],
+            items: this.pemesanan,
+        };
+    },
     components: {
-        blankVue
+        blankVue,
     },
     setup() {
         const search = reactive({
-            value: "",
+            searchField: "",
+            searchValue: "",
         });
         return {
             search,
@@ -148,6 +186,9 @@ export default {
                 })
             );
         },
+    },
+    mounted() {
+        console.log(this.items);
     },
     computed: {
         filteredItems() {

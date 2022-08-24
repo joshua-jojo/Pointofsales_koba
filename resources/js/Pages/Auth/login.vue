@@ -1,7 +1,8 @@
 <template lang="">
     <div class="h-screen w-screen bg-cyan-600 flex justify-center items-center">
         <div
-            class="hp:h-4/6 hp:w-10/12 tablet:h-4/6 tablet:w-10/12 desktop:h-5/6 desktop:w-9/12 animate-in fade-in zoom-in-50 duration-1000 relative bg-white bg-opacity-95 rounded-3xl shadow-xl overflow-hidden"
+            class="hp:h-4/6 hp:w-10/12 tablet:h-4/6 tablet:w-10/12 desktop:h-5/6 desktop:w-9/12  duration-1000 relative bg-white bg-opacity-95 rounded-3xl shadow-xl overflow-hidden"
+            data-aos="zoom-in" data-aos-duration="1000"
         >
             <div class="absolute z-0 h-full w-full justify-end flex">
                 <div
@@ -113,10 +114,12 @@
                 class="hp:-translate-x-2/4 tablet:-translate-x-1/3 desktop:-translate-x-1/2 h-full w-full"
             >
                 <div
-                    class="animate-in slide-in-from-left-28 duration-2s absolute z-10 bg-cyan-500 shadow-lg shadow-slate-500 h-full w-11/12 rounded-full bg-opacity-70"
+                    class=" absolute z-10 bg-cyan-500 shadow-lg shadow-slate-500 h-full w-11/12 rounded-full bg-opacity-70"
+                    data-aos="fade-right" data-aos-duration="2000"
                 >
                     <div
-                        class="bg-cyan-600 animate-in slide-in-from-left-28 duration-3s shadow-md shadow-slate-600 h-full w-11/12 rounded-full bg-opacity-50"
+                        class="bg-cyan-600 shadow-md shadow-slate-600 h-full w-11/12 rounded-full bg-opacity-50"
+                        data-aos="fade-right" data-aos-duration="2000"
                     ></div>
                 </div>
             </div>

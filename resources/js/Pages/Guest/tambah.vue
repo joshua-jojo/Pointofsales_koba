@@ -1,6 +1,6 @@
 <template lang="">
     <div v-if="search.validasi.length > 0" class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center">
-        <div class="w-18/20 h-15/20 bg-white p-2 grid grid-rows-1 rounded-xl animate-in zoom-in duration-300 overflow-auto scrollbar-hide">
+        <div class="w-18/20 h-15/20 bg-white p-2 grid grid-rows-1 rounded-xl overflow-auto scrollbar-hide" data-aos="zoom-in" data-aos-duration="300">
             <form class="h-full w-full" @submit.prevent="submit">
                 <div class="w-full h-full">
                     <div class="h-max w-full border-2 mb-10" v-for="(item, index) in search.validasi" :key="index">
@@ -41,7 +41,7 @@
     <div v-if="search.modal.length > 0"
         class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center">
         <div v-for="item in search.modal"
-            class="w-18/20 h-max bg-white p-2 grid grid-rows-1 rounded-xl animate-in zoom-in duration-300">
+            class="w-18/20 h-max bg-white p-2 grid grid-rows-1 rounded-xl " data-aos="zoom-in" data-aos-duration="300">
             <div class="border-b-2 h-max p-2 capitalize">{{ item.nama }}</div>
             <div class="border-b-2 h-max w-full p-2 capitalize">
                 <img :src="item.gambar" alt="" srcset="" />

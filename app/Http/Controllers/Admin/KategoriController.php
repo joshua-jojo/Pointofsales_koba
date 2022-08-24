@@ -38,7 +38,8 @@ class KategoriController extends Controller
     {
         try {
             Kategori::create([
-                'nama' => $request->nama
+                'nama' => $request->nama,
+                'taking_order' => $request->taking_order
             ]);
         } catch (\Throwable $th) {
             return $this->index()->with('danger', 'Gagal menambahkan kategori');
@@ -75,10 +76,10 @@ class KategoriController extends Controller
      */
     public function update(Request $request, Kategori $kategori)
     {
-
         try {
             $kategori->update([
-                'nama' => $request->nama
+                'nama' => $request->nama,
+                'taking_order' => $request->taking_order
             ]);
         } catch (\Throwable $th) {
             return $this->index()->with('danger', 'Data telah tersedia. Data harus unik!');

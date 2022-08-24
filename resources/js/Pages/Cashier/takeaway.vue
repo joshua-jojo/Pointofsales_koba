@@ -1,6 +1,6 @@
 <template lang="">
     <div class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500">
-        <div class="flex flex-row w-full h-full animate-in fade-in zoom-in duration-1000">
+        <div class="flex flex-row w-full h-full " data-aos="zoom-in" data-aos-duration="1000">
             <div class="w-13/20 h-full p-3">
                 <div class="w-full h-full rounded-xl flex flex-col overflow-hidden border-2">
                     <div class="w-full h-2/20 bg-blue-400 flex items-center px-4">
@@ -15,7 +15,7 @@
                         <div class="w-full h-full flex justify-end items-center">
                             <div class="indicator relative grid grid-cols-2 w-max gap-3">
                                 <span v-if="transaksi_api"
-                                    class="indicator-item animate-in fade-in zoom-in duration-300 border-0 z-20 indicator-middle indicator-start badge bg-red-600 text-white">{{ transaksi_api }}</span>
+                                    class="indicator-item  border-0 z-20 indicator-middle indicator-start badge bg-red-600 text-white" data-aos="zoom-in" data-aos-duration="300">{{ transaksi_api }}</span>
                                 <Link :href="route('cashiertransaksi.index')">
                                 <button class="btn bg-blue-600 border-0 text-white font-semibold hover:bg-blue-700">
                                     Transaksi

@@ -28,6 +28,7 @@ class ProdukController extends Controller
                 'harga' => $value->harga,
                 'stok' => $value->stok,
                 'satuan' => $value->satuan->nama,
+                'gambar' => asset('storage' . $value->gambar),
                 'kategori' => $value->kategori->nama,
             );
         }
@@ -60,32 +61,33 @@ class ProdukController extends Controller
             'diskon' => ['min:0', 'max:100', 'required'],
             'satuan' => ['required'],
             'kategori' => ['required'],
+            'gambar' => ['mimes:jpg,png'],
         ]);
+
+
+
         try {
-            $kategori  = Kategori::where('nama', $request->kategori)->first()->id;
-            $satuan  = Satuan::where('nama', $request->satuan)->first()->id;
-            $id = Produk::create([
-                'nama' => $request->nama,
-                'stok' => 0,
-                'diskon' => $request->diskon,
-                'harga' => $request->harga,
-                'keterangan' => $request->keterangan,
-                'id_satuan' => $satuan,
-                'id_kategori' => $kategori,
-            ])->id;
             if ($request->hasFile('gambar')) {
                 $ekstensi = $request->file('gambar')->getClientOriginalExtension();
-
-                if ($ekstensi == 'png' or $ekstensi == 'jpg' or $ekstensi == 'JPG') {
-                    $namafile = $request->file('gambar')->getClientOriginalName();
-                    $filename = pathinfo($namafile, PATHINFO_FILENAME);
-                    $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
-                    $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
-                    $path = $request->file('gambar')->storeAs('/public/foto_produk', $filenamesimpan);
-                    Produk::find($id)->update([
-                        'gambar' => $filenamesimpandatabase
-                    ]);
-                }
+                $kategori  = Kategori::where('nama', $request->kategori)->first()->id;
+                $satuan  = Satuan::where('nama', $request->satuan)->first()->id;
+                $id = Produk::create([
+                    'nama' => $request->nama,
+                    'stok' => 0,
+                    'diskon' => $request->diskon,
+                    'harga' => $request->harga,
+                    'keterangan' => $request->keterangan,
+                    'id_satuan' => $satuan,
+                    'id_kategori' => $kategori,
+                ])->id;
+                $namafile = $request->file('gambar')->getClientOriginalName();
+                $filename = pathinfo($namafile, PATHINFO_FILENAME);
+                $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
+                $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
+                $path = $request->file('gambar')->storeAs('/public/foto_produk', $filenamesimpan);
+                Produk::find($id)->update([
+                    'gambar' => $filenamesimpandatabase
+                ]);
             }
             return $this->index()->with('success', 'Produk berhasil ditambahkan');
         } catch (\Throwable $th) {

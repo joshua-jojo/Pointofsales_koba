@@ -21,6 +21,7 @@ class CreatePemesanansTable extends Migration
             $table->bigInteger('bayar')->default(0);
             $table->bigInteger('kembalian')->default(0);
             $table->foreignId('cashier')->nullable();
+            $table->text('referensi')->default('-');
             $table->enum('status',['aktif','finish'])->default('aktif');
             $table->enum('waitress',['aktif','finish'])->default('aktif');
             $table->timestamps();

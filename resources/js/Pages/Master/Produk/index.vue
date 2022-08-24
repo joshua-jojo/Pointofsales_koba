@@ -64,7 +64,7 @@
                     </svg>
                     <span class="capitalize">{{ danger }}</span>
                 </div>
-            </div>  
+            </div>
         </template>
         <template v-slot:opsibutton>
             <div class="flex justify-end">
@@ -109,6 +109,7 @@
                     <!-- head -->
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Nama</th>
                             <th>Harga</th>
                             <th>Kategori</th>
@@ -120,27 +121,39 @@
                     <tbody>
                         <!-- row 1 -->
                         <tr v-for="(item, index) in filteredItems">
+                            <td class="flex justify-center">
+                                <div class="avatar">
+                                    <div class="mask mask-squircle w-20 h-20">
+                                        <img
+                                            :src="item.gambar"
+                                            alt="Avatar Tailwind CSS Component"
+                                        />
+                                    </div>
+                                </div>
+                            </td>
                             <td>{{ item.nama }}</td>
                             <td>{{ item.harga }}</td>
                             <td>{{ item.kategori }}</td>
-                            <!-- <td>{{ item.stok }}</td> -->
                             <td>{{ item.satuan }}</td>
-                            <td class="text-white flex flex-row">
-                                <label
-                                    @click="edit(item.id)"
-                                    class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg mr-2"
-                                >
-                                    <i
-                                        class="fa-solid fa-pen-to-square pr-2"
-                                    ></i
-                                    >edit
-                                </label>
-                                <label
-                                    @click="hapus(item.id)"
-                                    class="flex justify-center items-center modal-button w-24 bg-red-500 hover:bg-red-400 capitalize h-8 rounded-lg"
-                                >
-                                    <i class="fa-solid fa-trash pr-2"></i>hapus
-                                </label>
+                            <td class="text-white ">
+                                <div class="grid grid-cols-2 gap-1 w-max">
+                                    <label
+                                        @click="edit(item.id)"
+                                        class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg"
+                                    >
+                                        <i
+                                            class="fa-solid fa-pen-to-square pr-2"
+                                        ></i
+                                        >edit
+                                    </label>
+                                    <label
+                                        @click="hapus(item.id)"
+                                        class="flex justify-center items-center modal-button w-24 bg-red-500 hover:bg-red-400 capitalize h-8 rounded-lg"
+                                    >
+                                        <i class="fa-solid fa-trash pr-2"></i
+                                        >hapus
+                                    </label>
+                                </div>
                             </td>
                         </tr>
                     </tbody>

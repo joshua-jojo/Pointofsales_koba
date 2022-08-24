@@ -3,7 +3,7 @@
         class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500"
     >
         <div
-            class="w-full h-full flex justify-center items-center animate-in fade-in zoom-in duration-1000"
+            class="w-full h-full flex justify-center items-center" data-aos="zoom-in" data-aos-duration="1000"
         >
             <div class="h-5/6 w-11/12 p-5 bg-white rounded-3xl flex flex-col">
                 <div

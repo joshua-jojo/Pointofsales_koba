@@ -1,6 +1,6 @@
 <template lang="">
     <div
-        class="flex items-center w-full h-full font-semibold text-3xl ml-8 text-white drop-shadow-lg animate-in fade-in duration-1000"
+        class="flex items-center w-full h-full font-semibold text-3xl ml-8 text-white drop-shadow-lg" data-aos="fade-in" data-aos-duration="300"
     >
         {{ title.nama }}
     </div>

@@ -3,6 +3,7 @@
 use App\Models\meja;
 use App\Models\Pemesanan;
 use App\Models\PemesananDetail;
+use App\Models\Produk;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,8 +26,30 @@ Route::get('settings', function () {
     return json_encode(Setting::all());
 })->name('apisettings');
 Route::get('pemesanan', function () {
-    $data = Pemesanan::where('status', 'aktif')->get();
-    $data = count($data);
+    $pemesanan_aktif = Pemesanan::where('status', 'aktif')->get();
+        $master_data = [];
+        foreach ($pemesanan_aktif as $key => $value) {
+            $data_pemesanan = PemesananDetail::where('id_pemesanan', $value->id)->get();
+            $total = 0;
+
+            foreach ($data_pemesanan as $keys => $data) {
+                if ($data->status == 'habis') {
+                    unset($data);
+                } else {
+                    $total += $data->total;
+                }
+            }
+            $pemesanan_aktif[$key]->total = $total;
+        }
+        foreach ($pemesanan_aktif as $key => $value) {
+            if ($value->total == 0) {
+                unset($pemesanan_aktif[$key]);
+            } else {
+                array_push($master_data,$value);
+                $pemesanan_aktif[$key]->meja = $value->datameja->nama;
+            }
+        }
+    $data = count($pemesanan_aktif); 
     return json_encode(['data' => $data]);
 })->name('apipemesanan');
 Route::get('cook', function () {
@@ -102,6 +125,10 @@ Route::post('update/{waitress}', function ($waitress) {
 
 Route::get('progress/{guest}', function ($guest) {
     $data = PemesananDetail::where('id_pemesanan', $guest)->get();
+    foreach ($data as $key => $value) {
+        $gambar = Produk::find($value->id_produk)->gambar;
+        $data[$key]->gambar = asset('storage'.$gambar);
+    }
     return json_encode(['data' => $data]);
 })->name('guestupdate');
 
