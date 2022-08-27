@@ -36,7 +36,7 @@ class ProdukController extends Controller
                 'kategori' => $value->kategori->nama,
             );
         }
-        return Inertia::render('Master/Produk/index', ['produk' => $produk, 'kategori' => $kategori, 'satuan' => $satuan]);
+        return Inertia::render('Master/produk', ['produk' => $produk, 'kategori' => $kategori, 'satuan' => $satuan]);
     }
 
     /**
@@ -45,11 +45,7 @@ class ProdukController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $satuan = Satuan::all();
-        $kategori = Kategori::all();
-        return Inertia::render('Master/Produk/tambah', ['satuan' => $satuan, 'kategori' => $kategori]);
-    }
+    { }
 
     /**
      * Store a newly created resource in storage.
@@ -91,9 +87,9 @@ class ProdukController extends Controller
                     'gambar' => $filenamesimpandatabase
                 ]);
             }
-            return $this->index()->with('success', 'Produk berhasil ditambahkan');
+            return $this->respon('success', 'Produk berhasil ditambahkan');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger', 'Produk gagal ditambahkan');
+            return $this->respon('danger', 'Produk gagal ditambahkan');
         }
     }
 
@@ -115,20 +111,7 @@ class ProdukController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Produk $produk)
-    {
-
-        $data = $produk;
-        $produk = array(
-            'id' => $data->id,
-            'nama' => $data->nama,
-            'harga' => $data->harga,
-            'diskon' => $data->diskon,
-            'satuan' => $data->satuan->nama,
-            'kategori' => $data->kategori->nama,
-            'keterangan' => $data->keterangan,
-        );
-        return Inertia::render('Master/Produk/edit', ['produk' => $produk, 'kategori' => Kategori::all(), 'satuan' => Satuan::all()]);
-    }
+    { }
 
     /**
      * Update the specified resource in storage.
@@ -139,52 +122,51 @@ class ProdukController extends Controller
      */
     public function update(Request $request, Produk $produk)
     {
-        $request['nama'] = $request->formedit['nama'];
-        $request['diskon'] = $request->formedit['diskon'];
-        $request['harga'] = $request->formedit['harga'];
-        $request['satuan'] = $request->formedit['satuan'];
-        $request['kategori'] = $request->formedit['kategori'];
+        $request['nama'] = $request->data['nama'];
+        $request['diskon'] = $request->data['diskon'];
+        $request['harga'] = $request->data['harga'];
+        $request['satuan'] = $request->data['satuan'];
+        $request['kategori'] = $request->data['kategori'];
         $request->validate([
             'nama' => ['required', 'min:3'],
             'diskon' => ['min:0', 'max:100', 'required', 'numeric'],
             'harga' => ['min:0', 'required', 'numeric'],
             'satuan' => ['required'],
-            'kategori' => ['required'],
         ]);
         try {
             $kategori  = Kategori::where('nama', $request['kategori'])->first()->id;
             $satuan  = Satuan::where('nama', $request['satuan'])->first()->id;
-            if ($request->hasFile('formedit')) {
-                $ekstensi = $request->file('formedit')['gambar']->getClientOriginalExtension();
-                $namafile = $request->file('formedit')['gambar']->getClientOriginalName();
+            if ($request->hasFile('data')) {
+                $ekstensi = $request->file('data')['gambar']->getClientOriginalExtension();
+                $namafile = $request->file('data')['gambar']->getClientOriginalName();
                 $filename = pathinfo($namafile, PATHINFO_FILENAME);
                 $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
                 $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
-                $path = $request->file('formedit')['gambar']->move(public_path('foto_produk'), $filenamesimpan);
+                $path = $request->file('data')['gambar']->move(public_path('foto_produk'), $filenamesimpan);
                 $produk->update([
-                    'nama' => $request['formedit']['nama'],
-                    'diskon' => $request['formedit']['diskon'],
+                    'nama' => $request['data']['nama'],
+                    'diskon' => $request['data']['diskon'],
                     'stok' => 0,
-                    'harga' => $request['formedit']['harga'],
-                    'keterangan' => $request['formedit']['keterangan'],
+                    'harga' => $request['data']['harga'],
+                    'keterangan' => $request['data']['keterangan'],
                     'id_satuan' => $satuan,
                     'id_kategori' => $kategori,
                     'gambar' => $filenamesimpandatabase,
                 ]);
             } else {
                 $produk->update([
-                    'nama' => $request['formedit']['nama'],
-                    'diskon' => $request['formedit']['diskon'],
+                    'nama' => $request['data']['nama'],
+                    'diskon' => $request['data']['diskon'],
                     'stok' => 0,
-                    'harga' => $request['formedit']['harga'],
-                    'keterangan' => $request['formedit']['keterangan'],
+                    'harga' => $request['data']['harga'],
+                    'keterangan' => $request['data']['keterangan'],
                     'id_satuan' => $satuan,
                     'id_kategori' => $kategori,
                 ]);
             }
-            return $this->index()->with('success', 'Produk berhasil diubah');
+            return $this->respon('success', 'Produk berhasil diubah');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger', 'Produk gagal diubah');
+            return $this->respon('danger', 'Produk gagal diubah');
         }
     }
 
@@ -198,9 +180,16 @@ class ProdukController extends Controller
     {
         try {
             $produk->delete();
-            return $this->index()->with('warning', 'Produk berhasil dihapus');
+            return $this->respon('warning', 'Produk berhasil dihapus');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger', 'Produk gagal dihapus');
+            return $this->respon('danger', 'Produk gagal dihapus');
         }
+    }
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('masterproduk.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }

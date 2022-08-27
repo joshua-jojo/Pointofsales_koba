@@ -11,58 +11,69 @@
             </ul>
         </template>
         <template v-slot:alert>
-            <div v-if="success" class="alert alert-success shadow-lg mb-2">
-                <div>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="stroke-current flex-shrink-0 h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                    <span class="capitalize">{{ success }}</span>
+            <div v-if="errors" class="toast toast-start">
+                <div
+                    v-if="this.alert_success"
+                    class="alert alert-success shadow-lg"
+                >
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="stroke-current flex-shrink-0 h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        <span>{{ this.alert_success }}</span>
+                    </div>
                 </div>
-            </div>
-            <div v-if="warning" class="alert bg-yellow-400 shadow-lg mb-2">
-                <div>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="stroke-current flex-shrink-0 h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                        />
-                    </svg>
-                    <span class="capitalize">{{ warning }}</span>
+                <div
+                    v-if="this.alert_warning"
+                    class="alert alert-warning shadow-lg"
+                >
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="stroke-current flex-shrink-0 h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            />
+                        </svg>
+                        <span>{{ this.alert_warning }}</span>
+                    </div>
                 </div>
-            </div>
-            <div v-if="danger" class="alert bg-red-400 shadow-lg mb-2">
-                <div>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="stroke-current flex-shrink-0 h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                        />
-                    </svg>
-                    <span class="capitalize">{{ danger }}</span>
+                <div
+                    v-if="this.alert_danger"
+                    class="alert alert-error shadow-lg"
+                >
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="stroke-current flex-shrink-0 h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        <span>{{ this.alert_danger }}</span>
+                    </div>
                 </div>
             </div>
         </template>
@@ -147,62 +158,65 @@
         <template v-slot:modals>
             <div class="modal modal-middle sm:modal-middle" id="modal-tambah">
                 <div class="modal-box">
-                    <form class="w-full h-full" @submit.prevent="submit">
-                        <h3 class="font-bold text-lg mb-1">Nama Kategori</h3>
-                        <input
-                            type="text"
-                            v-model="form.nama"
-                            placeholder="Type here"
-                            required
-                            class="input input-bordered w-full"
-                        />
-                        <h3 class="font-bold text-lg mb-1 capitalize">
-                            Taking Order
-                        </h3>
-                        <select
-                            class="select select-bordered w-full mb-2"
-                            name="kategori"
-                            v-model="form.taking_order"
-                            required
+                    <h3 class="font-bold text-lg mb-1">Nama Kategori</h3>
+                    <input
+                        type="text"
+                        v-model="formtambah.nama"
+                        placeholder="Type here"
+                        required
+                        class="input input-bordered w-full"
+                    />
+                    <span class="text-red-500" v-if="errors.nama">{{
+                        errors.nama
+                    }}</span>
+                    <h3 class="font-bold text-lg mb-1 capitalize">
+                        Taking Order
+                    </h3>
+                    <select
+                        class="select select-bordered w-full mb-2"
+                        name="kategori"
+                        v-model="formtambah.taking_order"
+                        required
+                    >
+                        <option value="barista">barista</option>
+                        <option value="cook">cook</option>
+                    </select>
+                    <span class="text-red-500" v-if="errors.taking_order">{{
+                        errors.taking_order
+                    }}</span>
+                    <div class="modal-action">
+                        <button
+                            v-if="formtambah.processing"
+                            class="btn bg-green-500 text-white border-0 btn-square loading"
+                        ></button>
+                        <button
+                            v-else
+                            :disabled="formtambah.processing"
+                            @click="submittambah"
+                            class="btn bg-green-500 text-white hover:bg-green-400 border-0"
                         >
-                            <option value="barista">barista</option>
-                            <option value="cook">cook</option>
-                        </select>
-                        <div class="modal-action">
-                            <a
-                                v-if="
-                                    form.nama != null &&
-                                    form.taking_order != null
-                                "
-                                href="#"
-                                @click="add"
-                                class="btn bg-green-500 text-white hover:bg-green-400 border-0"
-                            >
-                                Save
-                            </a>
-                            <a href="#" class="btn">Exit</a>
-                        </div>
-                    </form>
+                            Save
+                        </button>
+                        <a href="#" class="btn">Exit</a>
+                    </div>
                 </div>
             </div>
+            <a href="#" id="submit" hidden></a>
             <div class="modal modal-middle sm:modal-middle" id="modal-edit">
                 <div class="modal-box">
                     <h3 class="font-bold text-lg mb-1">Nama Kategori</h3>
                     <input
                         type="text"
-                        v-model="formedit.id"
-                        placeholder="Type here"
-                        required
-                        hidden
-                        class="input input-bordered w-full"
-                    />
-                    <input
-                        type="text"
                         v-model="formedit.nama"
+                        readonly
                         placeholder="Type here"
                         required
                         class="input input-bordered w-full"
+                        disabled
                     />
+                    <span class="text-red-500" v-if="errors.nama">{{
+                        errors.nama
+                    }}</span>
                     <h3 class="font-bold text-lg mb-1 capitalize">
                         Taking Order
                     </h3>
@@ -215,18 +229,22 @@
                         <option value="barista">barista</option>
                         <option value="cook">cook</option>
                     </select>
+                    <span class="text-red-500" v-if="errors.taking_order">{{
+                        errors.taking_order
+                    }}</span>
                     <div class="modal-action">
-                        <a
-                            v-if="
-                                formedit.nama != null &&
-                                formedit.taking_order != null
-                            "
-                            href="#"
+                        <button
+                            v-if="formedit.processing"
+                            class="btn bg-green-500 border-0 btn-square loading"
+                        ></button>
+                        <button
+                            v-else
+                            :disabled="formedit.processing"
                             @click="submitedit"
                             class="btn bg-green-500 text-white hover:bg-green-400 border-0"
                         >
                             Save
-                        </a>
+                        </button>
                         <a href="#" class="btn">Exit</a>
                     </div>
                 </div>
@@ -234,20 +252,21 @@
             <div class="modal modal-middle sm:modal-middle" id="modal-hapus">
                 <div class="modal-box">
                     <h3 class="font-bold text-lg mb-1">
-                        Konfirmasi Penghapusan Kategori {{formhapus.nama}}
+                        Konfirmasi Penghapusan Kategori {{ formhapus.nama }}
                     </h3>
                     <div class="modal-action">
-                        <a
-                            v-if="
-                                formhapus.nama != null &&
-                                formhapus.id != null
-                            "
-                            href="#"
+                        <button
+                            v-if="formhapus.processing"
+                            class="btn bg-red-500 border-0 btn-square loading"
+                        ></button>
+                        <button
+                            v-else
+                            :disabled="formhapus.processing"
                             @click="submithapus"
                             class="btn bg-red-500 text-white hover:bg-red-400 border-0"
                         >
                             Hapus
-                        </a>
+                        </button>
                         <a href="#" class="btn">Exit</a>
                     </div>
                 </div>
@@ -257,7 +276,6 @@
 </template>
 <script>
 import { reactive } from "vue";
-import { Inertia } from "@inertiajs/inertia";
 import blankVue from "../Template/blank.vue";
 import route from "../../../../vendor/tightenco/ziggy/src/js";
 import { useForm } from "@inertiajs/inertia-vue3";
@@ -268,20 +286,48 @@ export default {
     },
     props: {
         kategori: Array,
-        success: String,
-        warning: String,
-        danger: String,
+        flash: Object,
+        errors: Object,
+    },
+    data() {
+        return {
+            alert_success: null,
+            alert_warning: null,
+            alert_danger: null,
+        };
+    },
+    updated() {
+        if (this.flash.alert) {
+            if (this.flash.alert["type"] == "success") {
+                this.alert_success = this.flash.alert["message"];
+                setTimeout(() => (this.alert_success = null), 5000);
+            }
+            if (this.flash.alert["type"] == "warning") {
+                this.alert_warning = this.flash.alert["message"];
+                setTimeout(() => (this.alert_warning = null), 5000);
+            }
+            if (this.flash.alert["type"] == "danger") {
+                this.alert_danger = this.flash.alert["message"];
+                setTimeout(() => (this.alert_danger = null), 5000);
+            }
+        }
     },
     mounted() {},
     setup() {
-        const form = reactive({
+        const formtambah = useForm({
             nama: null,
             taking_order: null,
         });
-        function submit() {
-            Inertia.post(route("masterkategori.store"), form);
+        function submittambah() {
+            formtambah.post(route("masterkategori.store"), {
+                onSuccess: () => {
+                    formtambah.reset(), klik();
+                },
+            });
         }
-
+        function klik() {
+            document.getElementById("submit").click();
+        }
         const formedit = useForm({
             id: null,
             nama: null,
@@ -289,7 +335,12 @@ export default {
         });
         function submitedit() {
             this.formedit.put(
-                route("masterkategori.update", { kategori: this.formedit.id })
+                route("masterkategori.update", { kategori: this.formedit.id }),
+                {
+                    onSuccess: () => {
+                        formedit.reset(), klik();
+                    },
+                }
             );
         }
 
@@ -298,8 +349,13 @@ export default {
             nama: null,
         });
         function submithapus() {
-            this.formedit.delete(
-                route("masterkategori.destroy", { kategori: this.formedit.id })
+            this.formhapus.delete(
+                route("masterkategori.destroy", { kategori: this.formedit.id }),
+                {
+                    onSuccess: () => {
+                        formhapus.reset(), klik();
+                    },
+                }
             );
         }
 
@@ -308,12 +364,12 @@ export default {
         });
 
         return {
+            formtambah,
+            submittambah,
             formhapus,
             submithapus,
             formedit,
             submitedit,
-            form,
-            submit,
             search,
         };
     },
@@ -329,9 +385,6 @@ export default {
         },
     },
     methods: {
-        add() {
-            Inertia.post(route("masterkategori.store"), this.form);
-        },
         edit(id) {
             var data;
             this.kategori.filter((items) => {
@@ -354,7 +407,6 @@ export default {
             this.formhapus.nama = data.nama;
         },
     },
-    updated() {},
 };
 </script>
 <style lang=""></style>

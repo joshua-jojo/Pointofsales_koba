@@ -17,7 +17,7 @@ class SatuanController extends Controller
     public function index()
     {
         $data = Satuan::all();
-        return Inertia::render('Master/Satuan/index',['satuan' => $data]);
+        return Inertia::render('Master/satuan',['satuan' => $data]);
     }
 
     /**
@@ -27,7 +27,6 @@ class SatuanController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Master/Satuan/tambah');
     }
 
     /**
@@ -38,13 +37,14 @@ class SatuanController extends Controller
      */
     public function store(Request $request)
     {
+        $data = request()->validate([
+            'nama' => ['required','unique:satuans']
+        ]);
         try {
-            satuan::create([
-                'nama' => $request->nama
-            ]);
-            return $this->index()->with('success','Satuan berhasil ditambahkan');
+            satuan::create($data);
+            return $this->respon('success','Satuan berhasil ditambahkan');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Satuan gagal ditambahkan');
+            return $this->respon('danger','Satuan gagal ditambahkan');
         }
     }
 
@@ -67,8 +67,6 @@ class SatuanController extends Controller
      */
     public function edit(Satuan $satuan)
     {
-        // dd($satuan);
-        return Inertia::render('Master/Satuan/edit',['satuan' => $satuan]);
     }
 
     /**
@@ -83,9 +81,9 @@ class SatuanController extends Controller
         
         try {
             $satuan->update(['nama' => $request->nama]);
-            return $this->index()->with('success','Satuan berhasil diubah');
+            return $this->respon('success','Satuan berhasil diubah');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Satuan tidak dapat di ubah');
+            return $this->respon('danger','Satuan tidak dapat di ubah');
             
         }
     }
@@ -100,9 +98,16 @@ class SatuanController extends Controller
     {
         try {
             $satuan->delete();
-            return $this->index()->with('warning','Satuan berhasil dihapus!');
+            return $this->respon('warning','Satuan berhasil dihapus!');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Satuan gagal dihapus!');
+            return $this->respon('danger','Satuan gagal dihapus!');
         }
+    }
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('mastersatuan.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }

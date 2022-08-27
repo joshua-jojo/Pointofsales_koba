@@ -17,7 +17,7 @@ class HargaController extends Controller
     public function index()
     {
         $harga = Harga::all();
-        return Inertia::render('Master/Harga/index', ['harga' => $harga]);
+        return Inertia::render('Master/harga', ['harga' => $harga]);
     }
 
     /**
@@ -60,7 +60,6 @@ class HargaController extends Controller
      */
     public function edit(Harga $harga)
     {
-        return Inertia::render('Master/Harga/edit', ['harga' => $harga]);
     }
 
     /**
@@ -76,7 +75,7 @@ class HargaController extends Controller
             'value' => ['integer', 'min:0', 'max:100']
         ]);
         $harga->update($data);
-        return $this->index()->with('success', 'Value berhasil ditetapkan');
+        return $this->respon('success', 'Value berhasil ditetapkan');
     }
 
     /**
@@ -88,5 +87,12 @@ class HargaController extends Controller
     public function destroy(Harga $harga)
     {
         //
+    }
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('masterharga.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }

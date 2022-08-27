@@ -226,15 +226,17 @@
                         ></progress>
                     </div>
                     <div class="modal-action">
-                        <a
-                            ><button
-                                @click="submittambah"
-                                :disabled="formtambah.processing"
-                                class="btn bg-green-500 text-white border-0"
-                            >
-                                Save
-                            </button></a
+                        <button
+                            v-if="formtambah.processing"
+                            class="btn bg-green-500 border-0 btn-square loading"
+                        ></button>
+                        <button
+                            v-else
+                            @click="submittambah"
+                            class="btn bg-green-500 text-white border-0"
                         >
+                            Save
+                        </button>
                         <a href="#" class="btn">Exit</a>
                     </div>
                 </div>
@@ -376,15 +378,18 @@
                         ></progress>
                     </div>
                     <div class="modal-action">
-                        <a href="#"
-                            ><button
-                                @click="submitedit"
-                                :disabled="formedit.processing"
-                                class="btn bg-green-500 text-white border-0"
-                            >
-                                Save
-                            </button></a
+                        <button
+                            v-if="formedit.proses"
+                            class="btn bg-green-500 border-0 btn-square loading"
+                        ></button>
+                        <button
+                            v-else
+                            @click="submitedit"
+                            class="btn bg-green-500 text-white border-0"
                         >
+                            Save
+                        </button>
+
                         <a href="#" class="btn">Exit</a>
                     </div>
                 </div>
@@ -395,19 +400,22 @@
                         Konfirmasi penghapusan {{ formhapus.nama }}
                     </h3>
                     <div class="modal-action">
-                        <a href="#"
-                            ><button
-                                @click="submithapus"
-                                :disabled="formhapus.processing"
-                                class="btn bg-red-500 text-white border-0"
-                            >
-                                Hapus
-                            </button></a
+                        <button
+                            v-if="formhapus.processing"
+                            class="btn bg-red-500 border-0 btn-square loading"
+                        ></button>
+                        <button
+                            v-else
+                            @click="submithapus"
+                            class="btn bg-red-500 text-white border-0"
                         >
+                            Hapus
+                        </button>
                         <a href="#" class="btn">Exit</a>
                     </div>
                 </div>
             </div>
+            <a href="#" id="submit" hidden></a>
         </template>
         <template v-slot:konten>
             <div class="form-control mb-2">
@@ -469,16 +477,16 @@
                             <td>{{ item.satuan }}</td>
                             <td class="text-white">
                                 <div class="grid grid-cols-2 gap-1 w-max">
-                                     <a href="#modal-edit">
-                                    <label
-                                        @click="edit(item.id)"
-                                        class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg"
-                                    >
-                                        <i
-                                            class="fa-solid fa-pen-to-square pr-2"
-                                        ></i
-                                        >edit
-                                    </label>
+                                    <a href="#modal-edit">
+                                        <label
+                                            @click="edit(item.id)"
+                                            class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg"
+                                        >
+                                            <i
+                                                class="fa-solid fa-pen-to-square pr-2"
+                                            ></i
+                                            >edit
+                                        </label>
                                     </a>
                                     <a href="#modal-hapus">
                                         <label
@@ -504,7 +512,7 @@
 import { Inertia } from "@inertiajs/inertia";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { reactive } from "vue";
-import blankVue from "../../Template/blank.vue";
+import blankVue from "../Template/blank.vue";
 
 export default {
     components: {
@@ -523,20 +531,14 @@ export default {
             setTimeout(() => (this.alert_success = null), 5000);
         } else if (this.warning) {
             this.alert_warning = this.warning;
-            console.log(this.alert_warning);
-            setTimeout(
-                () => (
-                    (this.alert_warning = null), console.log(this.alert_warning)
-                ),
-                5000
-            );
+            setTimeout(() => (this.alert_warning = null), 5000);
         } else if (this.danger) {
             this.alert_danger = this.danger;
             setTimeout(() => (this.alert_danger = null), 5000);
         }
     },
     mounted() {},
-    setup(props,context) {
+    setup(props, context) {
         const formtambah = useForm({
             nama: null,
             harga: null,
@@ -547,14 +549,14 @@ export default {
             gambar: null,
         });
         function submittambah() {
-            this.formtambah.post(route("masterproduk.store"));
-            formtambah.nama = null;
-            formtambah.harga = null;
-            formtambah.diskon = null;
-            formtambah.keterangan = null;
-            formtambah.kategori = null;
-            formtambah.satuan = null;
-            formtambah.gambar = null;
+            this.formtambah.post(route("masterproduk.store"), {
+                onSuccess: () => {
+                    formtambah.reset(), klik();
+                },
+            });
+        }
+        function klik() {
+            document.getElementById("submit").click();
         }
         const formedit = useForm({
             id: null,
@@ -565,19 +567,27 @@ export default {
             kategori: null,
             satuan: null,
             gambar: null,
+            proses: false,
         });
         function submitedit() {
-            Inertia.post(route("masterproduk.update",{produk:this.formedit.id}),{
-                _method:'put',
-                formedit,
-            });
-            formtambah.nama = null;
-            formtambah.harga = null;
-            formtambah.diskon = null;
-            formtambah.keterangan = null;
-            formtambah.kategori = null;
-            formtambah.satuan = null;
-            formtambah.gambar = null;
+            formedit.proses = true;
+            Inertia.post(
+                route("masterproduk.update", { produk: this.formedit.id }),
+                {
+                    _method: "put",
+                    data: formedit,
+                },
+                {
+                    onSuccess: (page) => {
+                        formedit.reset();
+                        klik();
+                        formedit.proses = false;
+                    },
+                    onError: (errors) => {
+                        formedit.proses = false;
+                    },
+                }
+            );
         }
         const formhapus = useForm({
             id: null,
@@ -585,7 +595,12 @@ export default {
         });
         function submithapus() {
             this.formhapus.delete(
-                route("masterproduk.destroy", { produk: this.formhapus.id })
+                route("masterproduk.destroy", { produk: this.formhapus.id }),
+                {
+                    onSuccess: () => {
+                        formhapus.reset(), klik();
+                    },
+                }
             );
         }
 
@@ -606,19 +621,33 @@ export default {
         produk: Array,
         kategori: Array,
         satuan: Array,
-        success: String,
-        warning: String,
-        danger: String,
         errors: Object,
+        flash: Object,
+    },
+    data() {
+        return {
+            alert_success: null,
+            alert_warning: null,
+            alert_danger: null,
+        };
+    },
+    updated() {
+        if (this.flash.alert) {
+            if (this.flash.alert["type"] == "success") {
+                this.alert_success = this.flash.alert["message"];
+                setTimeout(() => (this.alert_success = null), 5000);
+            }
+            if (this.flash.alert["type"] == "warning") {
+                this.alert_warning = this.flash.alert["message"];
+                setTimeout(() => (this.alert_warning = null), 5000);
+            }
+            if (this.flash.alert["type"] == "danger") {
+                this.alert_danger = this.flash.alert["message"];
+                setTimeout(() => (this.alert_danger = null), 5000);
+            }
+        }
     },
     methods: {
-        edit(id) {
-            Inertia.get(
-                route("masterproduk.edit", {
-                    produk: id,
-                })
-            );
-        },
         edit(id) {
             var data;
             this.produk.filter((items) => {

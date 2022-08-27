@@ -1,6 +1,7 @@
 <template lang="">
     <div class="z-50 absolute">
         <slot name="alert"></slot>
+        <slot name="modals"></slot>
     </div>
     <div
         class="h-screen w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500 overflow-auto scrollbar-hide"
@@ -252,7 +253,6 @@
             </div>
         </div>
     </div>
-    <slot name="modals"></slot>
 </template>
 <script>
 import titleVue from "./title.vue";

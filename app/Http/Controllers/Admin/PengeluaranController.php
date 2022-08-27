@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pemasukkan;
 use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,7 +16,7 @@ class PengeluaranController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Transaksi/Pengeluaran/index',['pengeluaran' => Pengeluaran::orderBy('id','desc')->get()]);
+        return Inertia::render('Transaksi/Pengeluaran/index', ['pengeluaran' => Pengeluaran::orderBy('id', 'desc')->get()]);
     }
 
     /**
@@ -38,6 +37,13 @@ class PengeluaranController extends Controller
      */
     public function store(Request $request)
     {
+        $data = request()->validate([
+            'nama' => ['required', 'min:4'],
+            'jumlah' => ['required', 'min:1', 'numeric'],
+            'harga' => ['required', 'min:1', 'numeric'],
+            'total' => ['required', 'min:1', 'numeric'],
+            'keterangan' => ['required', 'min:4'],
+        ]);
         try {
             Pengeluaran::create([
                 'nama' => $request->nama,
@@ -47,9 +53,9 @@ class PengeluaranController extends Controller
                 'keterangan' => $request->keterangan,
             ]);
 
-            return $this->index()->with('success','Pengeluaran berhasil ditambahkan');
+            return $this->respon('success','Pengeluaran berhasil ditambahkan');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Pengeluaran gagal ditambahkan');
+            return $this->respon('danger','Pengeluaran gagal ditambahkan');
         }
     }
 
@@ -72,7 +78,7 @@ class PengeluaranController extends Controller
      */
     public function edit(Pengeluaran $pengeluaran)
     {
-        return Inertia::render('Transaksi/Pengeluaran/edit',['pengeluaran' => $pengeluaran]);
+        return Inertia::render('Transaksi/Pengeluaran/edit', ['pengeluaran' => $pengeluaran]);
     }
 
     /**
@@ -84,17 +90,18 @@ class PengeluaranController extends Controller
      */
     public function update(Request $request, Pengeluaran $pengeluaran)
     {
+        $data = request()->validate([
+            'nama' => ['required', 'min:4'],
+            'jumlah' => ['required', 'min:1', 'numeric'],
+            'harga' => ['required', 'min:1', 'numeric'],
+            'total' => ['required', 'min:1', 'numeric'],
+            'keterangan' => ['required', 'min:4'],
+        ]);
         try {
-            $pengeluaran->update([
-                'nama' =>$request->nama,
-                'jumlah' =>$request->jumlah,
-                'harga' =>$request->harga,
-                'total' =>$request->total,
-                'keterangan' =>$request->keterangan,
-            ]);
-            return $this->index()->with('success','Pengeluaran berhasil diubah');
+            $pengeluaran->update($data);
+            return $this->respon('success','Pengeluaran berhasil diubah');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Pengeluaran gagal diubah');
+            return $this->respon('danger','Pengeluaran gagal diubah');
         }
     }
 
@@ -108,9 +115,17 @@ class PengeluaranController extends Controller
     {
         try {
             $pengeluaran->delete();
-            return $this->index()->with('warning' ,'Pengeluaran berhasil dihapus');
+            return $this->respon('warning', 'Pengeluaran berhasil dihapus');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger' ,'Pengeluaran gagal dihapus');
+            return $this->respon('danger', 'Pengeluaran gagal dihapus');
         }
+    }
+
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('transaksipengeluaran.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }

@@ -36,15 +36,16 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
+        $data = request()->validate([
+            'nama' => ['required','min:2','unique:kategoris'],
+            'taking_order' => ['required'],
+        ]);
         try {
-            Kategori::create([
-                'nama' => $request->nama,
-                'taking_order' => $request->taking_order
-            ]);
+            Kategori::create($data);
         } catch (\Throwable $th) {
-            return $this->index()->with('danger', 'Gagal menambahkan kategori');
+            return $this->respon('danger', 'Gagal menambahkan kategori');
         }
-        return $this->index()->with('success', 'Data berhasil ditambahkan!');
+        return $this->respon('success', 'Data berhasil ditambahkan!');
     }
 
     /**
@@ -64,7 +65,6 @@ class KategoriController extends Controller
      */
     public function edit(Kategori $kategori)
     {
-        return Inertia::render('Master/kategoriedit', ['kategori' => $kategori]);
     }
 
     /**
@@ -76,15 +76,15 @@ class KategoriController extends Controller
      */
     public function update(Request $request, Kategori $kategori)
     {
+        $data = request()->validate([
+            'taking_order' => ['required']
+        ]);
         try {
-            $kategori->update([
-                'nama' => $request->nama,
-                'taking_order' => $request->taking_order
-            ]);
+            $kategori->update($data);
         } catch (\Throwable $th) {
-            return $this->index()->with('danger', 'Data telah tersedia. Data harus unik!');
+            return $this->respon('danger', 'Kategori gagal di ubah!');
         }
-        return $this->index()->with('success', 'Data telah berhasil diubah!');
+        return $this->respon('success', 'Kategori telah berhasil diubah!');
     }
 
     /**
@@ -96,6 +96,13 @@ class KategoriController extends Controller
     public function destroy(Kategori $kategori)
     {
         $kategori->delete();
-        return $this->index()->with('warning', 'Data telah berhasil dihapus!');
+        return $this->respon('warning', 'Data telah berhasil dihapus!');
+    }
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('masterkategori.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }

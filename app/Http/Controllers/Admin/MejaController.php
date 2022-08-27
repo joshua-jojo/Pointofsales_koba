@@ -16,7 +16,7 @@ class MejaController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Master/Meja/index',['meja' => meja::all()]);
+        return Inertia::render('Master/meja',['meja' => meja::all()]);
     }
 
     /**
@@ -26,7 +26,6 @@ class MejaController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Master/Meja/tambah');
     }
 
     /**
@@ -37,14 +36,16 @@ class MejaController extends Controller
      */
     public function store(Request $request)
     {
+        $data = request()->validate([
+            'nama' => ['required','min:2','unique:mejas'],
+            'status' => ['required'],
+        ]);
+        $data['status'] = (string)$data['status'];
         try {
-            meja::create([
-                'nama' => $request->nama,
-                'status' => (string)$request->status,
-            ]);
-            return $this->index()->with('success','Meja berhasil ditambahkan');
+            meja::create($data);
+            return $this->respon('success','Meja berhasil ditambahkan');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Meja gagal ditambahkan');
+            return $this->respon('danger','Meja gagal ditambahkan');
         }
     }
 
@@ -67,7 +68,6 @@ class MejaController extends Controller
      */
     public function edit(meja $meja)
     {
-        return Inertia::render('Master/Meja/edit',['meja' => $meja]);
     }
 
     /**
@@ -79,14 +79,15 @@ class MejaController extends Controller
      */
     public function update(Request $request, meja $meja)
     {
+        $data = request()->validate([
+            "status" => ['required']
+        ]);
+        $data['status'] = (string)$data['status'];
         try {
-            $meja-> update([
-                'nama' => $request->nama,
-                'status' => (string)$request->status,
-            ]);
-            return $this->index()->with('success','Meja berhasil diedit');
+            $meja-> update($data);
+            return $this->respon('success','Meja berhasil diedit');
         } catch (\Throwable $th) {
-            return $this->index()->with('danger','Meja gagal diedit');
+            return $this->respon('danger','Meja gagal diedit');
         }
     }
 
@@ -100,9 +101,16 @@ class MejaController extends Controller
     {
         try {
             $meja->delete();
-            return $this->index()->with('warning', 'Meja berhasil dihapus' );
+            return $this->respon('warning', 'Meja berhasil dihapus' );
         } catch (\Throwable $th) {
-            return $this->index()->with('danger', 'Meja gagal dihapus' );
+            return $this->respon('danger', 'Meja gagal dihapus' );
         }
+    }
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('mastermeja.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }

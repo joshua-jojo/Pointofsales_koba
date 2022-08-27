@@ -45,7 +45,7 @@ class HandleInertiaRequests extends Middleware
                 return (new Ziggy)->toArray();
             },
             'flash' => [
-                'message' => session('message')
+                'alert' => session('alert')
             ]
         ]);
     }
