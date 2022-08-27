@@ -5,3 +5,8 @@ menambah button list pesanan di menu guest waktu pesan. => ok
 Ppn => global master + di menu struk. => oke
 tambah kondisi uang pas di menu kasir transaksi. => ok
 tambah fitur user id cashier di setiap perubahan database. => ok
+
+1. perbaiki ukuran gambar pada menu guest dan detail guest.
+2. persimple bagian kategori. backend hanya dua (makanan, dan minuman).
+tambahkan fitur 
+3. tambah konfirmasi selesai di menu standby.

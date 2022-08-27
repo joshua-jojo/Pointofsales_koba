@@ -5,7 +5,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet" />
-    <script src="{{ mix('/js/app.js') }}" defer></script>
     @routes
     @inertiaHead
     <style>
@@ -19,6 +18,7 @@
 
 <body>
     @inertia
+    <script src="{{ mix('/js/app.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://kit.fontawesome.com/eac4eeb2c0.js" crossorigin="anonymous"></script>
 </body>

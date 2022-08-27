@@ -146,8 +146,7 @@
                         >
                             <img
                                 v-bind:src="`${item.gambar}`"
-                                class="bg-cover w-full"
-                                height="100"
+                                class="bg-fill w-40 h-40"
                             />
                             <div
                                 class="text-xs grid grid-rows-2 h-max w-full bg-white"

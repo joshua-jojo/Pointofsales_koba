@@ -18,7 +18,13 @@ mix.js('resources/js/app.js', 'public/js')
     ]);
 
 // mix.browserSync('127.0.0.1:8000');
-mix.browserSync('192.168.1.38:8000');
+// mix.browserSync('192.168.1.38:8000');
+mix.options({
+    hmrOptions: {
+        host: '127.0.0.1',
+        port: 9000
+    }
+})
 mix.disableNotifications();
 
 const path = require('path');

@@ -20,6 +20,8 @@ class ProdukController extends Controller
     public function index()
     {
         $data = Produk::all();
+        $kategori = Kategori::all();
+        $satuan = Satuan::all();
         $produk = [];
         foreach ($data as $key => $value) {
             $produk[$key] = array(
@@ -27,12 +29,14 @@ class ProdukController extends Controller
                 'nama' => $value->nama,
                 'harga' => $value->harga,
                 'stok' => $value->stok,
+                'diskon' => $value->diskon,
+                'keterangan' => $value->keterangan,
                 'satuan' => $value->satuan->nama,
                 'gambar' => asset($value->gambar),
                 'kategori' => $value->kategori->nama,
             );
         }
-        return Inertia::render('Master/Produk/index', ['produk' => $produk]);
+        return Inertia::render('Master/Produk/index', ['produk' => $produk, 'kategori' => $kategori, 'satuan' => $satuan]);
     }
 
     /**
@@ -55,16 +59,14 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'nama' => ['required', 'min:3'],
-            'diskon' => ['min:0', 'max:100', 'required'],
+            'diskon' => ['min:0', 'max:100', 'required', 'numeric'],
+            'harga' => ['min:0', 'required', 'numeric'],
             'satuan' => ['required'],
             'kategori' => ['required'],
-            'gambar' => ['mimes:jpg,png'],
+            'gambar' => ['required', 'mimes:jpg,png'],
         ]);
-
-
 
         try {
             if ($request->hasFile('gambar')) {
@@ -137,44 +139,45 @@ class ProdukController extends Controller
      */
     public function update(Request $request, Produk $produk)
     {
-        $request['nama'] = $request->form['nama'];
-        $request['diskon'] = $request->form['diskon'];
-        $request['satuan'] = $request->form['satuan'];
-        $request['kategori'] = $request->form['kategori'];
-
+        $request['nama'] = $request->formedit['nama'];
+        $request['diskon'] = $request->formedit['diskon'];
+        $request['harga'] = $request->formedit['harga'];
+        $request['satuan'] = $request->formedit['satuan'];
+        $request['kategori'] = $request->formedit['kategori'];
         $request->validate([
             'nama' => ['required', 'min:3'],
-            'diskon' => 'required|numeric|min:0|max:100',
+            'diskon' => ['min:0', 'max:100', 'required', 'numeric'],
+            'harga' => ['min:0', 'required', 'numeric'],
+            'satuan' => ['required'],
+            'kategori' => ['required'],
         ]);
         try {
-            $kategori  = Kategori::where('nama', $request['form']['kategori'])->first()->id;
-            $satuan  = Satuan::where('nama', $request['form']['satuan'])->first()->id;
-            if ($request->hasFile('form')) {
-                $ekstensi = $request->file('form')['gambar']->getClientOriginalExtension();
-                if ($ekstensi == 'png' or $ekstensi == 'jpg' or $ekstensi == 'JPG') {
-                    $namafile = $request->file('form')['gambar']->getClientOriginalName();
-                    $filename = pathinfo($namafile, PATHINFO_FILENAME);
-                    $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
-                    $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
-                    $path = $request->file('form')['gambar']->move(public_path('foto_produk'), $filenamesimpan);
-                    $produk->update([
-                        'nama' => $request['form']['nama'],
-                        'diskon' => $request['form']['diskon'],
-                        'stok' => 0,
-                        'harga' => $request['form']['harga'],
-                        'keterangan' => $request['form']['keterangan'],
-                        'id_satuan' => $satuan,
-                        'id_kategori' => $kategori,
-                        'gambar' => $filenamesimpandatabase,
-                    ]);
-                }
+            $kategori  = Kategori::where('nama', $request['kategori'])->first()->id;
+            $satuan  = Satuan::where('nama', $request['satuan'])->first()->id;
+            if ($request->hasFile('formedit')) {
+                $ekstensi = $request->file('formedit')['gambar']->getClientOriginalExtension();
+                $namafile = $request->file('formedit')['gambar']->getClientOriginalName();
+                $filename = pathinfo($namafile, PATHINFO_FILENAME);
+                $filenamesimpan = $filename . '_' . time() . '.' . $ekstensi;
+                $filenamesimpandatabase = '/foto_produk/' . $filename . '_' . time() . '.' . $ekstensi;
+                $path = $request->file('formedit')['gambar']->move(public_path('foto_produk'), $filenamesimpan);
+                $produk->update([
+                    'nama' => $request['formedit']['nama'],
+                    'diskon' => $request['formedit']['diskon'],
+                    'stok' => 0,
+                    'harga' => $request['formedit']['harga'],
+                    'keterangan' => $request['formedit']['keterangan'],
+                    'id_satuan' => $satuan,
+                    'id_kategori' => $kategori,
+                    'gambar' => $filenamesimpandatabase,
+                ]);
             } else {
                 $produk->update([
-                    'nama' => $request['form']['nama'],
-                    'diskon' => $request['form']['diskon'],
+                    'nama' => $request['formedit']['nama'],
+                    'diskon' => $request['formedit']['diskon'],
                     'stok' => 0,
-                    'harga' => $request['form']['harga'],
-                    'keterangan' => $request['form']['keterangan'],
+                    'harga' => $request['formedit']['harga'],
+                    'keterangan' => $request['formedit']['keterangan'],
                     'id_satuan' => $satuan,
                     'id_kategori' => $kategori,
                 ]);

@@ -168,7 +168,7 @@ class CashierTransaksiController extends Controller
                 'cashier' => Auth::user()->id
             ]);
         }
-        if (count(request()->pemesanan['id']) > 1) {
+        if (count(request()->pemesanan['id']) > 0) {
             $n = 0;
             $master = '';
             foreach (request()->pemesanan['id'] as $key => $data) {

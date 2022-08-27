@@ -69,7 +69,7 @@
         <template v-slot:opsibutton>
             <div class="flex justify-end">
                 <a
-                    href="#my-modal-6"
+                    href="#modal-tambah"
                     class="flex justify-center items-center modal-button w-24 bg-green-500 hover:bg-green-400 capitalize h-8 rounded-lg"
                     ><i class="fa-solid fa-plus pr-2"></i>tambah</a
                 >
@@ -119,19 +119,24 @@
                         <td>{{ data.nama }}</td>
                         <td>{{ data.taking_order }}</td>
                         <td class="text-white flex flex-row">
-                            <label
-                                @click="edit(data.id)"
-                                class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg mr-2"
-                            >
-                                <i class="fa-solid fa-pen-to-square pr-2"></i
-                                >edit
-                            </label>
-                            <label
-                                @click="hapus(data.id)"
-                                class="flex justify-center items-center modal-button w-24 bg-red-500 hover:bg-red-400 capitalize h-8 rounded-lg"
-                            >
-                                <i class="fa-solid fa-trash pr-2"></i>hapus
-                            </label>
+                            <a href="#modal-edit" @click="edit(data.id)">
+                                <label
+                                    class="flex justify-center items-center modal-button w-24 bg-blue-500 hover:bg-blue-400 capitalize h-8 rounded-lg mr-2"
+                                >
+                                    <i
+                                        class="fa-solid fa-pen-to-square pr-2"
+                                    ></i
+                                    >edit
+                                </label>
+                            </a>
+                            <a href="#modal-hapus" @click="edit(data.id)">
+                                <label
+                                    @click="hapus(data.id)"
+                                    class="flex justify-center items-center modal-button w-24 bg-red-500 hover:bg-red-400 capitalize h-8 rounded-lg"
+                                >
+                                    <i class="fa-solid fa-trash pr-2"></i>hapus
+                                </label>
+                            </a>
                         </td>
                     </tr>
 
@@ -140,7 +145,7 @@
             </table>
         </template>
         <template v-slot:modals>
-            <div class="modal modal-middle sm:modal-middle" id="my-modal-6">
+            <div class="modal modal-middle sm:modal-middle" id="modal-tambah">
                 <div class="modal-box">
                     <form class="w-full h-full" @submit.prevent="submit">
                         <h3 class="font-bold text-lg mb-1">Nama Kategori</h3>
@@ -151,7 +156,9 @@
                             required
                             class="input input-bordered w-full"
                         />
-                        <h3 class="font-bold text-lg mb-1 capitalize">Taking Order</h3>
+                        <h3 class="font-bold text-lg mb-1 capitalize">
+                            Taking Order
+                        </h3>
                         <select
                             class="select select-bordered w-full mb-2"
                             name="kategori"
@@ -163,7 +170,10 @@
                         </select>
                         <div class="modal-action">
                             <a
-                                v-if="form.nama != null && form.taking_order != null"
+                                v-if="
+                                    form.nama != null &&
+                                    form.taking_order != null
+                                "
                                 href="#"
                                 @click="add"
                                 class="btn bg-green-500 text-white hover:bg-green-400 border-0"
@@ -175,6 +185,73 @@
                     </form>
                 </div>
             </div>
+            <div class="modal modal-middle sm:modal-middle" id="modal-edit">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg mb-1">Nama Kategori</h3>
+                    <input
+                        type="text"
+                        v-model="formedit.id"
+                        placeholder="Type here"
+                        required
+                        hidden
+                        class="input input-bordered w-full"
+                    />
+                    <input
+                        type="text"
+                        v-model="formedit.nama"
+                        placeholder="Type here"
+                        required
+                        class="input input-bordered w-full"
+                    />
+                    <h3 class="font-bold text-lg mb-1 capitalize">
+                        Taking Order
+                    </h3>
+                    <select
+                        class="select select-bordered w-full mb-2"
+                        name="kategori"
+                        v-model="formedit.taking_order"
+                        required
+                    >
+                        <option value="barista">barista</option>
+                        <option value="cook">cook</option>
+                    </select>
+                    <div class="modal-action">
+                        <a
+                            v-if="
+                                formedit.nama != null &&
+                                formedit.taking_order != null
+                            "
+                            href="#"
+                            @click="submitedit"
+                            class="btn bg-green-500 text-white hover:bg-green-400 border-0"
+                        >
+                            Save
+                        </a>
+                        <a href="#" class="btn">Exit</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal modal-middle sm:modal-middle" id="modal-hapus">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg mb-1">
+                        Konfirmasi Penghapusan Kategori {{formhapus.nama}}
+                    </h3>
+                    <div class="modal-action">
+                        <a
+                            v-if="
+                                formhapus.nama != null &&
+                                formhapus.id != null
+                            "
+                            href="#"
+                            @click="submithapus"
+                            class="btn bg-red-500 text-white hover:bg-red-400 border-0"
+                        >
+                            Hapus
+                        </a>
+                        <a href="#" class="btn">Exit</a>
+                    </div>
+                </div>
+            </div>
         </template>
     </blankVue>
 </template>
@@ -182,6 +259,8 @@
 import { reactive } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import blankVue from "../Template/blank.vue";
+import route from "../../../../vendor/tightenco/ziggy/src/js";
+import { useForm } from "@inertiajs/inertia-vue3";
 
 export default {
     components: {
@@ -199,18 +278,43 @@ export default {
             nama: null,
             taking_order: null,
         });
-        const search = reactive({
-            value: "",
-        });
-
         function submit() {
             Inertia.post(route("masterkategori.store"), form);
         }
 
+        const formedit = useForm({
+            id: null,
+            nama: null,
+            taking_order: null,
+        });
+        function submitedit() {
+            this.formedit.put(
+                route("masterkategori.update", { kategori: this.formedit.id })
+            );
+        }
+
+        const formhapus = useForm({
+            id: null,
+            nama: null,
+        });
+        function submithapus() {
+            this.formedit.delete(
+                route("masterkategori.destroy", { kategori: this.formedit.id })
+            );
+        }
+
+        const search = reactive({
+            value: "",
+        });
+
         return {
-            search,
+            formhapus,
+            submithapus,
+            formedit,
+            submitedit,
             form,
             submit,
+            search,
         };
     },
     computed: {
@@ -229,18 +333,25 @@ export default {
             Inertia.post(route("masterkategori.store"), this.form);
         },
         edit(id) {
-            Inertia.get(
-                route("masterkategori.edit", {
-                    kategori: id,
-                })
-            );
+            var data;
+            this.kategori.filter((items) => {
+                if (items.id == id) {
+                    data = items;
+                }
+            });
+            this.formedit.id = data.id;
+            this.formedit.nama = data.nama;
+            this.formedit.taking_order = data.taking_order;
         },
         hapus(id) {
-            Inertia.delete(
-                route("masterkategori.destroy", {
-                    kategori: id,
-                })
-            );
+            var data;
+            this.kategori.filter((items) => {
+                if (items.id == id) {
+                    data = items;
+                }
+            });
+            this.formhapus.id = data.id;
+            this.formhapus.nama = data.nama;
         },
     },
     updated() {},
