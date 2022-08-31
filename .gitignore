@@ -1,5 +1,5 @@
 
-/node_modules
-/vendor
-/storage
-/public/foto_produk
+# /node_modules
+# /vendor
+# /storage
+# /public/foto_produk
