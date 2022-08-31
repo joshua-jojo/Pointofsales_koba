@@ -4,9 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
-use App\Models\Satuan;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class InventoryTransaksiController extends Controller
 {
@@ -16,11 +14,7 @@ class InventoryTransaksiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $data = Inventory::all();
-        $satuan = Satuan::all();
-        return  Inertia::render('Warehouse/Inventory/tambahtransaksi', ['inventory' => $data, 'satuan' => $satuan]);
-    }
+    { }
 
     /**
      * Show the form for creating a new resource.
@@ -28,11 +22,7 @@ class InventoryTransaksiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $data = Inventory::all();
-        $satuan = Satuan::all();
-        return  Inertia::render('Warehouse/Inventory/tambahtransaksikeluar', ['inventory' => $data, 'satuan' => $satuan]);
-    }
+    { }
 
     /**
      * Store a newly created resource in storage.
@@ -42,12 +32,23 @@ class InventoryTransaksiController extends Controller
      */
     public function store(Request $request)
     {
-        $inventory = Inventory::find($request->id);
-        $inventory->update([
-            'stok' => ((int) $request->jumlah + $inventory->stok)
+        $data = request()->validate([
+            'id' => 'required',
+            'jumlah' => 'required|min:1',
+            'type' => 'required'
         ]);
-        $inventory_page = new InventoryController;
-        return $inventory_page->index()->with('success', 'berhasil menambahkan inventory');
+        $inventory = Inventory::find($request->id);
+        if ($data['type']  == 'pemasukkan') {
+            $inventory->update([
+                'stok' => ((int) $request->jumlah + $inventory->stok)
+            ]);
+        }
+        else if ($data['type']  == 'pengeluaran') {
+            $inventory->update([
+                'stok' => ($inventory->stok - (int) $request->jumlah)
+            ]);
+        }
+        return $this->respon('success', 'berhasil menambahkan inventory');
     }
 
     /**
@@ -68,9 +69,7 @@ class InventoryTransaksiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Request $request, Inventory $inventorytransaksi)
-    {
-        
-    }
+    { }
 
     /**
      * Update the specified resource in storage.
@@ -97,5 +96,12 @@ class InventoryTransaksiController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('warehouseinventory.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }

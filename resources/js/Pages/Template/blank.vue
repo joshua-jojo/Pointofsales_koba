@@ -74,13 +74,13 @@
                                     >
                                 </li>
                                 <li class="opacity-70">
-                                    <Link :href="route('masterproduk.index')"
-                                        ><a>Produk</a></Link
+                                    <Link :href="route('mastersatuan.index')"
+                                    ><a>Satuan</a></Link
                                     >
                                 </li>
                                 <li class="opacity-70">
-                                    <Link :href="route('mastersatuan.index')"
-                                        ><a>Satuan</a></Link
+                                    <Link :href="route('masterproduk.index')"
+                                        ><a>Produk</a></Link
                                     >
                                 </li>
                                 <li class="opacity-70">

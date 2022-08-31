@@ -16,7 +16,7 @@ class PemasukkanController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Transaksi/Pemasukkan/index', ['pemasukkan' => Pemasukkan::all()]);
+        return Inertia::render('Transaksi/pemasukkan', ['pemasukkan' => Pemasukkan::all()]);
     }
 
     /**
@@ -26,7 +26,6 @@ class PemasukkanController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Transaksi/Pemasukkan/tambah');
     }
 
     /**

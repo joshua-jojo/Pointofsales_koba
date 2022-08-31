@@ -16,7 +16,7 @@ class PengeluaranController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Transaksi/Pengeluaran/index', ['pengeluaran' => Pengeluaran::orderBy('id', 'desc')->get()]);
+        return Inertia::render('Transaksi/pengeluaran', ['pengeluaran' => Pengeluaran::orderBy('id', 'desc')->get()]);
     }
 
     /**
@@ -26,7 +26,6 @@ class PengeluaranController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Transaksi/Pengeluaran/tambah');
     }
 
     /**
@@ -78,7 +77,6 @@ class PengeluaranController extends Controller
      */
     public function edit(Pengeluaran $pengeluaran)
     {
-        return Inertia::render('Transaksi/Pengeluaran/edit', ['pengeluaran' => $pengeluaran]);
     }
 
     /**

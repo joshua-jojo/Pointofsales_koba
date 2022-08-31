@@ -138,7 +138,7 @@
 <script>
 import { Inertia } from "@inertiajs/inertia";
 import { reactive } from "vue";
-import blankVue from "../../Template/blank.vue";
+import blankVue from "../Template/blank.vue";
 
 export default {
     data() {

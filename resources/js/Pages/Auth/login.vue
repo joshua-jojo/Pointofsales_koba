@@ -101,7 +101,7 @@
 
                         <div class="w-full flex justify-center">
                             <button
-                                type="submit"
+                                type="button" @click="submit"
                                 class="capitalize bg-cyan-400 text-white h-10 w-28 rounded-2xl"
                             >
                                 Login
@@ -137,8 +137,11 @@ export default {
             password: null,
             username: null,
         });
+        function submit(){
+            form.post(route('login.store'))
+        }
 
-        return { form };
+        return { form,submit };
     },
 };
 </script>

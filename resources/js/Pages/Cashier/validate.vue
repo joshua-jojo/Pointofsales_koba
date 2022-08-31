@@ -14,58 +14,66 @@
                     Transaksi Detail
                 </div>
                 <div
-                    class="w-max gap-2 rounded-t-2xl text-xl drop-shadow-md pl-5 h-3/20 grid grid-cols-6 mb-1"
+                    class="w-max rounded-t-2xl text-xl drop-shadow-md grid pl-5 h-10/20 mb-1"
                 >
-                    <div class="grid grid-cols-1">
-                        <label class="text-md" for="">Search : </label>
-                        <input
-                            v-model="search.value"
-                            type="text"
-                            id="search_transaksi"
-                            class="w-36 rounded-lg px-4 text-md"
-                        />
+                    <div class="grid grid-cols-2">
+                        <div class="w-max">
+                            <label for="">Total</label>
+                        </div>
+                        <div class="w-max">
+                            : Rp. {{ pemesanandetail.total }}
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1">
-                        <label for="">Total : </label>
-                        Rp. {{ pemesanandetail.total }}
+                    <div class="grid grid-cols-2">
+                        <label for="">Bayar</label>
+                        <div class="flex flex-row w-max">:
+                            <input
+                                v-model="form.bayar"
+                                @input="kembalian(pemesanandetail.total)"
+                                type="number"
+                                min="1"
+                                id="bayar"
+                                class="w-44 rounded-lg text-md ml-2 pl-2"
+                            />
+                            <button
+                                type="button"
+                                class="btn btn-sm h-full ml-4"
+                                @click="uang_pas"
+                            >
+                                Uang Pas
+                            </button>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1">
-                        <label for="">Bayar : </label>
-                        <input
-                            v-model="form.bayar"
-                            @input="kembalian(pemesanandetail.total)"
-                            type="number"
-                            min="1"
-                            id="bayar"
-                            class="w-36 rounded-lg pl-4 text-md"
-                        />
+                    <div class="grid grid-cols-2">
+                        <label class="" for="">Kembalian</label>
+                        <div>: Rp. {{ form.kembalian }}</div>
                     </div>
-                    <div class="grid grid-cols-1 p-2">
-                        <button
-                            type="button"
-                            class="btn h-full"
-                            @click="uang_pas"
-                        >
-                            Uang Pas
-                        </button>
+                    <div class="grid grid-cols-2">
+                        <label class="" for="">Ref</label>
+                        <div class="">
+                            :<input
+                                v-model="form.ref"
+                                type="text"
+                                placeholder="Optional..."
+                                min="1"
+                                class="w-44 rounded-lg pl-4 ml-2 text-md p-1"
+                            />
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1">
-                        <label class="" for="">Kembalian : </label>
-                        <div>Rp. {{ form.kembalian }}</div>
-                    </div> 
-                    <div class="grid grid-cols-1">
-                        <label class="" for="">Ref : </label>
-                        <input
-                            v-model="form.ref"
-                            type="text"
-                            placeholder="Optional..."
-                            min="1"
-                            class="w-36 rounded-lg pl-4 text-md p-1"
-                        />
-                    </div> 
+                    <div class="grid grid-cols-2">
+                        <label class="text-md" for="">Search</label>
+                        <div class="">
+                            :<input
+                                v-model="search.value"
+                                type="text"
+                                id="search_transaksi"
+                                class="w-44 rounded-lg px-4 text-md ml-2"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div
-                    class="w-full h-13/20 overflow-auto scrollbar-default rounded-b-2xl"
+                    class="w-full h-10/20 overflow-auto scrollbar-default rounded-b-2xl"
                 >
                     <table class="table w-full">
                         <thead>

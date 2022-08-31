@@ -1,17 +1,17 @@
 <template lang="">
     <blankVue>
         <template v-slot:title>
-            <title>Pemasukkan | Point Of Sales</title>
+            <title>Pengeluaran | Point Of Sales</title>
         </template>
         <template v-slot:breadcrumbs>
             <ul>
                 <li><a>Transaksi</a></li>
-                <li><a>Pemasukkan</a></li>
+                <li><a>Pengeluaran</a></li>
                 <li></li>
             </ul>
         </template>
         <template v-slot:alert>
-            <div v-if="errors" class="toast toast-start">
+            <div class="toast toast-start">
                 <div
                     v-if="this.alert_success"
                     class="alert alert-success shadow-lg"
@@ -77,6 +77,7 @@
                 </div>
             </div>
         </template>
+
         <template v-slot:opsibutton>
             <div class="flex justify-end">
                 <a href="#modal-tambah">
@@ -88,11 +89,10 @@
                 </a>
             </div>
         </template>
-
         <template v-slot:modals>
             <div class="modal" id="modal-tambah">
-                <div class="modal-box">
-                    <h2 class="font-bold text-lg">Tambah Pemasukkan</h2>
+                <div class="modal-box scrollbar-hide">
+                    <h2 class="font-bold text-lg">Tambah Pengeluaran</h2>
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Nama</span>
@@ -103,6 +103,11 @@
                             placeholder="Nama..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.nama"
+                            class="label-text text-red-500"
+                            >{{ errors.nama }}</span
+                        >
                     </div>
                     <div class="form-control">
                         <label class="label">
@@ -115,6 +120,11 @@
                             placeholder="harga..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.harga"
+                            class="label-text text-red-500"
+                            >{{ errors.harga }}</span
+                        >
                     </div>
                     <div class="form-control">
                         <label class="label">
@@ -127,6 +137,11 @@
                             placeholder="jumlah..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.jumlah"
+                            class="label-text text-red-500"
+                            >{{ errors.jumlah }}</span
+                        >
                     </div>
                     <div class="form-control">
                         <label class="label">
@@ -139,10 +154,29 @@
                             placeholder="total..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.total"
+                            class="label-text text-red-500"
+                            >{{ errors.total }}</span
+                        >
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Keterangan</span>
+                        </label>
+                        <textarea
+                            v-model="formtambah.keterangan"
+                            class="textarea textarea-bordered"
+                            placeholder="keterangan.."
+                        ></textarea>
+                        <span
+                            v-if="errors.keterangan"
+                            class="label-text text-red-500"
+                            >{{ errors.keterangan }}</span
+                        >
                     </div>
                     <div class="modal-action">
                         <a
-                            href="#"
                             class="btn bg-green-500 hover:bg-green-400 text-white border-0"
                             @click="submittambah"
                             >Save</a
@@ -152,8 +186,8 @@
                 </div>
             </div>
             <div class="modal" id="modal-edit">
-                <div class="modal-box">
-                    <h2 class="font-bold text-lg">Tambah Pemasukkan</h2>
+                <div class="modal-box scrollbar-hide">
+                    <h2 class="font-bold text-lg">Edit Pemasukkan</h2>
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Nama</span>
@@ -164,6 +198,11 @@
                             placeholder="Nama..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.nama"
+                            class="label-text text-red-500"
+                            >{{ errors.nama }}</span
+                        >
                     </div>
                     <div class="form-control">
                         <label class="label">
@@ -171,11 +210,16 @@
                         </label>
                         <input
                             v-model="formedit.harga"
-                            type="text"
                             @input="hitungedit"
+                            type="text"
                             placeholder="harga..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.harga"
+                            class="label-text text-red-500"
+                            >{{ errors.harga }}</span
+                        >
                     </div>
                     <div class="form-control">
                         <label class="label">
@@ -188,6 +232,11 @@
                             placeholder="jumlah..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.jumlah"
+                            class="label-text text-red-500"
+                            >{{ errors.jumlah }}</span
+                        >
                     </div>
                     <div class="form-control">
                         <label class="label">
@@ -200,29 +249,46 @@
                             placeholder="total..."
                             class="input input-bordered"
                         />
+                        <span
+                            v-if="errors.total"
+                            class="label-text text-red-500"
+                            >{{ errors.total }}</span
+                        >
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Keterangan</span>
+                        </label>
+                        <textarea
+                            v-model="formedit.keterangan"
+                            class="textarea textarea-bordered"
+                            placeholder="keterangan.."
+                        ></textarea>
+                        <span
+                            v-if="errors.keterangan"
+                            class="label-text text-red-500"
+                            >{{ errors.keterangan }}</span
+                        >
                     </div>
                     <div class="modal-action">
                         <a
-                            href="#"
                             class="btn bg-green-500 hover:bg-green-400 text-white border-0"
                             @click="submitedit"
                             >Save</a
                         >
                         <a href="#" class="btn">Exit</a>
+                        
                     </div>
                 </div>
             </div>
             <div class="modal" id="modal-hapus">
-                <div class="modal-box">
-                    <h2 class="font-bold text-lg">
-                        Konfirmasi penghapusan {{ formhapus.nama }}
-                    </h2>
+                <div class="modal-box scrollbar-hide">
+                    <h2 class="font-bold text-lg">Konfirmasi penghapusan {{formhapus.nama}}</h2>
                     <div class="modal-action">
                         <a
-                            href="#"
                             class="btn bg-red-500 hover:bg-red-400 text-white border-0"
                             @click="submithapus"
-                            >Delete</a
+                            >Hapus</a
                         >
                         <a href="#" class="btn">Exit</a>
                     </div>
@@ -265,6 +331,7 @@
                             <th>Jumlah</th>
                             <th>Harga</th>
                             <th>Total</th>
+                            <th>Keterangan</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -275,6 +342,7 @@
                             <td>{{ item.jumlah }}</td>
                             <td>{{ item.harga }}</td>
                             <td>{{ item.total }}</td>
+                            <td>{{ item.keterangan }}</td>
                             <td class="text-white flex flex-row">
                                 <a href="#modal-edit">
                                     <label
@@ -301,40 +369,51 @@
                     </tbody>
                 </table>
             </div>
+            <a href="#" id="submit" hidden></a> 
         </template>
     </blankVue>
 </template>
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
 import { reactive } from "vue";
-import blankVue from "../../Template/blank.vue";
+import blankVue from "../Template/blank.vue";
 
 export default {
     components: {
         blankVue,
     },
     setup() {
+        function klik(){
+            document.getElementById('submit').click();
+        }
         const formtambah = useForm({
             nama: null,
-            harga: null,
             jumlah: null,
             total: null,
+            harga: null,
+            keterangan: null,
         });
         function submittambah() {
-            this.formtambah.post(route("transaksipemasukkan.store"));
+            formtambah.post(route("transaksipengeluaran.store"), {
+                onSuccess: () => {formtambah.reset();klik()},
+            });
         }
         const formedit = useForm({
             id: null,
             nama: null,
-            harga: null,
             jumlah: null,
             total: null,
+            harga: null,
+            keterangan: null,
         });
         function submitedit() {
-            this.formedit.put(
-                route("transaksipemasukkan.update", {
-                    pemasukkan: this.formedit.id,
-                })
+            formedit.put(
+                route("transaksipengeluaran.update", {
+                    pengeluaran: formedit.id,
+                }),
+                {
+                    onSuccess: () => {formedit.reset(),klik()},
+                }
             );
         }
         const formhapus = useForm({
@@ -342,10 +421,13 @@ export default {
             nama: null,
         });
         function submithapus() {
-            this.formhapus.delete(
-                route("transaksipemasukkan.destroy", {
-                    pemasukkan: this.formhapus.id,
-                })
+            formhapus.delete(
+                route("transaksipengeluaran.update", {
+                    pengeluaran: formhapus.id,
+                }),
+                {
+                    onSuccess: () => {formhapus.reset();klik()},
+                }
             );
         }
         const search = reactive({
@@ -362,41 +444,37 @@ export default {
         };
     },
     props: {
-        pemasukkan: Array,
-        success: String,
-        warning: String,
-        danger: String,
+        pengeluaran: Array,
+        flash: Object,
         errors: Object,
     },
     data() {
         return {
-            alert_success: null,
-            alert_warning: null,
-            alert_danger: null,
+            alert_success : null,
+            alert_warning : null,
+            alert_danger : null,
         };
     },
     updated() {
-        console.log({
-            success: this.success,
-            warning: this.warning,
-            danger: this.danger,
-        });
-        if (this.success) {
-            this.alert_success = this.success;
-            setTimeout(() => (this.alert_success = null), 5000);
-        } else if (this.warning) {
-            this.alert_warning = this.warning;
-            setTimeout(() => (this.alert_warning = null), 5000);
-        } else if (this.danger) {
-            this.alert_danger = this.danger;
-            setTimeout(() => (this.alert_danger = null), 5000);
+        if (this.flash.alert) {
+            if (this.flash.alert["type"] == "success") {
+                this.alert_success = this.flash.alert["message"];
+                setTimeout(() => (this.alert_success = null), 5000);
+            }
+            if (this.flash.alert["type"] == "warning") {
+                this.alert_warning = this.flash.alert["message"];
+                setTimeout(() => (this.alert_warning = null), 5000);
+            }
+            if (this.flash.alert["type"] == "danger") {
+                this.alert_danger = this.flash.alert["message"];
+                setTimeout(() => (this.alert_danger = null), 5000);
+            }
         }
     },
-    mounted() {},
     methods: {
         edit(id) {
             var data;
-            this.pemasukkan.filter((items) => {
+            this.pengeluaran.filter((items) => {
                 if (items.id == id) {
                     data = items;
                 }
@@ -406,10 +484,11 @@ export default {
             this.formedit.harga = data.harga;
             this.formedit.total = data.total;
             this.formedit.jumlah = data.jumlah;
+            this.formedit.keterangan = data.keterangan;
         },
         hapus(id) {
             var data;
-            this.pemasukkan.filter((items) => {
+            this.pengeluaran.filter((items) => {
                 if (items.id == id) {
                     data = items;
                 }
@@ -427,7 +506,7 @@ export default {
     },
     computed: {
         filteredItems() {
-            return this.pemasukkan.filter((item) => {
+            return this.pengeluaran.filter((item) => {
                 return (
                     item.nama
                         .toLowerCase()

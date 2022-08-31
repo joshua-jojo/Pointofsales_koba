@@ -35,7 +35,7 @@ class TransaksiKasirController extends Controller
             }
         }
         // dd($master_pemesanan);
-        return Inertia::render('Transaksi/Kasir/index',['pemesanan' => $master_pemesanan]);
+        return Inertia::render('Transaksi/kasir',['pemesanan' => $master_pemesanan]);
     }
 
     /**

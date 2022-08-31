@@ -261,7 +261,7 @@ export default {
         function submittambah() {
             formtambah.post(route("mastersatuan.store"), {
                 onSuccess: () => {
-                    formedit.reset(), klik();
+                    formtambah.reset(), klik();
                 },
             });
         }

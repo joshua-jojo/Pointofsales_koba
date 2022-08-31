@@ -18,11 +18,12 @@ class InventoryController extends Controller
      */
     public function index()
     {
+        $satuan = Satuan::all();
         $inventory = Inventory::orderBy('created_at')->get();
         foreach ($inventory as $key => $value) {
             $inventory[$key]->satuan = $value->datasatuan->nama;
         }
-        return Inertia::render('Warehouse/Inventory/index',['inventory' => $inventory]);
+        return Inertia::render('Warehouse/inventory',['inventory' => $inventory,'satuan' => $satuan]);
     }
 
     /**
@@ -32,8 +33,6 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        $satuan = Satuan::all();
-        return Inertia::render('Warehouse/Inventory/tambah',['satuan' => $satuan]);
     }
 
     /**
@@ -44,12 +43,13 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        Inventory::create([
-            'nama' => $request->nama,
-            'satuan' => $request->satuan,
-            'harga' => $request->harga,
+        $data = request()->validate([
+            'nama' => ['required','min:3','unique:inventories'],
+            'harga' => ['required','min:0','numeric'],
+            'satuan' => ['required'],
         ]);
-        return $this->index()->with('success','Inventory berhasil ditambahkan');
+        Inventory::create($data);
+        return $this->respon('success','Inventory berhasil ditambahkan');
     }
 
     /**
@@ -84,12 +84,13 @@ class InventoryController extends Controller
      */
     public function update(Request $request,Inventory $inventory)
     {
-        $inventory->update([
-            'nama' => $request->nama,
-            'harga' => $request->harga,
-            'satuan' => $request->satuan,
+        $data = request()->validate([
+            'nama' => 'required|min:3',
+            'harga' => 'required|min:0|numeric',
+            'satuan' => 'required',
         ]);
-        return $this->index()->with('success','Inventory berhasil di ubah');
+        $inventory->update($data);
+        return $this->respon('success','Inventory berhasil di ubah');
     }
 
     /**
@@ -101,6 +102,13 @@ class InventoryController extends Controller
     public function destroy(Inventory $inventory)
     {
         $inventory->delete();
-        return $this->index()->with('warning','Data Inventory berhasil di hapus');
+        return $this->respon('warning','Data Inventory berhasil di hapus');
+    }
+    public function respon($type, $pesan)
+    {
+        return redirect()->route('warehouseinventory.index')->with('alert', [
+            "type" => $type,
+            "message" => $pesan,
+        ]);
     }
 }
