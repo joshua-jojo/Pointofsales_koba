@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Harga;
+use App\Models\meja;
 use App\Models\Pemasukkan;
 use App\Models\Pemesanan;
 use App\Models\PemesananDetail;
@@ -158,6 +159,11 @@ class CashierTransaksiController extends Controller
 
     public function cetak(Request $request)
     {
+        $meja = Pemesanan::find($request->pemesanan['id']);
+        meja::find($meja[0]->meja)->update([
+            'status' => '0'
+        ]);
+        dd();
         if (request()->ref == null) {
             request()->ref = '-';
         }

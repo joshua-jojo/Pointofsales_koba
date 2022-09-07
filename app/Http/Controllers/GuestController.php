@@ -10,6 +10,7 @@ use App\Models\PemesananDetail;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use stdClass;
 
 class GuestController extends Controller
 {
@@ -40,37 +41,37 @@ class GuestController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        request()->validate([
+            'pemesan' => 'required|min:3'
+        ]);
         $data = [];
         $data_master = [];
         $totalfinal = $request->totalfinal;
-        $namapemesan = $request->namapemesan;
+        $namapemesan = $request->pemesan;
         $meja = $request->meja;
         $nama_meja = meja::find((int) $meja)->nama;
-        foreach ($request->id as $key => $value) {
-            foreach ($value as $keys => $data) {
-                $taking_order = Kategori::where('nama',$request->kategori[$key][$keys]['nama'])->first();
-                $a = array(
-                    'id' =>  $request->id[$key][$keys],
-                    'nama' =>  $request->nama[$key][$keys],
-                    'jumlah' =>  $request->jumlah[$key][$keys],
-                    'harga' =>  $request->harga[$key][$keys],
-                    'total' =>  $request->total[$key][$keys],
-                    'kategori' =>  $request->kategori[$key][$keys]['nama'],
-                    'taking_order' =>  $taking_order->taking_order,
-                    'keterangan' =>  $request->keterangan[$keys],
-                    'meja' =>  $nama_meja,
-                );
-                $data = array($keys => $a);
-                $data_master = array_merge($data_master, $data);
-            }
+        $pesanan = request()->pesanan;
+        foreach ($pesanan as $key => $value) {
+            $taking_order = Kategori::where('nama', $value['kategori'])->first();
+            $a = array(
+                'id' =>  $value['id'],
+                'nama' =>  $value['nama'],
+                'jumlah' =>  $value['jumlah'],
+                'harga' =>  $value['harga'],
+                'total' =>  $value['total'],
+                'kategori' =>  $value['kategori'],
+                'taking_order' =>  $taking_order->taking_order,
+                'keterangan' =>  $value['keterangan_pesan'],
+                'meja' =>  $nama_meja,
+            );
+            $data = array($key => $a);
+            $data_master = array_merge($data_master, $data);
         }
         $id_pemesanan = Pemesanan::create([
             'nama' => $namapemesan,
             'total' => $totalfinal,
             'meja' => $meja,
         ])->id;
-        $data_kategori = Kategori::all();
 
         foreach ($data_master as $key => $value) {
             PemesananDetail::create([
@@ -100,23 +101,35 @@ class GuestController extends Controller
     public function show($id)
     {
         $kategori = Kategori::all();
-        $produk = Produk::all();
         $master_diskon = Harga::find(2);
-        $meja = $id;
+        $meja = meja::find($id);
         $data_produk = [];
-
+        $produk = Produk::all();
+        $data = [];
         foreach ($produk as $key => $value) {
-            $value->id_kategori = $value->kategori->nama;
-            if($master_diskon->value != 0){
-                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
+            $master_produk = new stdClass;
+            $master_produk->id = $value->id;
+            $master_produk->nama = $value->nama;
+            $master_produk->harga = $value->harga;
+            $master_produk->satuan = $value->satuan->nama;
+            $master_produk->stok = $value->stok;
+            $master_produk->diskon = $value->diskon;
+            $master_produk->kategori = $value->kategori->nama;
+            $master_produk->keterangan = $value->keterangan;
+            $master_produk->gambar = asset($value->gambar);
+            array_push($data, $master_produk);
+        }
+
+        foreach ($data as $key => $value) {
+            if ($master_diskon->value != 0) {
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value / 100);;
+            } else {
+                $value->harga = $value->harga - ($value->harga * $value->diskon / 100);
             }
-            else{
-                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
-            }
-            $value->gambar = asset( $value->gambar);
+            $value->gambar = asset($value->gambar);
             $data_produk[$key] = $value;
         }
-        return Inertia::render('Guest/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja]);
+        return Inertia::render('Guest/standbyv2', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja]);
     }
 
     /**
@@ -132,6 +145,7 @@ class GuestController extends Controller
             $gambar = Produk::find($value->id_produk)->gambar;
             $data[$key]->gambar = asset($gambar);
         }
+
         return Inertia::render('Guest/standby', ['pemesanan' => $data, 'id' => $id]);
         dd($data);
     }
@@ -161,20 +175,31 @@ class GuestController extends Controller
     public function tambah($id)
     {
         $kategori = Kategori::all();
-        $produk = Produk::all();
-        $meja = $id;
-        $data_produk = [];
         $master_diskon = Harga::find(2);
-
+        $data_produk = [];
+        $produk = Produk::all();
+        $data = [];
         foreach ($produk as $key => $value) {
-            $value->id_kategori = $value->kategori->nama;
-            if($master_diskon->value != 0){
-                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
+            $master_produk = new stdClass;
+            $master_produk->id = $value->id;
+            $master_produk->nama = $value->nama;
+            $master_produk->harga = $value->harga;
+            $master_produk->satuan = $value->satuan->nama;
+            $master_produk->stok = $value->stok;
+            $master_produk->diskon = $value->diskon;
+            $master_produk->kategori = $value->kategori->nama;
+            $master_produk->keterangan = $value->keterangan;
+            $master_produk->gambar = asset($value->gambar);
+            array_push($data, $master_produk);
+        }
+
+        foreach ($data as $key => $value) {
+            if ($master_diskon->value != 0) {
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value / 100);;
+            } else {
+                $value->harga = $value->harga - ($value->harga * $value->diskon / 100);
             }
-            else{
-                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
-            }
-            $value->gambar = asset( $value->gambar);
+            $value->gambar = asset($value->gambar);
             $data_produk[$key] = $value;
         }
         return Inertia::render('Guest/tambah', ['produk' => $data_produk, 'kategori' => $kategori, 'id_pembelian' => $id]);
@@ -185,26 +210,24 @@ class GuestController extends Controller
         $data_master = [];
         $totalfinal = $request->totalfinal;
         $namapemesan = $request->namapemesan;
+        $pesanan = request()->pesanan;
         $nama_meja = Pemesanan::find($id)->meja;
         $meja = meja::find($nama_meja)->nama;
-        // dd($request);
-        foreach ($request->id as $key => $value) {
-            foreach ($value as $keys => $data) {
-                $taking_order = Kategori::where('nama',$request->kategori[$key][$keys]['nama'])->first();
-                $a = array(
-                    'id' =>  $request->id[$key][$keys],
-                    'nama' =>  $request->nama[$key][$keys],
-                    'jumlah' =>  $request->jumlah[$key][$keys],
-                    'harga' =>  $request->harga[$key][$keys],
-                    'total' =>  $request->total[$key][$keys],
-                    'kategori' =>  $request->kategori[$key][$keys]['nama'],
-                    'taking_order' =>  $taking_order->taking_order,
-                    'keterangan' =>  $request->keterangan[$keys],
-                    'meja' =>  $meja,
-                );
-                $data = array($keys => $a);
-                $data_master = array_merge($data_master, $data);
-            }
+        foreach ($pesanan as $key => $value) {
+            $taking_order = Kategori::where('nama', $value['kategori'])->first();
+            $a = array(
+                'id' =>  $value['id'],
+                'nama' =>  $value['nama'],
+                'jumlah' =>  $value['jumlah'],
+                'harga' =>  $value['harga'],
+                'total' =>  $value['total'],
+                'kategori' =>  $value['kategori'],
+                'taking_order' =>  $taking_order->taking_order,
+                'keterangan' =>  $value['keterangan_pesan'],
+                'meja' =>  $nama_meja,
+            );
+            $data = array($key => $a);
+            $data_master = array_merge($data_master, $data);
         }
         foreach ($data_master as $key => $value) {
             PemesananDetail::create([

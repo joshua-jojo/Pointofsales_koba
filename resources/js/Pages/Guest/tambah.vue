@@ -1,376 +1,332 @@
 <template lang="">
-    <div v-if="search.validasi.length > 0" class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center">
-        <div class="w-18/20 h-15/20 bg-white p-2 grid grid-rows-1 rounded-xl overflow-auto scrollbar-hide" data-aos="zoom-in" data-aos-duration="300">
-            <form class="h-full w-full" @submit.prevent="submit">
-                <div class="w-full h-full">
-                    <div class="h-max w-full border-2 mb-10" v-for="(item, index) in search.validasi" :key="index">
-                        <div class="border-b-2 h-max p-2 capitalize">
-                            Nama : {{ item.nama }}
+    <div class="bg-white w-screen h-screen flex flex-col" data-theme="winter">
+        <div class="h-2/20 sticky z-10 flex flex-row px-2 items-center bg-white top-0 w-full shadow-lg">
+            <div class="indicator absolute z-10">
+                <modal :idmodal="'modal-keranjang'" classbutton="btn-sm btn-outline">
+                    <template v-slot:bodymodal>
+                        <div class="p-2 flex bg-white justify-center z-10 sticky top-0">
+                            <!-- <div class="w-full justify-center flex flex-col shadow-lg">
+                                <input v-model="form_pesanan.pemesan" type="text" class="input input-bordered text-center w-full"
+                                name="" id="" placeholder="nama pemesan" />
+                            <div class="text-red-400 text-center" v-if="errors.pemesan">{{errors.pemesan}}</div>
+                            </div> -->
                         </div>
-                        <div class="border-b-2 h-max p-2 capitalize">
-                            Jumlah: {{ item.jumlah }}
-                        </div>
-                        <div class="border-b-2 h-max p-2 capitalize">
-                            Harga: {{ item.harga }}
-                        </div>
-                        <div class="border-b-2 h-max p-2 capitalize">
-                            Total: {{ item.total }}
-                        </div>
-                        <div class="border-b-2 h-max p-2 capitalize flex items-center">
-                            Keterangan:
-                            <textarea class="textarea ml-2 w-full textarea-bordered" name="keterangan"
-                                :id="'keterangan'+item.id" placeholder="Keterangan ">{{ item.keterangan }}</textarea>
-                        </div>
-                    </div>
-                    <div class="w-full h-max mb-10 flex justify-end items-end p-2">
-                        <div class="grid grid-cols-2 gap-1">
-                            <button @click="" type="submit"
-                                class="btn btn-sm bg-green-500 text-white border-0 hover:bg-green-600 font-semibold w-max">
-                                Pesan
-                            </button>
-                            <button @click="search.validasi = []" type="button"
-                                class="btn btn-sm bg-gray-500 text-white border-0 hover:bg-gray-600 font-semibold w-max">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div v-if="search.modal.length > 0"
-        class="absolute z-20 w-screen h-screen bg-gray-500 bg-opacity-50 flex justify-center items-center">
-        <div v-for="item in search.modal"
-            class="w-18/20 h-max bg-white p-2 grid grid-rows-1 rounded-xl " data-aos="zoom-in" data-aos-duration="300">
-            <div class="border-b-2 h-max p-2 capitalize">{{ item.nama }}</div>
-            <div class="border-b-2 h-max w-full p-2 capitalize">
-                <img :src="item.gambar" alt="" srcset="" />
-            </div>
-            <div class="border-b-2 h-max p-2 capitalize">
-                Harga : {{ item.harga }}
-            </div>
-            <div class="border-b-2 h-max p-2 capitalize text-xs">
-                {{ item.keterangan }}
-            </div>
-            <div class="w-full flex justify-end p-5 item-center">
-                <div class="grid w-max grid-cols-2 gap-1">
-                    <button @click="add(item.id)" type="button"
-                        class="btn bg-green-400 text-white border-0 hover:bg-green-500 font-semibold">
-                        ADD
-                    </button>
-                    <button @click="close()" type="button"
-                        class="btn bg-gray-600 text-white border-0 hover:bg-gray-700 font-semibold">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500 p-2">
-        <div class="w-full h-full flex flex-col">
-            <div class="h-13/20 w-full bg-cyan-50 mb-2 rounded-lg overflow-hidden flex flex-col">
-                <div class="w-full bg-blue-400 h-3/20 flex flex-row items-center justify-center">
-                    <input type="text" v-model="search.value" placeholder="Search.."
-                        class="input input-bordered w-40" />
-                    <select v-model="search.kategori" @change="filteredItems" class="select w-40 ml-3">
-                        <option selected>All</option>
-                        <option v-for="item in kategori">
-                            {{ item.nama }}
-                        </option>
-                    </select>
-                </div>
-                <div class="w-full h-17/20 overflow-hidden p-3 flex justify-center">
-                    <div class="w-max h-full overflow-auto grid grid-cols-2 gap-3 scrollbar-hide">
-                        <div v-for="item in filteredItems"
-                            class="w-40 h-max flex flex-col bg-red-200 rounded-xl overflow-hidden">
-                            <img v-bind:src="`${item.gambar}`" class="bg-cover w-full" />
-                            <div class="text-xs grid grid-rows-2 h-max w-full bg-white">
-                                <div class="h-full w-full flex justify-center items-center">
-                                    <div class="w-full h-full px-2 break-words text-center">
-                                        {{ item.nama }}
-                                    </div>
+                        <div tabindex="0" class="collapse z-0 collapse-arrow border border-base-300 bg-base-100 rounded-box"
+                            v-for="item in list_pesanan">
+                            <input type="checkbox" />
+                            <div class="collapse-title text-xl font-medium flex flex-row gap-2 items-center">
+                                <div class="">
+                                    <img :src="item.gambar" alt="" class="w-12 rounded-lg" />
                                 </div>
-                                <div class="grid grid-cols-2 p-1 gap-1 h-max w-full pb-1">
-                                    <button @click="add(item.id)" type="button"
-                                        class="btn btn-sm bg-green-500 text-white border-0 hover:bg-green-600 font-semibold w-full">
-                                        ADD
-                                    </button>
-                                    <button type="button" @click="modal(item.id)"
-                                        class="btn btn-sm bg-blue-500 text-white border-0 hover:bg-blue-600 font-semibold w-full">
+                                <div class="">
+                                    <article class="prose">
+                                        <h3>{{ item.nama }}</h3>
+                                    </article>
+                                </div>
+                            </div>
+                            <div class="collapse-content">
+                                <table class="table w-full">
+                                    <tbody>
+                                        <tr class="active">
+                                            <td>Nama</td>
+                                            <td>{{ item.nama }}</td>
+                                        </tr>
+                                        <tr class="active">
+                                            <td>Harga</td>
+                                            <td>Rp. {{ item.harga }}</td>
+                                        </tr>
+                                        <tr class="active">
+                                            <td>jumlah</td>
+                                            <td>
+                                                {{ item.jumlah }}
+                                                {{ item.satuan }}
+                                            </td>
+                                        </tr>
+                                        <tr class="active">
+                                            <td>total</td>
+                                            <td>Rp {{ item.total }}</td>
+                                        </tr>
+                                        <tr class="active">
+                                            <td>Keterangan</td>
+                                            <td>
+                                                <textarea v-model="item.keterangan_pesan"
+                                                    class="textarea textarea-bordered w-full"
+                                                    placeholder="Keterangan..."></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr class="active">
+                                            <td colspan="2" class="">
+                                                <div class="grid grid-cols-3 gap-2">
+                                                    <button class="btn btn-primary" @click="add(item.id)">
+                                                        +
+                                                    </button>
+                                                    <button class="btn btn-secondary" @click="kurang(item.id)">
+                                                        -
+                                                    </button>
+                                                    <button class="btn btn-outline" @click="hapus(item.id)">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="text-center capitalize prose" v-if="form_pesanan.totalfinal >0">
+                            <h3 class="font-semibold">Total Rp. {{form_pesanan.totalfinal}}</h3>
+                        </div>
+                        <div class="text-center capitalize prose" v-if="list_pesanan.length < 1">
+                            <h3 class="font-semibold">Tidak ada pesanan</h3>
+                        </div>
+                    </template>
+                    <template v-slot:actionmodal><button class="btn btn-primary"
+                            v-if="list_pesanan.length" @click="submit">
+                            Pesan
+                        </button></template>
+                </modal>
+                <span class="indicator-item indicator-top indicator-end badge badge-secondary">{{ keranjang }}</span>
+                <label for="modal-keranjang">
+                    <div class="items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-9">
+                            <path
+                                d="M24 0C10.7 0 0 10.7 0 24S10.7 48 24 48H76.1l60.3 316.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24-10.7 24-24s-10.7-24-24-24H179.9l-9.1-48h317c14.3 0 26.9-9.5 30.8-23.3l54-192C578.3 52.3 563 32 541.8 32H122l-2.4-12.5C117.4 8.2 107.5 0 96 0H24zM176 512c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm336-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48z" />
+                        </svg>
+                    </div>
+                </label>
+            </div>
+            <div class="text-black flex justify-center w-full z-0 uppercase">
+                <article class="prose">
+                    <!-- <h2>{{meja.nama}}</h2> -->
+                </article>
+            </div>
+        </div>
+        <div class="h-3/20 flex flex-col p-2 z-0">
+            <div class="prose">
+                <h3 class="capitalize font-bold">kategori</h3>
+            </div>
+            <div class="w-full h-full overflow-auto scrollbar-hide flex-row flex items-center gap-2">
+                <div class="border-2 w-max h-max px-4 py-1 rounded-lg capitalize shadow-md font-semibold"
+                    @click="this.filter_kategori = 'all'">
+                    All
+                </div>
+                <div class="border-2 w-max h-max px-4 py-1 rounded-lg capitalize shadow-md font-semibold">
+                    Popular
+                </div>
+                <div class="border-2 w-max h-max px-4 py-1 rounded-lg capitalize shadow-md font-semibold"
+                    v-for="item in kategori" @click="this.filter_kategori = item.nama">
+                    {{ item.nama }}
+                </div>
+            </div>
+        </div>
+        <div class="h-15/20 flex flex-col p-2">
+            <div class="p-1 flex justify-between">
+                <div class="prose">
+                    <h3 class="capitalize font-bold">
+                        {{ this.filter_kategori }}
+                    </h3>
+                </div>
+                <div class="" v-if="this.filter_kategori == 'all'">
+                    <input v-model="this.filter_search" type="text" class="input input-bordered input-sm"
+                        placeholder="cari..." />
+                </div>
+            </div>
+            <div class="flex h-full border-2 rounded-lg shadow-lg p-2 grid-cols-2 justify-center">
+                <div
+                    class="w-max overflow-auto scrollbar-hide grid grid-cols-2 desktop:grid-cols-6 tablet:grid-cols-4 gap-4">
+                    <div class="h-max w-40 border rounded-xl flex flex-col overflow-hidden gap-2 shadow-lg"
+                        v-for="(item, index) in data_produk" :key="index">
+                        <img :src="item.gambar" alt="" class="rounded-2xl p-2" />
+                        <div class="prose flex flex-col px-2">
+                            <h4 class="text-sm">{{ item.nama }}</h4>
+                            <h5 class="text-xs">Rp. {{ item.harga }}</h5>
+                        </div>
+                        <div class="items-center w-full">
+                            <div class="btn-group w-full">
+                                <button class="btn w-1/2 btn-primary" @click="add(item.id)">
+                                    add
+                                </button>
+                                <button class="btn w-1/2 btn-primary btn-outline">
+                                    <label :for="item.nama + item.index" class="modal-button w-full h-full flex items-center">
                                         Detail
-                                    </button>
-                                </div>
+                                    </label>
+                                </button>
                             </div>
+                            <modal :idmodal="item.nama + item.index" :titlemodal="item.nama" classbutton="btn-sm">
+                                <template v-slot:buttonmodal>detail</template>
+                                <template v-slot:bodymodal>
+                                    <div class="justify-center w-full flex p-5">
+                                        <img :src="item.gambar"
+                                            class="rounded-xl w-3/4 desktop:w-10/20 tablet:w-9/20" />
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="table w-full table-compact">
+                                            <!-- head -->
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- row 1 -->
+                                                <tr class="active">
+                                                    <th>Nama</th>
+                                                    <td>{{ item.nama }}</td>
+                                                </tr>
+                                                <tr class="active">
+                                                    <th>Harga</th>
+                                                    <td>
+                                                       Rp. {{ item.harga }}
+                                                    </td>
+                                                </tr>
+                                                <tr class="active">
+                                                    <th>Keterangan</th>
+                                                    <td v-if="item.keterangan">
+                                                        {{ item.keterangan }}
+                                                    </td>
+                                                    <td v-else>-</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                                <template v-slot:actionmodal>
+                                    <div class="btn btn-primary" @click="add(item.id)">
+                                        add
+                                    </div>
+                                </template>
+                            </modal>
                         </div>
                     </div>
                 </div>
             </div>
-            <form class="h-7/20 w-full" @submit.prevent="submit">
-                <div class="h-full w-full bg-blue-500 rounded-lg overflow-hidden flex flex-col">
-                    <div class="w-full h-4/20 flex justify-center items-center">
-                        <button v-if="search.ceksubmit > 0" type="button" @click="validasi"
-                            class="btn bg-blue-600 text-white border-0 hover:bg-blue-700 font-semibold">
-                            Cek
-                        </button>
-                    </div>
-                    <div class="w-full h-16/20 bg-blue-300 p-2 overflow-hidden">
-                        <div class="h-full w-full overflow-auto scrollbar-hide">
-                            <div :id="'row' + items.id" class="flex flex-row justify-center items-center w-full py-3"
-                                v-for="items in this.search.pesanan">
-                                <div class="w-full text-xs text-center">
-                                    {{ items.nama }}
-                                    <input name="nama" hidden :value="items.nama" type="text" />
-                                    <input name="kategori_produk" hidden :value="items.id_kategori" type="text" /><input
-                                        name="id" hidden :value="items.id" type="text" />
-                                </div>
-                                <div class="w-full text-center">
-                                    x {{ items.jumlah }}
-                                </div>
-                                <div class="w-full text-center">
-                                    <input class="w-10 text-center" name="harga" :id="'harga' + items.id"
-                                        :value="items.harga" hidden />
-                                    Rp. {{ items.harga }}
-                                </div>
-                                <div class="w-full px-2 text-center">
-                                    Rp. {{ items.total }}
-                                </div>
-                                <div class="w-full grid grid-cols-2 gap-1 text-center">
-                                    <button @click="tambah(items.id)" type="button"
-                                        class="btn btn-sm bg-green-500 text-white border-0 hover:bg-green-600 font-semibold w-full">
-                                        +
-                                    </button>
-                                    <button @click="kurang(items.id)" type="button"
-                                        class="btn btn-sm bg-yellow-500 text-white border-0 hover:bg-yellow-600 font-semibold w-full">
-                                        -
-                                    </button>
-                                    <button type="button" @click="hapus(items.id)"
-                                        class="btn btn-sm col-span-2 bg-blue-500 text-white border-0 hover:bg-blue-600 font-semibold">
-                                        hapus
-                                    </button>
-                                </div>
-                            </div>
-                            <div v-if="search.totalharga != 0"
-                                class="flex justify-center items-center font-semibold text-lg w-full py-3">
-                                Total Rp. {{ search.totalharga
-                                }}<input v-model="form.totalfinal" id="totalharga" hidden />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </template>
 <script>
     import {
-        Inertia
-    } from "@inertiajs/inertia";
-    import {
         useForm
-    } from "@inertiajs/inertia-vue3";
-    import {
-        reactive
-    } from "vue";
+    } from '@inertiajs/inertia-vue3';
 
     export default {
+        component: {},
+        setup(props) {
+            const form_pesanan = useForm({
+                pemesan: null,
+                pesanan: null,
+                meja: null,
+                totalfinal: null,
+            })
+            return {
+                form_pesanan
+            }
+        },
         props: {
             produk: Array,
             kategori: Array,
             id_pembelian: String,
+            meja: Object,
+            errors: Object,
         },
-        mounted() {
-            setInterval(() => this.form.meja = this.meja, 3000);
-
-        },
-        setup(props) {
-            const search = reactive({
-                value: "",
-                kategori: "All",
-                meja: "Pilih Meja",
-                nama: 0,
-                jumlah: 0,
-                pesanan: [],
-                totalharga: 0,
-                ceksubmit: 0,
-                modal: [],
-                validasi: [],
-            });
-            const form = useForm({
-                id: [],
-                id_pembelian: null,
-                kategori: [],
-                nama: [],
-                jumlah: [],
-                total: [],
-                harga: [],
-                totalfinal: null,
-                namapemesan: null,
-                meja: 0,
-            });
-
-            const id_pembelian = props.id_pembelian;
-
-            function submit() {
-                var harga_array = [];
-                var id_array = [];
-                var jumlah_array = [];
-                var total_value_array = [];
-                var kategori_array = [];
-                var nama_array = [];
-                var harga_array = [];
-                var keterangan_array = [];
-                var totalfinal = 0;
-
-                this.search.pesanan.forEach((item, index) => {
-                    var keterangan = document.getElementById('keterangan' + item.id).value
-
-                    harga_array.push(item.harga)
-                    id_array.push(item.id)
-                    jumlah_array.push(item.jumlah)
-                    total_value_array.push(item.total)
-                    kategori_array.push(item.kategori)
-                    nama_array.push(item.nama)
-                    keterangan_array.push(keterangan)
-                    totalfinal = totalfinal + item.total
-                })
-                this.form.harga.push(harga_array);
-                this.form.id.push(id_array);
-                this.form.jumlah.push(jumlah_array);
-                this.form.total.push(total_value_array);
-                this.form.nama.push(nama_array);
-                this.form.kategori.push(kategori_array);
-                this.form.keterangan = keterangan_array;
-                console.log(this.id_pembelian);
-                Inertia.post(route("updatepesan", {
-                    id: this.id_pembelian
-                }), form);
-
-                this.form.harga = [];
-                this.form.harga = [];
-                this.form.id = [];
-                this.form.jumlah = [];
-                this.form.total = [];
-                this.form.nama = [];
-                this.form.kategori = [];
-
-                this.form.totalfinal = 0;
-                this.search.totalharga = 0;
-                this.form.namapemesan = null;
-                this.form.meja = this.meja;
-
-                this.search.pesanan = [];
-            }
+        data() {
             return {
-                submit,
-                id_pembelian,
-                form,
-                search,
+                filter_kategori: "all",
+                filter_search: "",
+                list_pesanan: [],
             };
         },
         methods: {
-            tambah(id) {
-                this.search.pesanan.forEach((items, index) => {
-                    if (items.id == id) {
-                        items.jumlah++;
-                        items.total = items.jumlah * items.harga;
-                        this.search.pesanan[index] = items;
+            add(id) {
+                if (this.list_pesanan.length < 1) {
+                    this.produk.filter((items) => {
+                        if (items.id == id) {
+                            items.jumlah = 1;
+                            items.keterangan_pesan = '';
+                            items.total = 1 * items.harga;
+                            this.list_pesanan.push(items);
+                        }
+                    });
+                } else {
+                    var cek = 0;
+                    this.list_pesanan.filter((items) => {
+                        if (items.id == id) {
+                            cek++;
+                        }
+                    });
+                    if (cek == 0) {
+                        this.produk.filter((items) => {
+                            if (items.id == id) {
+                                items.jumlah = 1;
+                                items.keterangan_pesan = '';
+                                items.total = 1 * items.harga;
+                                this.list_pesanan.push(items);
+                            }
+                        });
+                    } else {
+                        this.list_pesanan.filter((items) => {
+                            if (items.id == id) {
+                                items.jumlah += 1;
+                                items.total = items.jumlah * items.harga;
+                            }
+                        });
                     }
-                });
+                }
+                this.total()
             },
             kurang(id) {
-                this.search.pesanan.forEach((items, index) => {
+                this.list_pesanan = this.list_pesanan.filter((items) => {
                     if (items.id == id) {
-                        items.jumlah--;
+                        items.jumlah -= 1;
                         if (items.jumlah <= 1) {
                             items.jumlah = 1;
-                            items.total = items.jumlah * items.harga;
-                            this.search.pesanan[index] = items;
-                        } else {
-                            items.total = items.jumlah * items.harga;
-                            this.search.pesanan[index] = items;
                         }
+                        items.total = items.jumlah * items.harga;
                     }
+                    return items;
                 });
-            },
-            close() {
-                this.search.modal = [];
-            },
-            modal(id) {
-                this.produk.filter((item) => {
-                    if (item.id == id) {
-                        if (this.search.modal.length < 1) {
-                            this.search.modal.push(item);
-                        }
-                    }
-                });
-            },
-            validasi() {
-                this.search.pesanan.forEach((items, index) => {
-                    items["keterangan"] = "-";
-                    this.search.pesanan[index] = items;
-                });
-                this.search.validasi = this.search.pesanan;
-            },
-            add(id) {
-                this.search.nama = id;
-                return this.produk.filter((item) => {
-                    if (item.id == id) {
-                        if (this.search.pesanan.length < 1) {
-                            item["jumlah"] = 1;
-                            item["total"] = item.harga;
-                            this.search.pesanan.push(item);
-                        } else {
-                            var no = 0;
-                            this.search.pesanan.forEach((element) => {
-                                if (element.id == item.id) {
-                                    no++;
-                                }
-                            });
-                            if (no < 1) {
-                                item["jumlah"] = 1;
-                                item["total"] = item.harga;
-                                this.search.pesanan.push(item);
-                            }
-                        }
-                    }
-                    this.cek();
-                });
-            },
-            cek() {
-                this.search.ceksubmit = this.search.pesanan.length;
+                this.total()
             },
             hapus(id) {
-                var set = [];
-                this.search.pesanan.filter((data) => {
-                    if (data.id != id) {
-                        set.push(data);
-                    } else {}
+                this.list_pesanan = this.list_pesanan.filter((items) => {
+                    if (items.id != id) {
+                        return items;
+                    }
                 });
-                // document.getElementById("row" + id).remove();
-                console.log();
-                this.search.pesanan = set;
-                this.cek();
+                this.total()
             },
+            total() {
+                var total = 0
+                this.list_pesanan.filter(items => {
+                    total += items.total
+                })
+                this.form_pesanan.totalfinal = total
+            },
+            submit() {
+                this.total()
+                this.form_pesanan.pesanan = this.list_pesanan
+                this.form_pesanan.post(route("updatepesan",{id:this.id_pembelian}))
+            }
         },
+        mounted() {},
         computed: {
-            getdata(data) {},
-            filteredItems() {
-                if (this.search.kategori == "All") {
+            keranjang() {
+                var jumlah = 0;
+                this.list_pesanan.filter((items) => {
+                    jumlah += items.jumlah;
+                    return jumlah;
+                });
+                return jumlah;
+            },
+            data_produk() {
+                if (this.filter_kategori.toLowerCase() == "all") {
                     return this.produk.filter((item) => {
-                        return (
-                            item.nama
+                        return item.nama
                             .toLowerCase()
-                            .indexOf(this.search.value.toLowerCase()) > -1
-                        );
+                            .includes(this.filter_search.toLowerCase());
                     });
                 } else {
                     return this.produk.filter((item) => {
-                        if (item.id_kategori == this.search.kategori) {
-                            return (
-                                item.nama
-                                .toLowerCase()
-                                .indexOf(this.search.value.toLowerCase()) > -1
-                            );
+                        var text = item.kategori.toLowerCase();
+                        if (text.indexOf(this.filter_kategori.toLowerCase()) == 0) {
+                            return item;
                         }
                     });
                 }

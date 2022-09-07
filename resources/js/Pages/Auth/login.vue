@@ -86,7 +86,7 @@
                                 />
                             </div>
                         </div>
-                        <div class="border-b-2 pb-5 mb-5 mt-9">
+                        <!-- <div class="border-b-2 pb-5 mb-5 mt-9">
                             <div
                                 class="flex justify-center text-xs w-full text-slate-500 font-semibold"
                             >
@@ -97,9 +97,9 @@
                                     >Sign up</Link
                                 >
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="w-full flex justify-center">
+                        <div class="w-full flex justify-center mt-5">
                             <button
                                 type="button" @click="submit"
                                 class="capitalize bg-cyan-400 text-white h-10 w-28 rounded-2xl"
@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div
-                class="hp:-translate-x-2/4 tablet:-translate-x-1/3 desktop:-translate-x-1/2 h-full w-full"
+                class="hp:-translate-x-13/20 tablet:-translate-x-10/20 desktop:-translate-x-1/2 h-full w-full"
             >
                 <div
                     class=" absolute z-10 bg-cyan-500 shadow-lg shadow-slate-500 h-full w-11/12 rounded-full bg-opacity-70"

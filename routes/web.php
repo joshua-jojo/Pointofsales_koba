@@ -20,6 +20,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TransaksiKasirController;
 use App\Http\Controllers\WaitressController;
+use App\Models\Kategori;
+use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -93,3 +95,26 @@ Route::resource('cashiertransaksi', CashierTransaksiController::class)->middlewa
 Route::resource('pesan', GuestController::class);
 
 Route::post('cetak',[CashierTransaksiController::class,'cetak'])->name('cetak');
+Route::get('editpesan', function () {
+    $produk = Produk::all();
+    $data=[];
+    foreach ($produk as $key => $value) {
+        $master_produk = new stdClass;
+        $master_produk->id = $value->id;
+        $master_produk->nama = $value->nama;
+        $master_produk->harga = $value->harga;
+        $master_produk->satuan = $value->satuan->nama;
+        $master_produk->stok = $value->stok;
+        $master_produk->diskon = $value->diskon;
+        $master_produk->kategori = $value->kategori->nama;
+        $master_produk->keterangan = $value->keterangan;
+        $master_produk->gambar = asset($value->gambar);
+        array_push($data,$master_produk);
+    }
+    $kategori = Kategori::all();
+    $kategori_array = [];
+    foreach ($kategori as $key => $value) {
+        array_push($kategori_array,$value);
+    }
+    return Inertia::render('Guest/standbyv2',['produk' => $data,'kategori'=> $kategori_array]);
+});

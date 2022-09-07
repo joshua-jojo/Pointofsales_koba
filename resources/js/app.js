@@ -8,6 +8,7 @@ import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css'
+import modal from './Pages/Guest/modal.vue'
 
 
 var username = localStorage.getItem('username')
@@ -18,6 +19,7 @@ createInertiaApp({
       .use(plugin,VueApexCharts,AOS.init()) // use the plugin
       .component('Link',Link,InertiaProgress.init({color: '#72FFFF',}))
       .component('DataTable',Vue3EasyDataTable)
+      .component('modal',modal)
       .provide('username', username)
       .mixin({ methods: { route }})
       .mount(el)
