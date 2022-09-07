@@ -154,12 +154,13 @@
                     </button>
                 </div>
                 <div class="justify-end ">
-                    <button class="btn bg-blue-400 border-0 hover:bg-blue-300 w-max text-white flex flex-row gap-2">
+                    <button :disabled="formbarcode.id == null" @click="submitbarcode"
+                        class="btn bg-blue-400 border-0 hover:bg-blue-300 w-max text-white flex flex-row gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="text-white h-4 w-4">
                             <path
                                 d="M384 32H64.01C28.66 32 .0085 60.65 .0065 96L0 415.1C-.002 451.3 28.65 480 64 480h232.1c25.46 0 49.88-10.12 67.89-28.12l55.88-55.89C437.9 377.1 448 353.6 448 328.1V96C448 60.8 419.2 32 384 32zM52.69 427.3C50.94 425.6 48 421.8 48 416l.0195-319.1C48.02 87.18 55.2 80 64.02 80H384c8.674 0 16 7.328 16 16v192h-88C281.1 288 256 313.1 256 344v88H64C58.23 432 54.44 429.1 52.69 427.3zM330.1 417.9C322.9 425.1 313.8 429.6 304 431.2V344c0-4.406 3.594-8 8-8h87.23c-1.617 9.812-6.115 18.88-13.29 26.05L330.1 417.9z" />
-                            </svg>
-                            cetak barcode
+                        </svg>
+                        cetak barcode
                     </button>
                 </div>
             </div>
@@ -167,7 +168,7 @@
                 <div class="h-36 w-56 border rounded-lg overflow-hidden shadow-lg hover:scale-105 transition ease-out"
                     v-for="(data, index) in filteredItems" :key="index">
                     <div class="z-10 absolute p-1">
-                        <input type="checkbox" :value="data.id" class="checkbox">
+                        <input type="checkbox" @click="barcode_data" name="barcode" :value="data.id" class="checkbox">
                     </div>
                     <div class="bg-red-300 z-0 w-full h-full flex gap-4 items-center justify-center flex-col"
                         v-if="data.status == 1">
@@ -273,6 +274,14 @@
             flash: Object,
         },
         setup() {
+            const formbarcode = useForm({
+                id: null
+            });
+
+            function submitbarcode() {
+                window.open(route("cetakbarcode",{id: formbarcode.id}))
+            }
+
             const formtambah = useForm({
                 nama: null,
                 status: 0,
@@ -327,6 +336,8 @@
                 value: "",
             });
             return {
+                formbarcode,
+                submitbarcode,
                 formhapus,
                 submithapus,
                 formedit,
@@ -359,7 +370,13 @@
                 }
             }
         },
-        mounted() {},
+        mounted() {
+            window.onafterprint = back;
+
+        function back() {
+            window.history.back();
+        }
+        },
         methods: {
             edit(id) {
                 var data;
@@ -382,6 +399,23 @@
                 this.formhapus.id = data.id;
                 this.formhapus.nama = data.nama;
             },
+            barcode_data() {
+                var barcode = document.getElementsByName('barcode')
+                var master = [];
+                var cek = 0
+                barcode.forEach(items => {
+                    if (items.checked == true) {
+                        cek++
+                        master.push(items.value)
+                    }
+                })
+                if(cek > 0){
+                    this.formbarcode.id = master
+                }
+                else{
+                    this.formbarcode.id = null
+                }
+            }
         },
         computed: {
             filteredItems() {

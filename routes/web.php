@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Cashier2Controller;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CashierTransaksiController;
+use App\Http\Controllers\CetakBarcodeController;
 use App\Http\Controllers\CookController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LoginController;
@@ -118,3 +119,5 @@ Route::get('editpesan', function () {
     }
     return Inertia::render('Guest/standbyv2',['produk' => $data,'kategori'=> $kategori_array]);
 });
+
+Route::get('cetakbarcode/{id}',[CetakBarcodeController::class,'cetakbarcode'])->name('cetakbarcode');
