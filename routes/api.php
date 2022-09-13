@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Harga;
 use App\Models\meja;
 use App\Models\Pemesanan;
 use App\Models\PemesananDetail;
@@ -27,30 +28,52 @@ Route::get('settings', function () {
 })->name('apisettings');
 Route::get('pemesanan', function () {
     $pemesanan_aktif = Pemesanan::where('status', 'aktif')->get();
-        $master_data = [];
-        foreach ($pemesanan_aktif as $key => $value) {
-            $data_pemesanan = PemesananDetail::where('id_pemesanan', $value->id)->get();
-            $total = 0;
+    $master_data = [];
+    foreach ($pemesanan_aktif as $key => $value) {
+        $data_pemesanan = PemesananDetail::where('id_pemesanan', $value->id)->get();
+        $total = 0;
 
-            foreach ($data_pemesanan as $keys => $data) {
-                if ($data->status == 'habis') {
-                    unset($data);
-                } else {
-                    $total += $data->total;
-                }
-            }
-            $pemesanan_aktif[$key]->total = $total;
-        }
-        foreach ($pemesanan_aktif as $key => $value) {
-            if ($value->total == 0) {
-                unset($pemesanan_aktif[$key]);
+        foreach ($data_pemesanan as $keys => $data) {
+            if ($data->status == 'habis') {
+                unset($data);
             } else {
-                array_push($master_data,$value);
-                $pemesanan_aktif[$key]->meja = $value->datameja->nama;
+                $total += $data->total;
             }
         }
-    $data = count($pemesanan_aktif); 
-    return json_encode(['data' => $data]);
+        $pemesanan_aktif[$key]->total = $total;
+    }
+    foreach ($pemesanan_aktif as $key => $value) {
+        if ($value->total == 0) {
+            unset($pemesanan_aktif[$key]);
+        } else {
+            array_push($master_data, $value);
+            $pemesanan_aktif[$key]->meja = $value->datameja->nama;
+        }
+    }
+    $data_jumlah = count($pemesanan_aktif);
+    $pemesanan_aktif = Pemesanan::with(['pemesanandetail'])->get();
+    $ppn = Harga::find(1)->value;
+    $master_data = [];
+    foreach ($pemesanan_aktif as $key => $value) {
+        $total = 0;
+        foreach ($value->pemesanandetail as $key => $data) {
+            if ($data->status == 'habis') {
+                unset($data);
+            } else {
+                $total += $data->total;
+            }
+        }
+        $data = new stdClass;
+        $data->produk = $value->pemesanandetail;
+        $data->nama = $value->nama;
+        $data->total = $total;
+        array_push($master_data, $data);
+    }
+
+    $master = new stdClass;
+    $master->jumlah = $data_jumlah;
+    $master->data = $master_data;
+    return json_encode(['data' => $master]);
 })->name('apipemesanan');
 Route::get('cook', function () {
     $pemesanan_aktif = PemesananDetail::where('progress', 'cook')->where('status', 'antri')->orWhere('status', 'diproses')->orderBy('id_pemesanan', 'asc')->get();

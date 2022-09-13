@@ -10,6 +10,7 @@ use App\Models\PemesananDetail;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use stdClass;
 
 class CashierController extends Controller
 {
@@ -20,27 +21,28 @@ class CashierController extends Controller
      */
     public function index()
     {
-
         $kategori = Kategori::all();
-        $produk = Produk::all();
+        $produk = Produk::with(['satuan', 'kategori'])->get();
         $meja = meja::all();
         $master_diskon = Harga::find(2);
         $data_produk = [];
         foreach ($produk as $key => $value) {
             $produk[$key]->gambar = asset($value->gambar);
-            if($master_diskon->value != 0){
-                $value->harga = $value->harga  - ($value->harga * $master_diskon->value/100);;
-            }
-            else{
-                $value->harga = $value->harga - ($value->harga * $value->diskon/100);
+            if ($master_diskon->value != 0) {
+                $value->harga = $value->harga  - ($value->harga * $master_diskon->value / 100);;
+            } else {
+                $value->harga = $value->harga - ($value->harga * $value->diskon / 100);
             }
         }
         foreach ($produk as $key => $value) {
             $value->id_kategori = $value->kategori->nama;
             $data_produk[$key] = $value;
         }
+
+
         
-        return Inertia::render('Cashier/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja]);
+
+        return Inertia::render('Cashier/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja,]);
     }
 
     /**
@@ -67,7 +69,7 @@ class CashierController extends Controller
         $nama_meja = meja::find((int) $meja)->nama;
         foreach ($request->id as $key => $value) {
             foreach ($value as $keys => $data) {
-                $taking_order = Kategori::where('nama',$request->kategori[$key][$keys]['nama'])->first();
+                $taking_order = Kategori::where('nama', $request->kategori[$key][$keys]['nama'])->first();
                 $a = array(
                     'id' =>  $request->id[$key][$keys],
                     'nama' =>  $request->nama[$key][$keys],

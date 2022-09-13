@@ -1,261 +1,272 @@
 <template lang="">
-    <div
-        class="h-screen relative w-screen bg-gradient-to-br from-blue-600 via-cyan-400 to-cyan-500"
-    >
-        <div
-            class="flex flex-row w-full h-full"
-            data-aos="zoom-in"
-            data-aos-duration="1000"
-        >
-            <div class="w-13/20 h-full p-3">
+    <div class="h-screen w-full p-2 bg-slate-200">
+        <div class="h-full w-full flex flex-row gap-2">
+            <div class="w-2/3 h-full min-h-full flex flex-col gap-1">
+                <div class="h-2/20 overflow-hidden items-center flex py-1">
+                    <input
+                        v-model="this.search.value"
+                        type="text"
+                        placeholder="Cari..."
+                        class="input input-bordered w-full input-sm"
+                    />
+                </div>
                 <div
-                    class="w-full h-full rounded-xl flex flex-col overflow-hidden border-2"
+                    class="h-18/20 flex flex-col bg-white rounded-2xl border-2"
                 >
                     <div
-                        class="w-full h-2/20 bg-blue-400 flex items-center px-4"
+                        class="h-2/20 flex flex-row items-center border-b-2 justify-between p-3"
                     >
-                        <input
-                            v-model="search.value"
-                            type="text"
-                            placeholder="Search.."
-                            class="input input-bordered w-56"
-                        />
-                        <select
-                            @change="filteredItems"
-                            class="select w-40 ml-3"
-                            v-model="search.kategori"
-                        >
-                            <option selected>All</option>
-                            <option v-for="item in kategori">
-                                {{ item.nama }}
-                            </option>
-                        </select>
-                        <div
-                            class="w-full h-full flex justify-end items-center"
-                        >
+                        <div class="flex-row flex gap-2">
+                            <article class="prose prose-sm">
+                                <h2>Kategori</h2>
+                            </article>
+                            <select
+                                class="select select-sm select-bordered w-32"
+                            >
+                                <option value="">All</option>
+                                <option
+                                    v-for="item in kategori"
+                                    :value="item.nama"
+                                >
+                                    {{ item.nama }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="">
                             <div
-                                class="indicator relative grid grid-cols-1 w-max gap-3"
+                                class="indicator"
+                                v-if="this.transaksi_api"
+                                @click="
+                                    this.transaksi_show = !this.transaksi_show
+                                "
                             >
                                 <span
-                                    v-if="transaksi_api"
-                                    class="indicator-item animate-in fade-in zoom-in duration-300 border-0 z-20 indicator-middle indicator-start badge bg-red-600 text-white"
-                                    >{{ transaksi_api }}</span
+                                    class="indicator-item z-10 indicator-start badge badge-error"
+                                    >{{ this.transaksi_api }}</span
                                 >
-                                <Link :href="route('cashiertransaksi.index')">
-                                    <button
-                                        class="btn bg-blue-600 border-0 text-white font-semibold hover:bg-blue-700"
-                                    >
-                                        Transaksi
-                                    </button>
-                                </Link>
-                                <!-- <Link :href="route('cashiertransaksi.index')">
-                                <button class="btn bg-blue-600 border-0 text-white font-semibold hover:bg-blue-700">
-                                    Takeaway
+                                <button class="btn btn-info btn-sm">
+                                    Transaksi
                                 </button>
-                                </Link> -->
+                            </div>
+                            <div class="indicator" v-else>
+                                <button class="btn btn-info btn-sm">
+                                    Transaksi
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div
-                        class="w-full h-18/20 bg-cyan-100 flex justify-center item-center"
+                        class="h-18/20 p-2 overflow-auto justify-center flex scrollbar-hide"
                     >
-                        <div
-                            v-if="filteredItems.length <= 8"
-                            class="w-max h-max p-3 grid grid-cols-4 gap-3 overflow-auto scrollbar-hide"
-                        >
+                        <div class="w-max h-max grid grid-cols-4 gap-2">
                             <div
-                                v-for="item in filteredItems"
-                                @click="add(item.id)"
-                                class="bg-black w-40 h-40 flex border-2 items-end rounded-xl overflow-hidden relative"
+                                class="w-44 h-max border shadow rounded-lg p-1 flex flex-col gap-2"
+                                v-for="(item, index) in filteredItems"
+                                :key="index"
                             >
                                 <img
                                     :src="item.gambar"
-                                    class="bg-cover absolute z-0"
+                                    alt=""
+                                    srcset=""
+                                    class="rounded-lg"
                                 />
-                                <div
-                                    class="absolute z-10 flex justify-center items-center h-5/20 w-full bg-white"
-                                >
-                                    {{ item.nama }}
+                                <div class="w-full">
+                                    <article
+                                        class="prose text-center prose-sm w-full break-words flex-col capitalize"
+                                    >
+                                        <h4>
+                                            {{ item.nama }}
+                                        </h4>
+                                        <h5>rp {{ item.harga }}</h5>
+                                    </article>
                                 </div>
-                            </div>
-                        </div>
-                        <div
-                            v-if="filteredItems.length > 8"
-                            class="w-max h-auto p-3 grid grid-cols-4 gap-3 overflow-auto scrollbar-hide"
-                        >
-                            <div
-                                v-for="item in filteredItems"
-                                @click="add(item.id)"
-                                class="bg-black w-40 h-40 flex border-2 items-end rounded-xl overflow-hidden relative"
-                            >
-                                <img
-                                    :src="item.gambar"
-                                    class="bg-cover absolute z-0"
-                                />
-                                <div
-                                    class="absolute z-10 flex justify-center items-center h-5/20 w-full bg-white"
-                                >
-                                    {{ item.nama }}
+                                <div class="w-full flex-row flex">
+                                    <button
+                                        @click="add(item.id)"
+                                        class="btn btn-sm w-1/2 btn-success rounded-l-lg rounded-r-none"
+                                    >
+                                        Tambah
+                                    </button>
+                                    <div class="w-1/2 bg-info rounded-r-lg">
+                                        <modalVue :produk="item" :id="item.id">
+                                            <template v-slot:action>
+                                                <label
+                                                    class="btn btn-success"
+                                                    @click="add(item.id)"
+                                                    >Tambah</label
+                                                >
+                                            </template>
+                                        </modalVue>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="w-7/20 h-full py-3 pr-3">
+            <div
+                class="shadow bg-white rounded-lg w-1/3 min-h-full flex flex-col"
+            >
                 <div
-                    class="w-full h-full bg-cyan-100 rounded-xl flex flex-col overflow-hidden border-2"
+                    class="h-2/20 border flex justify-between items-center p-1"
                 >
-                    <div
-                        class="w-full h-2/20 bg-blue-400 flex justify-center items-center capitalize font-semibold text-2xl text-white"
-                    >
-                        Daftar Pesanan
+                    <div class="">
+                        <select
+                            class="select select-bordered select-sm"
+                            name=""
+                            id=""
+                            v-model="this.form.meja"
+                        >
+                            <option value="">Pilih Meja</option>
+                            <option v-for="item in meja" :value="item.id">
+                                {{ item.nama }}
+                            </option>
+                        </select>
                     </div>
-                    <form @submit.prevent="submit" class="w-full h-18/20">
-                        <div
-                            class="w-full h-3/20 grid grid-cols-2 items-center border-b-4 border-blue-600 p-2"
+                    <div class="">
+                        <input
+                            v-model="this.form.namapemesan"
+                            type="text"
+                            class="input input-bordered input-sm text-center w-32"
+                            placeholder="Nama pemesan..."
+                        />
+                    </div>
+                    <div class="">
+                        <button
+                            :disabled="
+                                this.form.namapemesan == '' ||
+                                this.form.meja == '' ||
+                                this.search.pesanan.length == 0
+                            "
+                            @click="submit"
+                            class="btn btn-sm btn-info"
                         >
-                            <select required class="select" v-model="form.meja">
-                                <option value="0" selected>Pilih Meja</option>
-                                <option :value="item.id" v-for="item in meja">
-                                    {{ item.nama }}
-                                </option>
-                            </select>
-                            <input
-                                required
-                                v-model="form.namapemesan"
-                                type="text"
-                                placeholder="Nama Pemesan.."
-                                class="input input-bordered ml-1"
-                            />
+                            Pesan
+                        </button>
+                    </div>
+                </div>
+                <div class="h-full overflow-auto scrollbar-hide">
+                    <div
+                        v-if="this.transaksi_show"
+                        v-for="item in this.transaksi"
+                        tabindex="0"
+                        class="collapse collapse-arrow border border-base-300 bg-base-100 animate-in fade-in-0 duration-75"
+                    >
+                        <input type="checkbox" />
+                        <div class="collapse-title text-xl font-medium">
+                            {{ item.nama }}
                         </div>
-                        <div class="w-full h-1/20 px-1">
-                            <div
-                                class="w-full h-max my-1 flex flex-row border-b-2 border-blue-400"
-                            >
-                                <div
-                                    class="w-full flex justify-start items-center"
-                                >
-                                    Nama
-                                </div>
-                                <div
-                                    class="w-full flex justify-center items-center"
-                                >
-                                    Jumlah
-                                </div>
-                                <div
-                                    class="w-full flex justify-center items-center"
-                                >
-                                    Harga
-                                </div>
-                                <div
-                                    class="w-full flex justify-center items-center"
-                                >
-                                    Total
-                                </div>
-                                <div
-                                    class="w-full flex justify-center items-center"
-                                >
-                                    Opsi
-                                </div>
+                        <div class="collapse-content flex flex-col gap-2">
+                            <div class="overflow-x-auto border">
+                                <table class="table table-zebra table-compact w-full">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>Produk</th>
+                                            <th >jumlah</th>
+                                            <th>Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- row 1 -->
+                                        <tr v-for="data in item.produk">
+                                            <td>{{data.nama}}</td>
+                                            <td class="text-center">{{data.jumlah}}</td>
+                                            <td class="text-center">Rp. {{data.harga}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="overflow-x-auto border">
+                                <table class="table table-zebra table-compact w-full">
+                                    <tbody>
+                                        <!-- row 1 -->
+                                        <tr>
+                                            <td>total</td>
+                                            <td>Rp {{item.total}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                    </div>
+                    <div
+                        class="collapse border collapse-arrow"
+                        v-for="item in this.search.pesanan"
+                        v-else
+                    >
+                        <input type="checkbox" />
                         <div
-                            class="w-full h-12/20 overflow-auto scrollbar-hide"
+                            class="collapse-title text-xl font-medium flex flex-row gap-2"
                         >
-                            <div
-                                v-for="items in this.search.pesanan"
-                                :id="'row' + items.id"
-                                name="rows"
-                                class="w-full my-1 flex flex-row border-b-2"
-                            >
-                                <div class="grid grid-cols-5 w-full">
-                                    <div
-                                        class="w-full flex justify-start items-center"
-                                    >
-                                        {{ items.nama }}
-                                    </div>
-                                    <div
-                                        class="w-full flex justify-center items-center"
-                                    >
-                                        {{ items.jumlah }}
-                                    </div>
-                                    <div
-                                        class="w-full flex justify-center items-center"
-                                    >
-                                        Rp. {{ items.harga }}
-                                    </div>
-                                    <div
-                                        class="w-full flex justify-center items-center"
-                                    >
-                                        Rp. {{ items.total }}
-                                    </div>
-                                    <div
-                                        class="w-full grid grid-cols-2 gap-1 text-center"
-                                    >
-                                        <button
-                                            @click="tambah(items.id)"
-                                            type="button"
-                                            class="btn btn-sm bg-green-500 text-white border-0 hover:bg-green-600 font-semibold w-full"
-                                        >
-                                            +
-                                        </button>
-                                        <button
-                                            @click="kurang(items.id)"
-                                            type="button"
-                                            class="btn btn-sm bg-yellow-500 text-white border-0 hover:bg-yellow-600 font-semibold w-full"
-                                        >
-                                            -
-                                        </button>
-                                        <button
-                                            type="button"
-                                            @click="hapus(items.id)"
-                                            class="btn btn-sm col-span-2 bg-blue-500 text-white border-0 hover:bg-blue-600 font-semibold"
-                                        >
-                                            hapus
-                                        </button>
-                                    </div>
-                                    <div class="col-span-5 p-1">
-                                        <textarea
-                                            class="textarea w-full textarea-bordered"
-                                            name="keterangan"
-                                            :id="'keterangan' + items.id"
-                                            placeholder="Keterangan.."
-                                        ></textarea>
-                                    </div>
-                                </div>
+                            <div class="h-10">
+                                <img
+                                    :src="item.gambar"
+                                    alt=""
+                                    srcset=""
+                                    class="rounded-lg h-full"
+                                />
+                            </div>
+                            <div class="flex items-center">
+                                <article class="prose">
+                                    <h4>{{ item.nama }}</h4>
+                                </article>
                             </div>
                         </div>
-                        <div
-                            class="w-full h-2/20 flex justify-center items-center font-semibold bg-blue-500 text-white text-2xl"
-                        >
-                            Total Rp. {{ search.totalhargaitem }}
+                        <div class="collapse-content">
+                            <article class="prose">
+                                <div class="grid grid-cols-2 w-1/2 gap-4">
+                                    <h5>Harga</h5>
+                                    <h5>Rp {{ item.harga }}</h5>
+                                </div>
+                                <div class="grid grid-cols-2 w-1/2 gap-4">
+                                    <h5>Jumlah</h5>
+                                    <h5>
+                                        {{ item.jumlah }} {{ item.satuan.nama }}
+                                    </h5>
+                                </div>
+                                <div class="grid grid-cols-2 w-1/2 gap-4">
+                                    <h5>Total</h5>
+                                    <h5>Rp {{ item.total }}</h5>
+                                </div>
+                                <div class="">
+                                    <textarea
+                                        class="textarea textarea-bordered w-full"
+                                        placeholder="keterangan"
+                                        :id="'keterangan' + item.id"
+                                    ></textarea>
+                                </div>
+                                <div class="grid grid-cols-3 w-full gap-4">
+                                    <button
+                                        @click="tambah(item.id)"
+                                        class="btn btn-sm btn-success"
+                                    >
+                                        +
+                                    </button>
+                                    <button
+                                        @click="kurang(item.id)"
+                                        class="btn btn-sm btn-info"
+                                    >
+                                        -
+                                    </button>
+                                    <button
+                                        @click="hapus(item.id)"
+                                        class="btn btn-sm btn-error"
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
+                            </article>
                         </div>
-                        <div class="flex h-2/20 w-full ">
-                            <button
-                                v-if="
-                                    search.totalhargaitem < 1 ||
-                                    form.namapemesan == null ||
-                                    form.namapemesan == '' ||
-                                    form.meja == '0'
-                                "
-                                type="submit"
-                                class="btn bg-green-400 btn-disabled text-white font-semibold w-full"
-                            >
-                                Pesan
-                            </button>
-                            <button
-                                v-else-if="
-                                    form.namapemesan != null &&
-                                    form.meja != null
-                                "
-                                type="submit"
-                                class="btn bg-green-500 text-white border-0 w-full hover:bg-green-600"
-                            >
-                                Pesan
-                            </button>
-                        </div>
-                    </form>
+                    </div>
+                </div>
+                <div class="h-2/20 border flex items-center justify-center" v-if="!this.transaksi_show">
+                    <article
+                        class="prose capitalize text-center"
+                        
+                    >
+                        <h2>rp {{ this.search.totalhargaitem }}</h2>
+                    </article>
                 </div>
             </div>
         </div>
@@ -265,8 +276,12 @@
 import { Inertia } from "@inertiajs/inertia";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { reactive } from "vue";
+import modalVue from "./modal.vue";
 
 export default {
+    components: {
+        modalVue,
+    },
     props: {
         produk: Array,
         kategori: Array,
@@ -292,8 +307,8 @@ export default {
             total: [],
             harga: [],
             totalfinal: null,
-            namapemesan: null,
-            meja: 0,
+            namapemesan: "",
+            meja: "",
         });
 
         function submit() {
@@ -341,7 +356,7 @@ export default {
             this.search.totalharga = 0;
             this.search.totalhargaitem = 0;
             this.form.namapemesan = null;
-            this.form.meja = 0;
+            this.form.meja = "";
 
             this.search.pesanan = [];
         }
@@ -378,6 +393,7 @@ export default {
             });
         },
         cek() {
+            this.transaksi_show = false;
             var total = 0;
             this.search.pesanan.forEach((element) => {
                 total += element.total;
@@ -428,13 +444,16 @@ export default {
     data() {
         return {
             transaksi_api: 0,
+            transaksi_show: false,
+            transaksi: [],
         };
     },
     mounted() {
         setInterval(
             () =>
                 axios.get(route("apipemesanan")).then((response) => {
-                    this.transaksi_api = response.data.data;
+                    this.transaksi_api = response.data.data.jumlah;
+                    this.transaksi = response.data.data.data;
                 }),
             5000
         );
