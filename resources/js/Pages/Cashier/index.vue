@@ -108,6 +108,7 @@
                 class="shadow bg-white rounded-lg w-1/3 min-h-full flex flex-col"
             >
                 <div
+                    v-if="!this.transaksi_show"
                     class="h-2/20 border flex justify-between items-center p-1"
                 >
                     <div class="">
@@ -153,37 +154,61 @@
                         class="collapse collapse-arrow border border-base-300 bg-base-100 animate-in fade-in-0 duration-75"
                     >
                         <input type="checkbox" />
-                        <div class="collapse-title text-xl font-medium">
-                            {{ item.nama }}
+                        <div
+                            class="collapse-title text-xl font-medium z-0 flex flex-row gap-3 items-center"
+                        >
+                            <input
+                                type="checkbox"
+                                name="checkbox"
+                                :value="item.id"
+                                @click="total_semua()"
+                                class="checkbox z-10"
+                            />
+                            <div class="grid grid-cols-2 gap-5 w-full">
+                                <div class="">
+                                    {{ item.nama }}
+                                </div>
+                                <div class="">
+                                    {{ item.meja.nama }}
+                                </div>
+                            </div>
                         </div>
                         <div class="collapse-content flex flex-col gap-2">
                             <div class="overflow-x-auto border">
-                                <table class="table table-zebra table-compact w-full">
+                                <table
+                                    class="table table-zebra table-compact w-full"
+                                >
                                     <thead>
                                         <tr class="text-center">
                                             <th>Produk</th>
-                                            <th >jumlah</th>
+                                            <th>jumlah</th>
                                             <th>Harga</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <!-- row 1 -->
                                         <tr v-for="data in item.produk">
-                                            <td>{{data.nama}}</td>
-                                            <td class="text-center">{{data.jumlah}}</td>
-                                            <td class="text-center">Rp. {{data.harga}}</td>
+                                            <td>{{ data.nama }}</td>
+                                            <td class="text-center">
+                                                {{ data.jumlah }}
+                                            </td>
+                                            <td class="text-center">
+                                                Rp. {{ data.harga }}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
                             <div class="overflow-x-auto border">
-                                <table class="table table-zebra table-compact w-full">
+                                <table
+                                    class="table table-zebra table-compact w-full"
+                                >
                                     <tbody>
                                         <!-- row 1 -->
                                         <tr>
                                             <td>total</td>
-                                            <td>Rp {{item.total}}</td>
+                                            <td>Rp {{ item.total }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -260,13 +285,182 @@
                         </div>
                     </div>
                 </div>
-                <div class="h-2/20 border flex items-center justify-center" v-if="!this.transaksi_show">
-                    <article
-                        class="prose capitalize text-center"
-                        
-                    >
+                <div
+                    class="h-2/20 border flex items-center justify-center"
+                    v-if="!this.transaksi_show"
+                >
+                    <article class="prose capitalize text-center">
                         <h2>rp {{ this.search.totalhargaitem }}</h2>
                     </article>
+                </div>
+                <div
+                    class="h-2/20 border flex flex-col items-center justify-center"
+                    v-else
+                >
+                    <article class="prose capitalize text-center">
+                        <h2>rp {{ this.total_transaksi.total }}</h2>
+                    </article>
+                </div>
+                <div
+                    class="h-2/20 border flex flex-col items-center justify-center"
+                    v-if="this.total_transaksi.total > 1"
+                >
+                    <button class="btn w-full btn-success text-xl">
+                        <modal-lg
+                            modal_id="bayar"
+                            modal_title="Form Pembayaran"
+                            modal_button="Bayar"
+                        >
+                            <template v-slot:modal_body>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="overflow-x-auto h-80 scrollbar-thin scrollbar-track-gray-300">
+                                        <table
+                                            class="table col-span-2 w-max table-compact"
+                                        >
+                                            <tbody>
+                                                <tr>
+                                                    <td>ID</td>
+                                                    <td
+                                                        class="flex flex-row w-max"
+                                                    >
+                                                        :
+                                                        <div
+                                                            class="flex flex-row pl-2"
+                                                        >
+                                                            <div
+                                                                class=""
+                                                                v-for="item in this
+                                                                    .total_transaksi
+                                                                    .id"
+                                                            >
+                                                                {{ item }},
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nama</td>
+                                                    <td class="flex flex-row">
+                                                        :
+                                                        <div
+                                                            class="flex flex-row pl-2 gap-1"
+                                                        >
+                                                            <div
+                                                                class=""
+                                                                v-for="item in this
+                                                                    .total_transaksi
+                                                                    .nama"
+                                                            >
+                                                                "{{ item }}" ,
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="table table-zebra w-full">
+                                            <!-- head -->
+                                            <thead>
+                                                <tr
+                                                    class="capitalize sticky top-0"
+                                                >
+                                                    <th>Nama</th>
+                                                    <th class="text-center">
+                                                        jumlah
+                                                    </th>
+                                                    <th>harga</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    v-for="item in this
+                                                        .total_transaksi.produk"
+                                                >
+                                                    <td>{{ item.nama }}</td>
+                                                    <td class="text-center">
+                                                        {{ item.jumlah }}
+                                                    </td>
+                                                    <td>
+                                                        Rp. {{ item.total }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="form-control">
+                                        <table class="table w-full">
+                                            <tbody>
+                                                <tr>
+                                                    <td
+                                                        colspan="2"
+                                                        class="w-full"
+                                                    >
+                                                        <div
+                                                            class="font-bold text-2xl text-center w-full"
+                                                        >
+                                                            Rp.
+                                                            {{
+                                                                this
+                                                                    .total_transaksi
+                                                                    .total
+                                                            }}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CASH</td>
+                                                    <td
+                                                        class="grid grid-rows-2 gap-1"
+                                                    >
+                                                        <div class="grid grid-cols-4 gap-1">
+                                                            <div @click="pecahan(20000)" class="btn btn-outline">20.000</div>
+                                                            <div @click="pecahan(50000)" class="btn btn-outline">50.000</div>
+                                                            <div @click="pecahan(100000)" class="btn btn-outline">100.000</div>
+                                                            <button
+                                                                @click="
+                                                                    uang_pas
+                                                                "
+                                                                class="btn w-full"
+                                                            >
+                                                                Uang Pas
+                                                            </button>
+                                                        </div>
+                                                        <input
+                                                            @input="hitung"
+                                                            type="number"
+                                                            class="input input-bordered w-full"
+                                                            v-model="
+                                                                this.cetak.bayar
+                                                            "
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" class=" w-full">
+                                                        <div class=" grid grid-cols-3 gap-3">
+                                                            <img :src="item" alt="" class="shadow-md" v-for="item in gambar">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-slot:modal_action>
+                                <button
+                                    class="btn btn-success"
+                                    @click="submitcetak"
+                                    v-if="
+                                        this.cetak.bayar > 0 &&
+                                        this.cetak.kembalian >= 0
+                                    "
+                                >
+                                    bayar
+                                </button>
+                            </template>
+                        </modal-lg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -286,6 +480,7 @@ export default {
         produk: Array,
         kategori: Array,
         meja: Array,
+        gambar: Array,
     },
     setup() {
         const search = reactive({
@@ -360,7 +555,19 @@ export default {
 
             this.search.pesanan = [];
         }
+        const cetak = useForm({
+            id: [],
+            nama: [],
+            produk: [],
+            meja: [],
+            total: 0,
+            bayar: 0,
+            kembalian: 0,
+            ref: null,
+        });
+
         return {
+            cetak,
             submit,
             form,
             search,
@@ -440,12 +647,65 @@ export default {
             });
             this.cek();
         },
+        total_semua() {
+            var data = document.getElementsByName("checkbox");
+            var final = [];
+            var produk = [];
+            var nama = [];
+            var meja = [];
+            var total = 0;
+            var id = [];
+            data.forEach((items) => {
+                if (items.checked == true) {
+                    this.transaksi.forEach((transaksi) => {
+                        if (items.value == transaksi.id) {
+                            id.push(transaksi.id);
+                            total += transaksi.total;
+                            produk = produk.concat(transaksi.produk);
+                            nama = nama.concat(transaksi.nama);
+                            meja = meja.concat(transaksi.meja.id);
+                        }
+                    });
+                }
+            });
+            final["id"] = id;
+            final["nama"] = nama;
+            final["meja"] = meja;
+            final["bayar"] = 0;
+            final["produk"] = produk;
+            final["total"] = total;
+            this.cetak.total = total;
+            this.total_transaksi = final;
+        },
+        uang_pas() {
+            this.cetak.bayar = this.cetak.total;
+            this.hitung();
+        },
+        submitcetak() {
+            this.cetak.id = this.total_transaksi.id;
+            this.cetak.nama = this.total_transaksi.nama;
+            this.cetak.produk = this.total_transaksi.produk;
+            this.cetak.meja = this.total_transaksi.meja;
+            this.cetak.post(route("cetak"), {
+                onSuccess: () => {
+                    this.cetak.reset();
+                },
+            });
+        },
+        hitung() {
+            this.cetak.kembalian = this.cetak.bayar - this.cetak.total;
+        },
+        pecahan(data){
+            this.cetak.bayar = data
+            this.hitung();
+        }
     },
     data() {
         return {
             transaksi_api: 0,
             transaksi_show: false,
             transaksi: [],
+            total_transaksi: [],
         };
     },
     mounted() {
@@ -455,7 +715,7 @@ export default {
                     this.transaksi_api = response.data.data.jumlah;
                     this.transaksi = response.data.data.data;
                 }),
-            5000
+            10000
         );
     },
     computed: {

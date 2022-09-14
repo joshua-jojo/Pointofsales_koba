@@ -38,11 +38,14 @@ class CashierController extends Controller
             $value->id_kategori = $value->kategori->nama;
             $data_produk[$key] = $value;
         }
-
-
-        
-
-        return Inertia::render('Cashier/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja,]);
+        $gambar = [];
+        array_push($gambar, asset('img/dana.jpg'));
+        array_push($gambar, asset('img/gopay.jpg'));
+        array_push($gambar, asset('img/linkaja.jpg'));
+        array_push($gambar, asset('img/ovo.jpg'));
+        array_push($gambar, asset('img/qris.jpg'));
+        array_push($gambar, asset('img/shopeepay.jpg'));
+        return Inertia::render('Cashier/index', ['produk' => $data_produk, 'kategori' => $kategori, 'meja' => $meja,'gambar' => $gambar]);
     }
 
     /**

@@ -19,5 +19,10 @@ class Pemesanan extends Model
     {
         return $this->hasMany(PemesananDetail::class,'id_pemesanan','id');
     }
+
+    public function data_meja()
+    {
+        return $this->belongsTo(meja::class,'meja','id');
+    }
     
 }

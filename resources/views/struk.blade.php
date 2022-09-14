@@ -52,7 +52,7 @@ dd($pemesanan_detail);
                     </tr>
                 </thead>
                 <tbody class="text-center text-sm">
-                    @foreach ($pemesanan_detail->pemesanan['data_pemesanan'] as $item)
+                    @foreach ($pemesanan_detail->produk as $item)
                     {{-- @php
                     dd($pemesanan_detail);
                     @endphp --}}
@@ -76,15 +76,15 @@ dd($pemesanan_detail);
             </div>
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Total Keseluruhan :</div>
-                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail->pemesanan['total']}}</div>
+                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail->total}}</div>
             </div>
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Cash :</div>
-                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail['bayar']}}</div>
+                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail->bayar}}</div>
             </div>
             <div class="w-full flex flex-row text-right">
                 <div class="w-7/12 h-5 font-bold">Sisa :</div>
-                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail['kembalian']}}</div>
+                <div class="w-6/12 h-5 ">Rp. {{$pemesanan_detail->kembalian}}</div>
             </div>
 
         </div>

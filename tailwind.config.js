@@ -85,5 +85,5 @@ module.exports = {
       'desktop': '1024px',
     },
   },
-  plugins: [require("tailwindcss-animate"),require("daisyui"),require('tailwind-scrollbar-hide'),require('@tailwindcss/typography')],
+  plugins: [require("tailwindcss-animate"),require("daisyui"),require('tailwind-scrollbar-hide'),require('@tailwindcss/typography'),require('tailwind-scrollbar')],
 }

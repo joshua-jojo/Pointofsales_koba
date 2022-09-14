@@ -9,6 +9,7 @@ import 'vue3-easy-data-table/dist/style.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css'
 import modal from './Pages/Guest/modal.vue'
+import modal_lg from './Pages/Cashier/modal_lg.vue'
 
 
 var username = localStorage.getItem('username')
@@ -20,6 +21,7 @@ createInertiaApp({
       .component('Link',Link,InertiaProgress.init({color: '#72FFFF',}))
       .component('DataTable',Vue3EasyDataTable)
       .component('modal',modal)
+      .component('modal-lg',modal_lg)
       .provide('username', username)
       .mixin({ methods: { route }})
       .mount(el)

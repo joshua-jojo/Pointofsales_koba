@@ -37,20 +37,19 @@ class BerandaController extends Controller
         foreach ($bulan as $key => $value) {
             $total = 0;
             foreach ($pemasukkan as $key => $data) {
-                if($value == $data->created_at->format('m')){
+                if($value == $data->created_at->format('m') && $data->created_at->format('Y') == date('Y')){
                     $total+=$data->total;
                 }
             }
             array_push($data_pemasukkan, $total);
             $total = 0;
             foreach ($pengeluaran as $key => $data) {
-                if($value == $data->created_at->format('m')){
+                if($value == $data->created_at->format('m') && $data->created_at->format('Y') == date('Y')){
                     $total+=$data->total;
                 }
             }
             array_push($data_pengeluaran, $total);
         }
-
         $produk  = count(Produk::all());
         $kategori  = count(Kategori::all());
         $transaksi_pemasukan  = count(Pemasukkan::all());

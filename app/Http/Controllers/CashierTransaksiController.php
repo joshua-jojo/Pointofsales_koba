@@ -21,7 +21,7 @@ class CashierTransaksiController extends Controller
      */
     public function index()
     {
-        
+
         $pemesanan_aktif = Pemesanan::where('status', 'aktif')->get();
         $ppn = Harga::find(1)->value;
         $master_data = [];
@@ -42,7 +42,7 @@ class CashierTransaksiController extends Controller
             if ($value->total == 0) {
                 unset($pemesanan_aktif[$key]);
             } else {
-                array_push($master_data,$value);
+                array_push($master_data, $value);
                 $pemesanan_aktif[$key]->meja = $value->datameja->nama;
             }
         }
@@ -80,10 +80,9 @@ class CashierTransaksiController extends Controller
                 if ($id_data < $data->id_pemesanan) {
                     $id_data = $data->id_pemesanan;
                 }
-                if($data->status == 'habis'){
+                if ($data->status == 'habis') {
                     unset($pemesanan_detail[$key]);
-                }
-                else{
+                } else {
                     array_push($master_data, $data->toArray());
                 }
             }
@@ -109,7 +108,7 @@ class CashierTransaksiController extends Controller
      */
     public function show($cashiertransaksi)
     {
-        
+
         $data = PemesananDetail::where('id_pemesanan', $cashiertransaksi)->get();
         $master_data = [];
         foreach ($data as $key => $value) {
@@ -159,25 +158,28 @@ class CashierTransaksiController extends Controller
 
     public function cetak(Request $request)
     {
-        $meja = Pemesanan::find($request->pemesanan['id']);
-        meja::find($meja[0]->meja)->update([
-            'status' => '0'
-        ]);
-        dd();
         if (request()->ref == null) {
             request()->ref = '-';
         }
-        foreach ($request->pemesanan['id'] as $key => $value) {
+        foreach ($request->id as $key => $value) {
             Pemesanan::find($value)->update([
                 'status' => 'finish',
                 'referensi' => request()->ref,
                 'cashier' => Auth::user()->id
             ]);
+            foreach ($request->meja as $key => $value) {
+                $data = meja::with(['pemesanan'])->find($value);
+                if (count($data->pemesanan) == 0) {
+                    $data->update([
+                        'status' => '0'
+                    ]);
+                }
+            }
         }
-        if (count(request()->pemesanan['id']) > 0) {
+        if (count(request()->id) > 0) {
             $n = 0;
             $master = '';
-            foreach (request()->pemesanan['id'] as $key => $data) {
+            foreach (request()->id as $key => $data) {
                 if ($n == 0) {
                     $master = $master . $data;
                 } else {
@@ -187,8 +189,9 @@ class CashierTransaksiController extends Controller
             }
             $request['id'] = $master;
         }
+
         $total_keseluruhan = 0;
-        foreach ($request['pemesanan']['data_pemesanan'] as $key => $value) {
+        foreach ($request->produk as $key => $value) {
             $total_keseluruhan += $value['total'];
             Pemasukkan::create([
                 'nama' => $value['nama'],
@@ -197,7 +200,6 @@ class CashierTransaksiController extends Controller
                 'total' => $value['total'],
             ]);
         }
-
         $ppn = Harga::where('nama', 'ppn')->first()->value;
         $ppn = $total_keseluruhan * ($ppn / 100);
         $perusahaan = Setting::find(1)->nama;
